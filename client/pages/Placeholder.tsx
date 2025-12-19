@@ -9,7 +9,8 @@ export default function PlaceholderPage({ title }: { title: string }) {
         </div>
         <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
         <p className="text-slate-500 max-w-md">
-          This page is currently under development. Please continue prompting to fill in this page contents.
+          This page is currently under development. Please continue prompting to
+          fill in this page contents.
         </p>
       </div>
     </DashboardLayout>

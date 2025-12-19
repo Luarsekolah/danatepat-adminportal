@@ -10,8 +10,8 @@ export function Header() {
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
           <Search className="w-5 h-5" />
         </div>
-        <Input 
-          placeholder="Cari program, merchant, transaksi..." 
+        <Input
+          placeholder="Cari program, merchant, transaksi..."
           className="pl-12 h-11 bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 rounded-xl transition-all"
         />
       </div>
@@ -35,8 +35,12 @@ export function Header() {
             <AvatarFallback>AU</AvatarFallback>
           </Avatar>
           <div className="text-left hidden md:block">
-            <p className="text-sm font-bold text-slate-900 leading-none">Admin Utama</p>
-            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mt-1">Administrator</p>
+            <p className="text-sm font-bold text-slate-900 leading-none">
+              Admin Utama
+            </p>
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mt-1">
+              Administrator
+            </p>
           </div>
           <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
         </button>

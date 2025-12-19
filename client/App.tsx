@@ -21,11 +21,26 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/programs" element={<PlaceholderPage title="Program Management" />} />
-          <Route path="/merchants" element={<PlaceholderPage title="Merchant Management" />} />
-          <Route path="/audit" element={<PlaceholderPage title="Audit Explorer" />} />
-          <Route path="/users" element={<PlaceholderPage title="User & Role Management" />} />
-          <Route path="/settings" element={<PlaceholderPage title="Settings & Logs" />} />
+          <Route
+            path="/programs"
+            element={<PlaceholderPage title="Program Management" />}
+          />
+          <Route
+            path="/merchants"
+            element={<PlaceholderPage title="Merchant Management" />}
+          />
+          <Route
+            path="/audit"
+            element={<PlaceholderPage title="Audit Explorer" />}
+          />
+          <Route
+            path="/users"
+            element={<PlaceholderPage title="User & Role Management" />}
+          />
+          <Route
+            path="/settings"
+            element={<PlaceholderPage title="Settings & Logs" />}
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

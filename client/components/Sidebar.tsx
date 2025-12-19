@@ -1,14 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Store, 
-  Search, 
-  Users, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  Store,
+  Search,
+  Users,
   Settings,
   Layers,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 
 const menuItems = [
@@ -20,14 +20,12 @@ const menuItems = [
       { name: "Merchant Management", icon: Store, path: "/merchants" },
       { name: "Audit Explorer", icon: Search, path: "/audit" },
       { name: "User & Role Management", icon: Users, path: "/users" },
-    ]
+    ],
   },
   {
     label: "SISTEM",
-    items: [
-      { name: "Settings & Logs", icon: Settings, path: "/settings" },
-    ]
-  }
+    items: [{ name: "Settings & Logs", icon: Settings, path: "/settings" }],
+  },
 ];
 
 export function Sidebar() {
@@ -41,7 +39,9 @@ export function Sidebar() {
           <div className="w-9 h-9 bg-[#1E6CF6] rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/20">
             <Layers className="w-5 h-5" />
           </div>
-          <span className="text-xl font-extrabold text-slate-800 tracking-tight">DANA TEPAT</span>
+          <span className="text-xl font-extrabold text-slate-800 tracking-tight">
+            DANA TEPAT
+          </span>
         </div>
       </div>
 
@@ -54,23 +54,33 @@ export function Sidebar() {
             </h3>
             <div className="space-y-1">
               {group.items.map((item) => {
-                const isActive = location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path));
+                const isActive =
+                  location.pathname === item.path ||
+                  (item.path !== "/" &&
+                    location.pathname.startsWith(item.path));
                 return (
                   <Link
                     key={item.name}
                     to={item.path}
                     className={cn(
                       "flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group",
-                      isActive 
-                        ? "bg-[#1E6CF6] text-white shadow-lg shadow-blue-500/20" 
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                      isActive
+                        ? "bg-[#1E6CF6] text-white shadow-lg shadow-blue-500/20"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
                     )}
                   >
                     <div className="flex items-center gap-3">
-                      <item.icon className={cn("w-5 h-5 transition-transform group-hover:scale-110", isActive ? "text-white" : "text-slate-400")} />
+                      <item.icon
+                        className={cn(
+                          "w-5 h-5 transition-transform group-hover:scale-110",
+                          isActive ? "text-white" : "text-slate-400",
+                        )}
+                      />
                       <span className="text-sm font-semibold">{item.name}</span>
                     </div>
-                    {isActive && <ChevronRight className="w-4 h-4 text-white/50" />}
+                    {isActive && (
+                      <ChevronRight className="w-4 h-4 text-white/50" />
+                    )}
                   </Link>
                 );
               })}
@@ -83,7 +93,9 @@ export function Sidebar() {
       <div className="p-4 border-t border-slate-100">
         <div className="p-3 bg-blue-50 rounded-xl flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Blockchain Verified</span>
+          <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">
+            Blockchain Verified
+          </span>
         </div>
       </div>
     </aside>
