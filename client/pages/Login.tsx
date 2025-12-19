@@ -15,6 +15,7 @@ import {
   QrCode,
   BarChart3,
   CheckCircle2,
+  LockKeyhole
 } from "lucide-react";
 
 export default function Login() {
@@ -25,97 +26,96 @@ export default function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, we would authenticate here
+    // Navigate to dashboard
     navigate("/");
   };
 
   return (
-    <div className="flex min-h-screen bg-white font-sans">
+    <div className="flex min-h-screen bg-white font-sans text-slate-900">
       {/* Left Section - Hero/Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[#1E6CF6] via-[#1E6CF6] to-[#00D4FF] flex-col items-center justify-center p-12 text-white">
-        <div className="max-w-md text-center">
-          <div className="mb-8 inline-block p-4 bg-white/10 backdrop-blur-md rounded-2xl">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Ffb22e4cf099d4f3cbc5f8fb9845b8315%2Fe6d498e5293f413782f056ced81f14a4?format=webp&width=400"
-              alt="Blockchain Illustration"
-              className="w-64 h-64 object-contain opacity-90"
-            />
+      <div className="hidden lg:flex lg:w-[45%] relative bg-gradient-to-b from-[#1E6CF6] via-[#1E6CF6] to-[#00C9A7] flex-col items-center justify-center p-12 text-white overflow-hidden">
+        <div className="relative z-10 max-w-md text-center">
+          <div className="mb-12 inline-block">
+            <div className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-2xl">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Ffb22e4cf099d4f3cbc5f8fb9845b8315%2Fe6d498e5293f413782f056ced81f14a4?format=webp&width=400"
+                alt="Blockchain Illustration"
+                className="w-56 h-56 object-contain rounded-2xl"
+              />
+            </div>
           </div>
-          <h1 className="text-4xl font-extrabold mb-4 tracking-tight">
+          <h1 className="text-4xl font-extrabold mb-6 tracking-tight leading-tight">
             Dashboard DANA TEPAT
           </h1>
-          <p className="text-lg text-blue-50/90 mb-8 leading-relaxed">
+          <p className="text-lg text-white/80 mb-12 leading-relaxed font-medium">
             Platform administrasi berbasis blockchain untuk transparansi dan
             akuntabilitas program bantuan sosial
           </p>
-          <div className="flex items-center justify-center gap-6 text-sm font-medium text-blue-100">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Blockchain Secure</span>
+          <div className="flex items-center justify-center gap-8 text-sm font-bold text-white/90">
+            <div className="flex items-center gap-2.5">
+              <ShieldCheck className="w-5 h-5 text-white" />
+              <span className="tracking-wide">Blockchain Secure</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Transparent</span>
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 className="w-5 h-5 text-white" />
+              <span className="tracking-wide">Transparent</span>
             </div>
           </div>
         </div>
 
-        {/* Abstract Background Shapes */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-          <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-black/5 rounded-full blur-3xl" />
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-white rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-400 rounded-full blur-[120px]" />
         </div>
       </div>
 
       {/* Right Section - Login Form */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 lg:p-24 bg-slate-50">
-        <div className="w-full max-w-[420px]">
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-8 justify-center lg:justify-start">
-            <div className="w-10 h-10 bg-[#1E6CF6] rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-              <Layers className="w-6 h-6" />
+      <div className="w-full lg:w-[55%] flex flex-col items-center justify-center p-6 sm:p-12 lg:p-24 bg-white">
+        <div className="w-full max-w-[440px]">
+          {/* Brand Logo */}
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-14 h-14 bg-[#1E6CF6] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-500/30 mb-4 transition-transform hover:scale-105 duration-300">
+              <Layers className="w-8 h-8" />
             </div>
-            <span className="text-2xl font-bold text-slate-800 tracking-tight">
+            <span className="text-2xl font-black text-slate-800 tracking-tighter">
               DANA TEPAT
             </span>
           </div>
 
-          <div className="space-y-2 mb-8 text-center lg:text-left">
-            <h2 className="text-2xl font-bold text-slate-900">
+          <div className="space-y-3 mb-10 text-center">
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
               Masuk ke Dashboard DANA TEPAT
             </h2>
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[320px] mx-auto">
               Kelola program bantuan sosial dengan transparansi blockchain
             </p>
           </div>
 
-          {/* Secure Access Banner */}
-          <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 flex items-start gap-3 mb-8">
-            <div className="mt-0.5 p-1 bg-emerald-500 rounded-md text-white">
-              <ShieldCheck className="w-4 h-4" />
+          {/* Akses Aman Banner */}
+          <div className="bg-[#E6F9F5] border border-[#B3EFDF] rounded-2xl p-4 flex items-start gap-4 mb-10 shadow-sm shadow-emerald-500/5">
+            <div className="mt-0.5 p-1.5 bg-[#10B981] rounded-lg text-white shadow-md shadow-emerald-500/20">
+              <LockKeyhole className="w-4 h-4" />
             </div>
-            <div className="space-y-0.5">
-              <p className="text-sm font-semibold text-emerald-900">
-                Akses Aman
-              </p>
-              <p className="text-xs text-emerald-700 leading-relaxed">
-                Dashboard ini dilindungi oleh sistem blockchain dan enkripsi
-                OAuth 2.0
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-[#064E3B]">Akses Aman</p>
+              <p className="text-[11px] text-[#047857] leading-relaxed font-semibold opacity-90">
+                Dashboard ini dilindungi oleh sistem blockchain dan enkripsi OAuth 2.0
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2.5">
               <Label
                 htmlFor="email"
-                className="text-sm font-medium text-slate-700"
+                className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
               >
                 Email
               </Label>
               <div className="relative group">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1E6CF6] transition-colors">
-                  <Mail className="w-4 h-4" />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1E6CF6] transition-colors">
+                  <Mail className="w-5 h-5" />
                 </div>
                 <Input
                   id="email"
@@ -123,22 +123,22 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@danatepat.id"
-                  className="pl-10 h-11 border-slate-200 focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10 rounded-xl"
+                  className="pl-12 h-14 border-slate-200 bg-slate-50/50 focus:bg-white focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10 rounded-2xl font-medium transition-all"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <Label
                 htmlFor="password"
-                className="text-sm font-medium text-slate-700"
+                className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
               >
                 Password
               </Label>
               <div className="relative group">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1E6CF6] transition-colors">
-                  <Lock className="w-4 h-4" />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1E6CF6] transition-colors">
+                  <Lock className="w-5 h-5" />
                 </div>
                 <Input
                   id="password"
@@ -146,39 +146,39 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-10 pr-10 h-11 border-slate-200 focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10 rounded-xl"
+                  className="pl-12 pr-12 h-14 border-slate-200 bg-slate-50/50 focus:bg-white focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10 rounded-2xl font-medium transition-all"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1E6CF6] transition-colors p-1"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-5 h-5" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-5 h-5" />
                   )}
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center space-x-2.5">
                 <Checkbox
                   id="remember"
-                  className="rounded-md border-slate-300 data-[state=checked]:bg-[#1E6CF6] data-[state=checked]:border-[#1E6CF6]"
+                  className="w-5 h-5 rounded-lg border-slate-300 data-[state=checked]:bg-[#1E6CF6] data-[state=checked]:border-[#1E6CF6] transition-all"
                 />
                 <Label
                   htmlFor="remember"
-                  className="text-sm text-slate-600 font-medium cursor-pointer"
+                  className="text-sm text-slate-600 font-bold cursor-pointer select-none"
                 >
                   Ingat saya
                 </Label>
               </div>
               <Link
                 to="#"
-                className="text-sm font-semibold text-[#1E6CF6] hover:underline"
+                className="text-sm font-bold text-[#1E6CF6] hover:text-blue-700 transition-colors"
               >
                 Lupa kata sandi?
               </Link>
@@ -186,39 +186,39 @@ export default function Login() {
 
             <Button
               type="submit"
-              className="w-full h-12 bg-[#1E6CF6] hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+              className="w-full h-14 bg-[#1E6CF6] hover:bg-blue-700 text-white text-base font-black rounded-2xl shadow-xl shadow-blue-500/25 transition-all active:scale-[0.98] mt-2"
             >
               Masuk Sekarang
             </Button>
 
-            <p className="text-center text-slate-500 text-sm">
+            <p className="text-center text-slate-500 text-sm font-bold pt-2">
               Belum punya akun?{" "}
               <Link
                 to="#"
-                className="font-semibold text-[#1E6CF6] hover:underline"
+                className="text-[#1E6CF6] hover:text-blue-700 transition-colors"
               >
                 Daftar
               </Link>
             </p>
           </form>
 
-          {/* Footer Features */}
-          <div className="mt-12 pt-8 border-t border-slate-200 flex flex-wrap items-center justify-center gap-6 text-slate-400">
-            <div className="flex items-center gap-2">
+          {/* Footer Integration Tags */}
+          <div className="mt-16 pt-8 border-t border-slate-100 flex flex-wrap items-center justify-center gap-8 text-slate-400">
+            <div className="flex items-center gap-2 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
               <Layers className="w-4 h-4" />
-              <span className="text-[10px] uppercase tracking-wider font-bold">
+              <span className="text-[10px] uppercase tracking-[0.15em] font-black">
                 Hyperledger Fabric
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
               <QrCode className="w-4 h-4" />
-              <span className="text-[10px] uppercase tracking-wider font-bold">
+              <span className="text-[10px] uppercase tracking-[0.15em] font-black">
                 QRIS Integration
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
               <BarChart3 className="w-4 h-4" />
-              <span className="text-[10px] uppercase tracking-wider font-bold">
+              <span className="text-[10px] uppercase tracking-[0.15em] font-black">
                 Real-time Analytics
               </span>
             </div>
