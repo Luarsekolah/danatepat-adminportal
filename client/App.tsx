@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Programs from "./pages/Programs";
 import Merchants from "./pages/Merchants";
+import Users from "./pages/Users";
 import PlaceholderPage from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
@@ -29,10 +30,7 @@ const App = () => (
             path="/audit"
             element={<PlaceholderPage title="Audit Explorer" />}
           />
-          <Route
-            path="/users"
-            element={<PlaceholderPage title="User & Role Management" />}
-          />
+          <Route path="/users" element={<Users />} />
           <Route
             path="/settings"
             element={<PlaceholderPage title="Settings & Logs" />}
