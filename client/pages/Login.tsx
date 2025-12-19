@@ -15,7 +15,7 @@ import {
   QrCode,
   BarChart3,
   CheckCircle2,
-  LockKeyhole
+  LockKeyhole,
 } from "lucide-react";
 
 export default function Login() {
@@ -100,7 +100,8 @@ export default function Login() {
             <div className="space-y-1">
               <p className="text-sm font-bold text-[#064E3B]">Akses Aman</p>
               <p className="text-[11px] text-[#047857] leading-relaxed font-semibold opacity-90">
-                Dashboard ini dilindungi oleh sistem blockchain dan enkripsi OAuth 2.0
+                Dashboard ini dilindungi oleh sistem blockchain dan enkripsi
+                OAuth 2.0
               </p>
             </div>
           </div>
