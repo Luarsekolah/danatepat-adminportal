@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 

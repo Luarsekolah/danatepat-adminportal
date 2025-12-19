@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Bell, Search, User, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
