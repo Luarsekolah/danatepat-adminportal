@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Programs from "./pages/Programs";
+import Merchants from "./pages/Merchants";
 import PlaceholderPage from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
@@ -23,10 +24,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/programs" element={<Programs />} />
-          <Route
-            path="/merchants"
-            element={<PlaceholderPage title="Merchant Management" />}
-          />
+          <Route path="/merchants" element={<Merchants />} />
           <Route
             path="/audit"
             element={<PlaceholderPage title="Audit Explorer" />}
