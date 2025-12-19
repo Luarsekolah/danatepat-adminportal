@@ -195,12 +195,11 @@ export default function Programs() {
                         <div className="flex justify-between items-center">
                           <span className="text-[10px] font-bold text-slate-400">{program.realisasi}%</span>
                         </div>
-                        <Progress value={program.realisasi} className="h-1.5 bg-slate-100 overflow-hidden rounded-full">
-                          <div 
-                            className="h-full bg-emerald-500 rounded-full" 
-                            style={{ width: `${program.realisasi}%` }} 
-                          />
-                        </Progress>
+                        <Progress
+                          value={program.realisasi}
+                          className="h-1.5 bg-slate-100"
+                          indicatorClassName={program.status === "Aktif" ? "bg-emerald-500" : "bg-amber-500"}
+                        />
                       </div>
                     </td>
                     <td className="px-6 py-5">
