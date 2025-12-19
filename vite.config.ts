@@ -16,6 +16,9 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist/spa",
   },
+  optimizeDeps: {
+    include: ["react", "react-dom"],
+  },
   plugins: [react(), expressPlugin()],
   resolve: {
     alias: {
