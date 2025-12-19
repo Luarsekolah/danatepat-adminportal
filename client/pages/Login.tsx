@@ -27,7 +27,7 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Navigate to dashboard
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
@@ -191,16 +191,6 @@ export default function Login() {
             >
               Masuk Sekarang
             </Button>
-
-            <p className="text-center text-slate-500 text-sm font-bold pt-2">
-              Belum punya akun?{" "}
-              <Link
-                to="#"
-                className="text-[#1E6CF6] hover:text-blue-700 transition-colors"
-              >
-                Daftar
-              </Link>
-            </p>
           </form>
 
           {/* Footer Integration Tags */}
