@@ -14,6 +14,7 @@ import Users from "./pages/Users";
 import PlaceholderPage from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/SettingLog";
+import Audit from "./pages/Audit";
 
 const queryClient = new QueryClient();
 
@@ -28,15 +29,9 @@ const App = () => (
           <Route path="/" element={<Login />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/merchants" element={<Merchants />} />
-          <Route
-            path="/audit"
-            element={<PlaceholderPage title="Audit Explorer" />}
-          />
+          <Route path="/audit" element={<Audit />} />
           <Route path="/users" element={<Users />} />
-          <Route
-            path="/settings"
-            element={<Settings />}
-          />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
