@@ -1,6 +1,7 @@
-import * as React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,18 +17,32 @@ import {
   BarChart3,
   CheckCircle2,
   LockKeyhole,
+  Loader2,
 } from "lucide-react";
+import { loginPayloadSchema, type LoginPayload } from "@/services/schemas/auth";
+import { useLogin } from "@/services/mutations/auth";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("admin@danatepat.id");
-  const [password, setPassword] = useState("password123");
-  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<LoginPayload>({
+    resolver: zodResolver(loginPayloadSchema),
+    mode: "onBlur",
+    defaultValues: {
+      email: "admin@danatepat.id",
+      password: "password123",
+    },
+  });
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Navigate to dashboard
-    navigate("/dashboard");
+  const loginMutation = useLogin(setError);
+
+  const onSubmit = (data: LoginPayload) => {
+    console.log("data", data);
+    loginMutation.mutate(data);
   };
 
   return (
@@ -106,7 +121,20 @@ export default function Login() {
             </div>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Root error display */}
+            {errors.root && (
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+                <div className="text-red-600 mt-0.5 flex-shrink-0">⚠️</div>
+                <div>
+                  <p className="text-sm font-bold text-red-800">
+                    {errors.root.message}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Email Field */}
             <div className="space-y-2.5">
               <Label
                 htmlFor="email"
@@ -115,21 +143,35 @@ export default function Login() {
                 Email
               </Label>
               <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1E6CF6] transition-colors">
+                <div
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
+                    errors.email
+                      ? "text-red-500"
+                      : "text-slate-400 group-focus-within:text-[#1E6CF6]"
+                  }`}
+                >
                   <Mail className="w-5 h-5" />
                 </div>
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@danatepat.id"
-                  className="pl-12 h-14 border-slate-200 bg-slate-50/50 focus:bg-white focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10 rounded-2xl font-medium transition-all"
-                  required
+                  {...register("email")}
+                  className={`pl-12 h-14 font-medium rounded-2xl transition-all ${
+                    errors.email
+                      ? "border-red-300 bg-red-50/50 focus:bg-red-50 focus:border-red-500 focus:ring-red-500/10"
+                      : "border-slate-200 bg-slate-50/50 focus:bg-white focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10"
+                  }`}
                 />
               </div>
+              {errors.email && (
+                <p className="text-xs font-semibold text-red-600 ml-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
+            {/* Password Field */}
             <div className="space-y-2.5">
               <Label
                 htmlFor="password"
@@ -138,22 +180,31 @@ export default function Login() {
                 Password
               </Label>
               <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1E6CF6] transition-colors">
+                <div
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
+                    errors.password
+                      ? "text-red-500"
+                      : "text-slate-400 group-focus-within:text-[#1E6CF6]"
+                  }`}
+                >
                   <Lock className="w-5 h-5" />
                 </div>
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-12 pr-12 h-14 border-slate-200 bg-slate-50/50 focus:bg-white focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10 rounded-2xl font-medium transition-all"
-                  required
+                  {...register("password")}
+                  className={`pl-12 pr-12 h-14 font-medium rounded-2xl transition-all ${
+                    errors.password
+                      ? "border-red-300 bg-red-50/50 focus:bg-red-50 focus:border-red-500 focus:ring-red-500/10"
+                      : "border-slate-200 bg-slate-50/50 focus:bg-white focus:border-[#1E6CF6] focus:ring-[#1E6CF6]/10"
+                  }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1E6CF6] transition-colors p-1"
+                  tabIndex={-1}
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -162,8 +213,14 @@ export default function Login() {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-xs font-semibold text-red-600 ml-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
+            {/* Remember & Forgot Password */}
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center space-x-2.5">
                 <Checkbox
@@ -185,11 +242,20 @@ export default function Login() {
               </Link>
             </div>
 
+            {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-14 bg-[#1E6CF6] hover:bg-blue-700 text-white text-base font-black rounded-2xl shadow-xl shadow-blue-500/25 transition-all active:scale-[0.98] mt-2"
+              disabled={isSubmitting || loginMutation.isPending}
+              className="w-full h-14 bg-[#1E6CF6] hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white text-base font-black rounded-2xl shadow-xl shadow-blue-500/25 transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2"
             >
-              Masuk Sekarang
+              {isSubmitting || loginMutation.isPending ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Memproses...</span>
+                </>
+              ) : (
+                "Masuk Sekarang"
+              )}
             </Button>
           </form>
 
