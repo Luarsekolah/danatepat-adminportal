@@ -16,7 +16,7 @@ const menuItems = [
   {
     label: "MENU UTAMA",
     items: [
-      { name: "Dashboard", icon: LayoutDashboard, path: "/" },
+      { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { name: "Program Management", icon: Briefcase, path: "/programs" },
       { name: "Merchant Management", icon: Store, path: "/merchants" },
       { name: "Audit Explorer", icon: Search, path: "/audit" },
