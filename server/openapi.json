@@ -1,0 +1,1056 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "DataTepat API",
+    "description": "API untuk manajemen program bantuan sosial, merchant, dan autentikasi",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Abdul"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://dev.danatepat.com",
+      "description": "Development Server"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Endpoint untuk autentikasi pengguna"
+    },
+    {
+      "name": "Program",
+      "description": "Endpoint untuk manajemen program bantuan"
+    },
+    {
+      "name": "Merchant",
+      "description": "Endpoint untuk manajemen merchant"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login pengguna",
+        "description": "Login pengguna dan mendapatkan token autentikasi",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "email": "admin@danatepat.com",
+                "password": "password12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/program/api/programs": {
+      "post": {
+        "tags": [
+          "Program"
+        ],
+        "summary": "Membuat program baru",
+        "description": "Membuat program bantuan baru",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgramRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Program berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Program"
+        ],
+        "summary": "Mengambil semua program",
+        "description": "Mengambil daftar semua program",
+        "responses": {
+          "200": {
+            "description": "Daftar program berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/program/api/programs/{id}": {
+      "get": {
+        "tags": [
+          "Program"
+        ],
+        "summary": "Mengambil detail program",
+        "description": "Mengambil detail program berdasarkan ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID program"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detail program berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Program"
+        ],
+        "summary": "Memperbarui program",
+        "description": "Memperbarui data program berdasarkan ID",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID program"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgramRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Program berhasil diperbarui",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/program/api/programs/dashboard": {
+      "get": {
+        "tags": [
+          "Program"
+        ],
+        "summary": "Dashboard program",
+        "description": "Mengambil statistik program",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistik program berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramDashboardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/kota": {
+      "get": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Mengambil data kota",
+        "description": "Mengambil daftar kota",
+        "responses": {
+          "200": {
+            "description": "Daftar kota berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KotaListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/kecamatan/{idKota}": {
+      "get": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Mengambil data kecamatan",
+        "description": "Mengambil daftar kecamatan berdasarkan ID kota",
+        "parameters": [
+          {
+            "name": "idKota",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID kota"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar kecamatan berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KecamatanListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/register": {
+      "post": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Registrasi merchant",
+        "description": "Membuat merchant baru",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Merchant berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantRegistrationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/{merchantId}/wilayah": {
+      "post": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Set wilayah merchant",
+        "description": "Mengatur wilayah operasi merchant",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "merchantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID merchant"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantWilayahRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Wilayah merchant berhasil diatur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/profiles": {
+      "get": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Mengambil daftar merchant",
+        "description": "Mengambil semua data merchant dengan pagination dan filter",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "Nomor halaman"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Jumlah item per halaman"
+          },
+          {
+            "name": "kota",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter berdasarkan nama kota"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar merchant berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantProfilesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/summary": {
+      "get": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Dashboard merchant",
+        "description": "Mengambil statistik merchant",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistik merchant berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "admin@danatepat.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "password12345"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "integer"
+              },
+              "email": {
+                "type": "string"
+              },
+              "fullName": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "token": {
+                "type": "string"
+              },
+              "expiresIn": {
+                "type": "integer"
+              },
+              "tokenType": {
+                "type": "string"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProgramRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "programManagerId",
+          "startDate",
+          "endDate",
+          "dailyAllocationAmount",
+          "currencyTokenName",
+          "status"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Bantuan Sembako 2025"
+          },
+          "description": {
+            "type": "string",
+            "example": "Program bantuan sembako untuk masyarakat prasejahtera"
+          },
+          "programManagerId": {
+            "type": "integer",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-12-31"
+          },
+          "dailyAllocationAmount": {
+            "type": "number",
+            "format": "double",
+            "example": 50000.00
+          },
+          "currencyTokenName": {
+            "type": "string",
+            "example": "SEMBAKO_TOKEN"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "ACTIVE"
+            ],
+            "example": "DRAFT"
+          }
+        }
+      },
+      "ProgramResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "programManagerId": {
+                "type": "integer"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "dailyAllocationAmount": {
+                "type": "number"
+              },
+              "currencyTokenName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProgramListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "programManagerId": {
+                  "type": "integer"
+                },
+                "startDate": {
+                  "type": "string"
+                },
+                "endDate": {
+                  "type": "string"
+                },
+                "dailyAllocationAmount": {
+                  "type": "number"
+                },
+                "currencyTokenName": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProgramDashboardResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "totalPrograms": {
+                "type": "integer"
+              },
+              "totalActivePrograms": {
+                "type": "integer"
+              },
+              "totalDailyAllocationAmount": {
+                "type": "number"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "KotaListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kota": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "KecamatanListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kecamatan": {
+                  "type": "string"
+                },
+                "kota": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "kota": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MerchantRegistrationRequest": {
+        "type": "object",
+        "required": [
+          "userId",
+          "businessName",
+          "bankName",
+          "bankAccountNumber",
+          "kategori"
+        ],
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "example": 2
+          },
+          "businessName": {
+            "type": "string",
+            "example": "Toko Admin Dua"
+          },
+          "bankName": {
+            "type": "string",
+            "example": "BRI"
+          },
+          "bankAccountNumber": {
+            "type": "string",
+            "example": "0987654321"
+          },
+          "kategori": {
+            "type": "string",
+            "enum": [
+              "PANGAN"
+            ],
+            "example": "PANGAN"
+          }
+        }
+      },
+      "MerchantRegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "integer"
+              },
+              "businessName": {
+                "type": "string"
+              },
+              "bankName": {
+                "type": "string"
+              },
+              "bankAccountNumber": {
+                "type": "string"
+              },
+              "bankAccountHolder": {
+                "type": "string"
+              },
+              "kategori": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "qrisData": {
+                "type": "string"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MerchantWilayahRequest": {
+        "type": "object",
+        "required": [
+          "wilayah"
+        ],
+        "properties": {
+          "wilayah": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kotaId": {
+                  "type": "string",
+                  "example": "3171"
+                },
+                "alamat": {
+                  "type": "string",
+                  "example": "Jl. Tebet Raya No. 123, Jakarta Selatan"
+                }
+              }
+            }
+          }
+        }
+      },
+      "MerchantProfilesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "businessName": {
+                      "type": "string"
+                    },
+                    "bankName": {
+                      "type": "string"
+                    },
+                    "bankAccountNumber": {
+                      "type": "string"
+                    },
+                    "bankAccountHolder": {
+                      "type": "string"
+                    },
+                    "kategori": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "qrisData": {
+                      "type": "string"
+                    },
+                    "wilayahList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "merchantUserId": {
+                            "type": "integer"
+                          },
+                          "kota": {
+                            "type": "string"
+                          },
+                          "kecamatan": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "alamat": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "pageable": {
+                "type": "object"
+              },
+              "last": {
+                "type": "boolean"
+              },
+              "totalPages": {
+                "type": "integer"
+              },
+              "totalElements": {
+                "type": "integer"
+              },
+              "size": {
+                "type": "integer"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "numberOfElements": {
+                "type": "integer"
+              },
+              "first": {
+                "type": "boolean"
+              },
+              "empty": {
+                "type": "boolean"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MerchantSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "totalMerchant": {
+                "type": "integer"
+              },
+              "totalMerchantAktif": {
+                "type": "integer"
+              },
+              "totalMerchantPending": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    }
+  }
+}
