@@ -7,10 +7,11 @@ import type { ApiResponse, UserAuthData } from "@/types/base";
  */
 export const loginPayloadSchema = z.object({
   email: z
-    .string({ message: "Email harus berisi nilai" })
-    .min(1, { message: "Email harus diisi" })
-    .email({ message: "Format email tidak valid" })
-    .toLowerCase(),
+    .string()
+    .nonempty({ message: "Email harus diisi" })
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+      message: "Format email tidak valid",
+    }),
   password: z
     .string({ message: "Password harus berisi nilai" })
     .min(1, { message: "Password harus diisi" })
