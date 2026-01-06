@@ -32,7 +32,9 @@ const menuItems = [
   },
   {
     label: "SISTEM",
-    items: [{ name: "Settings & Logs", icon: Settings, path: "/settings" }],
+    items: [
+      { name: "Settings & Logs", icon: Settings, path: "/dashboard/settings" },
+    ],
   },
 ];
 
