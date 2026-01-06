@@ -1,4 +1,8 @@
-import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationOptions,
+} from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { UseFormSetError } from "react-hook-form";
 import { mainApi } from "../api";
@@ -59,5 +63,24 @@ export function useLogin(
         message: errorMessage,
       });
     },
+  });
+}
+
+export function useLogout(options?: UseMutationOptions<void>) {
+  const { clearAuth } = useAuthStore();
+  const queryClient = useQueryClient();
+
+  return useMutation<void>({
+    mutationFn: async () => {
+      // Simulate async logout operation if needed
+      return Promise.resolve();
+    },
+    onSettled: () => {
+      clearAuth();
+      queryClient.clear();
+
+      window.location.href = "/";
+    },
+    ...options,
   });
 }
