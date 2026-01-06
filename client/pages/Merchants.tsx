@@ -29,14 +29,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import {
   useListMerchant,
   useMerchantSummary,
   useGetKotaList,
 } from "@/services/queries/merchant";
 import type { ListMerchantQuery } from "@/services/schemas/merchant";
-import type { MerchantData } from "@/types/base";
+import { AddMerchantDialog } from "@/components/AddMerchantDialog";
 
 const statConfig = [
   {
@@ -99,6 +98,7 @@ export default function Merchants() {
   const [selectedStatus, setSelectedStatus] = React.useState<string>("all");
   const [selectedKota, setSelectedKota] = React.useState<string>("all");
   const [currentPage, setCurrentPage] = React.useState(0);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
   const itemsPerPage = 10;
 
   const filters: ListMerchantQuery = React.useMemo(
@@ -126,7 +126,10 @@ export default function Merchants() {
               Kelola dan verifikasi merchant yang terdaftar dalam sistem
             </p>
           </div>
-          <Button className="bg-[#1E6CF6] hover:bg-blue-700 text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-blue-500/20">
+          <Button
+            onClick={() => setDialogOpen(true)}
+            className="bg-[#1E6CF6] hover:bg-blue-700 text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-blue-500/20"
+          >
             <Plus className="w-5 h-5 mr-2" />
             Tambah Merchant
           </Button>
@@ -331,7 +334,7 @@ export default function Merchants() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 text-sm font-mono font-medium text-slate-600">
+                      <td className="px-6 py-5 text-sm font-mono font-medium text-slate-600 max-w-[230px] truncate">
                         {merchant.qrisData || "-"}
                       </td>
                       <td className="px-6 py-5">
@@ -479,6 +482,16 @@ export default function Merchants() {
           </div>
         </div>
       </div>
+
+      {/* Add Merchant Dialog */}
+      <AddMerchantDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSuccess={() => {
+          setCurrentPage(0);
+          merchantsQuery.refetch?.();
+        }}
+      />
     </DashboardLayout>
   );
 }

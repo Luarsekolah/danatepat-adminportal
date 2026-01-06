@@ -5,7 +5,6 @@ import type {
   MerchantSummary,
   Kota,
   Kecamatan,
-  MerchantWilayah,
 } from "@/types/base";
 
 /**
@@ -13,21 +12,44 @@ import type {
  * Validates all required fields for merchant registration
  */
 export const registerMerchantPayloadSchema = z.object({
-  userId: z
-    .number({ message: "ID pengguna harus berupa angka" })
-    .positive({ message: "ID pengguna harus lebih dari 0" }),
+  email: z
+    .string()
+    .nonempty({ message: "Email harus diisi" })
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+      message: "Format email tidak valid",
+    }),
+  fullName: z
+    .string({ message: "Nama lengkap harus diisi" })
+    .min(1, { message: "Nama lengkap harus diisi" })
+    .min(3, { message: "Nama lengkap minimal 3 karakter" }),
+  phoneNumber: z
+    .string()
+    .nonempty({ message: "Nomor telepon harus diisi" })
+    .regex(/^\d+$/, {
+      message: "Nomor telepon harus berupa angka",
+    })
+    .regex(/^\d{10,15}$/, {
+      message: "Nomor telepon harus 10 hingga 15 digit",
+    }),
+  nik: z
+    .string({ message: "NIK harus diisi" })
+    .min(1, { message: "NIK harus diisi" })
+    .length(16, { message: "NIK harus 16 karakter" }),
+  blockchainWalletAddress: z
+    .string({ message: "Alamat wallet blockchain harus diisi" })
+    .min(1, { message: "Alamat wallet blockchain harus diisi" }),
   businessName: z
-    .string({ message: "Nama bisnis harus berisi nilai" })
+    .string({ message: "Nama bisnis harus diisi" })
     .min(1, { message: "Nama bisnis harus diisi" })
     .min(3, { message: "Nama bisnis minimal 3 karakter" }),
   bankName: z
-    .string({ message: "Nama bank harus berisi nilai" })
+    .string({ message: "Nama bank harus diisi" })
     .min(1, { message: "Nama bank harus diisi" }),
   bankAccountNumber: z
-    .string({ message: "Nomor rekening harus berisi nilai" })
+    .string({ message: "Nomor rekening harus diisi" })
     .min(1, { message: "Nomor rekening harus diisi" }),
   kategori: z.enum(["PANGAN"], {
-    message: "Kategori harus PANGAN",
+    message: "Kategori harus diisi",
   }),
 });
 
@@ -37,13 +59,13 @@ export const registerMerchantPayloadSchema = z.object({
  */
 export const setMerchantWilayahPayloadSchema = z.object({
   kota: z
-    .string({ message: "Kota harus berisi nilai" })
+    .string({ message: "Kota harus diisi" })
     .min(1, { message: "Kota harus diisi" }),
   kecamatan: z
-    .string({ message: "Kecamatan harus berisi nilai" })
+    .string({ message: "Kecamatan harus diisi" })
     .min(1, { message: "Kecamatan harus diisi" }),
   alamat: z
-    .string({ message: "Alamat harus berisi nilai" })
+    .string({ message: "Alamat harus diisi" })
     .min(1, { message: "Alamat harus diisi" })
     .min(5, { message: "Alamat minimal 5 karakter" }),
 });
