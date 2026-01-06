@@ -122,18 +122,6 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Root error display */}
-            {errors.root && (
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
-                <div className="text-red-600 mt-0.5 flex-shrink-0">⚠️</div>
-                <div>
-                  <p className="text-sm font-bold text-red-800">
-                    {errors.root.message}
-                  </p>
-                </div>
-              </div>
-            )}
-
             {/* Email Field */}
             <div className="space-y-2.5">
               <Label
