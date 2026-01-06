@@ -27,7 +27,9 @@ import {
   useProgramDashboard,
 } from "@/services/queries/program";
 import { AddProgramDialog } from "@/components/AddProgramDialog";
+import { EditProgramDialog } from "@/components/EditProgramDialog";
 import { toast } from "sonner";
+import type { ProgramData } from "@/types/base";
 
 const CATEGORY_ICONS: Record<string, string> = {
   PANGAN: "🍴",
@@ -41,6 +43,10 @@ export default function Programs() {
     "all" | "DRAFT" | "ACTIVE"
   >("all");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<ProgramData | null>(
+    null,
+  );
 
   // Fetch programs using infinite query
   const programsQuery = useListProgram(
@@ -299,7 +305,13 @@ export default function Programs() {
                           <button className="p-2 text-slate-400 hover:text-[#1E6CF6] hover:bg-blue-50 rounded-lg transition-all">
                             <Eye className="w-5 h-5" />
                           </button>
-                          <button className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all">
+                          <button
+                            className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all"
+                            onClick={() => {
+                              setSelectedProgram(program);
+                              setEditDialogOpen(true);
+                            }}
+                          >
                             <Edit className="w-5 h-5" />
                           </button>
                         </div>
@@ -324,6 +336,17 @@ export default function Programs() {
       <AddProgramDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+        onSuccess={() => {
+          // Optionally refetch programs
+          programsQuery.refetch?.();
+        }}
+      />
+
+      {/* Edit Program Dialog */}
+      <EditProgramDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        program={selectedProgram}
         onSuccess={() => {
           // Optionally refetch programs
           programsQuery.refetch?.();
