@@ -28,6 +28,7 @@ import {
 } from "@/services/queries/program";
 import { AddProgramDialog } from "@/components/AddProgramDialog";
 import { EditProgramDialog } from "@/components/EditProgramDialog";
+import { ViewProgramDialog } from "@/components/ViewProgramDialog";
 import { toast } from "sonner";
 import type { ProgramData } from "@/types/base";
 
@@ -44,6 +45,7 @@ export default function Programs() {
   >("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<ProgramData | null>(
     null,
   );
@@ -302,7 +304,14 @@ export default function Programs() {
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center justify-center gap-3">
-                          <button className="p-2 text-slate-400 hover:text-[#1E6CF6] hover:bg-blue-50 rounded-lg transition-all">
+                          <button
+                            className="p-2 text-slate-400 hover:text-[#1E6CF6] hover:bg-blue-50 rounded-lg transition-all"
+                            title="View"
+                            onClick={() => {
+                              setSelectedProgram(program);
+                              setViewDialogOpen(true);
+                            }}
+                          >
                             <Eye className="w-5 h-5" />
                           </button>
                           <button
@@ -351,6 +360,13 @@ export default function Programs() {
           // Optionally refetch programs
           programsQuery.refetch?.();
         }}
+      />
+
+      {/* View Program Dialog */}
+      <ViewProgramDialog
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+        program={selectedProgram}
       />
     </DashboardLayout>
   );
