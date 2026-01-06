@@ -16,7 +16,16 @@ import Audit from "./pages/Audit";
 import { ProtectedRoute } from "./components/layout/protected-route";
 import { PublicRoute } from "./components/layout/public-route";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
