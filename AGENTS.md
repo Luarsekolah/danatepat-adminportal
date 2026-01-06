@@ -7,7 +7,7 @@ While the starter comes with a express server, only create endpoint when strictl
 ## Tech Stack
 
 - **PNPM**: Prefer pnpm
-- **Frontend**: React 18 + React Router 6 (spa) + TypeScript + Vite + TailwindCSS 3
+- **Frontend**: React 18 + React Router 7 (spa) + TypeScript + Vite + TailwindCSS 3
 - **Backend**: Express server integrated with Vite dev server
 - **Testing**: Vitest
 - **UI**: Radix UI + TailwindCSS 3 + Lucide React icons
@@ -29,20 +29,41 @@ shared/                   # Types used by both client & server
 └── api.ts                # Example of how to share api interfaces
 ```
 
-## Key Features
+## Research & Implementation
+
+- When implementing new features, use `context7` MCP to fetch relevant package documentation
+- Review official React, TypeScript, and library docs before coding
+- Understand component patterns and hooks thoroughly before implementation
+- Follow established patterns from the existing codebase
+- Dont't need to create any markdown documentation after the implementation, unless it's a tricky part of the implementation
+
+## Code Formatting
+
+- Avoid nested ternary operators or nested if-else statements as far as possible
+- Prefer `Boolean(value)` over `!!value` for boolean checks
+- For TanStack Query hooks usage, prefer `const anyData = useAnyData()` then `anyData.data`, `anyData.isLoading`, `anyData.error` over `const { data, isLoading, error } = useAnyData()`
+
+## API Integration
+
+- Use Axios for HTTP requests in `client/services/api.ts`
+- Implement TanStack Query query data hooks in `client/services/queries/`
+- Implement TanStack Query mutation data hooks in `client/services/mutations/`
+- Save the API routes name and TanStack Query key in `client/services/api-config.ts`
+- Follow the established API configuration patterns
+- Use proper error handling with the error utilities
 
 ## SPA Routing System
 
 The routing system is powered by React Router 6:
 
 - `client/pages/Index.tsx` represents the home page.
-- Routes are defined in `client/App.tsx` using the `react-router-dom` import
+- Routes are defined in `client/App.tsx` using the `react-router` import
 - Route files are located in the `client/pages/` directory
 
 For example, routes can be defined with:
 
 ```typescript
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router";
 
 <Routes>
   <Route path="/" element={<Index />} />

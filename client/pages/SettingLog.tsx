@@ -173,7 +173,7 @@ const SettingLog: React.FC = () => {
                 <CardHeader>
                   <CardTitle>Audit Trail Information</CardTitle>
                   <CardDescription>
-                    Gunakan filter audit log untuk penelusuran jejak data dan memastikan transparansi penuh dalam setiap transaksi yang terjadi di platform Dana Tepat.
+                    Gunakan filter audit log untuk penelusuran jejak data dan memastikan transparansi penuh dalam setiap transaksi yang terjadi di platform Presidana.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
