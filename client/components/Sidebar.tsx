@@ -16,10 +16,18 @@ const menuItems = [
     label: "MENU UTAMA",
     items: [
       { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-      { name: "Program Management", icon: Briefcase, path: "/programs" },
-      { name: "Merchant Management", icon: Store, path: "/merchants" },
-      { name: "Audit Explorer", icon: Search, path: "/audit" },
-      { name: "User & Role Management", icon: Users, path: "/users" },
+      {
+        name: "Program Management",
+        icon: Briefcase,
+        path: "/dashboard/programs",
+      },
+      {
+        name: "Merchant Management",
+        icon: Store,
+        path: "/dashboard/merchants",
+      },
+      { name: "Audit Explorer", icon: Search, path: "/dashboard/audit" },
+      { name: "User & Role Management", icon: Users, path: "/dashboard/users" },
     ],
   },
   {
@@ -54,10 +62,7 @@ export function Sidebar() {
             </h3>
             <div className="space-y-1">
               {group.items.map((item) => {
-                const isActive =
-                  location.pathname === item.path ||
-                  (item.path !== "/" &&
-                    location.pathname.startsWith(item.path));
+                const isActive = location.pathname === item.path;
                 return (
                   <Link
                     key={item.name}
