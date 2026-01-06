@@ -35,7 +35,9 @@ import {
   useGetKotaList,
 } from "@/services/queries/merchant";
 import type { ListMerchantQuery } from "@/services/schemas/merchant";
+import type { MerchantData } from "@/types/base";
 import { AddMerchantDialog } from "@/components/AddMerchantDialog";
+import { ViewMerchantDialog } from "@/components/ViewMerchantDialog";
 
 const statConfig = [
   {
@@ -99,6 +101,9 @@ export default function Merchants() {
   const [selectedKota, setSelectedKota] = React.useState<string>("all");
   const [currentPage, setCurrentPage] = React.useState(0);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = React.useState(false);
+  const [selectedMerchant, setSelectedMerchant] =
+    React.useState<MerchantData | null>(null);
   const itemsPerPage = 10;
 
   const filters: ListMerchantQuery = React.useMemo(
@@ -368,44 +373,17 @@ export default function Merchants() {
                         -
                       </td>
                       <td className="px-6 py-5">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center">
                           <button
+                            onClick={() => {
+                              setSelectedMerchant(merchant);
+                              setViewDialogOpen(true);
+                            }}
                             className="p-2 text-[#1E6CF6] hover:bg-blue-50 rounded-lg transition-all"
                             title="View"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
-                          {merchant.status === "VERIFIKASI" ? (
-                            <>
-                              <button
-                                className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all"
-                                title="Approve"
-                              >
-                                <Check className="w-4 h-4" />
-                              </button>
-                              <button
-                                className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
-                                title="Reject"
-                              >
-                                <X className="w-4 h-4" />
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button
-                                className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all"
-                                title="Edit"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </button>
-                              <button
-                                className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
-                                title="Delete"
-                              >
-                                <MoreVertical className="w-4 h-4" />
-                              </button>
-                            </>
-                          )}
                         </div>
                       </td>
                     </tr>
@@ -491,6 +469,13 @@ export default function Merchants() {
           setCurrentPage(0);
           merchantsQuery.refetch?.();
         }}
+      />
+
+      {/* View Merchant Dialog */}
+      <ViewMerchantDialog
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+        merchant={selectedMerchant}
       />
     </DashboardLayout>
   );
