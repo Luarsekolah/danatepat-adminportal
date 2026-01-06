@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/SettingLog";
 import Audit from "./pages/Audit";
 import { ProtectedRoute } from "./components/layout/protected-route";
+import { PublicRoute } from "./components/layout/public-route";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +33,9 @@ const App = () => (
             <Route path="users" element={<Users />} />
             <Route path="settings" element={<Settings />} />
           </Route>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<PublicRoute />}>
+            <Route index element={<Login />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
