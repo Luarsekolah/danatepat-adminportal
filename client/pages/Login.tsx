@@ -31,17 +31,11 @@ export default function Login() {
     setError,
   } = useForm<LoginPayload>({
     resolver: zodResolver(loginPayloadSchema),
-    mode: "onBlur",
-    defaultValues: {
-      email: "admin@danatepat.id",
-      password: "password123",
-    },
   });
 
   const loginMutation = useLogin(setError);
 
   const onSubmit = (data: LoginPayload) => {
-    console.log("data", data);
     loginMutation.mutate(data);
   };
 
@@ -60,7 +54,7 @@ export default function Login() {
             </div>
           </div>
           <h1 className="text-4xl font-extrabold mb-6 tracking-tight leading-tight">
-            Dashboard DANA TEPAT
+            Dashboard Presidana
           </h1>
           <p className="text-lg text-white/80 mb-12 leading-relaxed font-medium">
             Platform administrasi berbasis blockchain untuk transparansi dan
@@ -94,13 +88,13 @@ export default function Login() {
               <Layers className="w-8 h-8" />
             </div>
             <span className="text-2xl font-black text-slate-800 tracking-tighter">
-              DANA TEPAT
+              Presidana
             </span>
           </div>
 
           <div className="space-y-3 mb-10 text-center">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              Masuk ke Dashboard DANA TEPAT
+              Masuk ke Dashboard Presidana
             </h2>
             <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[320px] mx-auto">
               Kelola program bantuan sosial dengan transparansi blockchain
