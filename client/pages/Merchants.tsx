@@ -264,9 +264,6 @@ export default function Merchants() {
             <table className="w-full min-w-max text-left">
               <thead>
                 <tr className="bg-slate-50/50">
-                  <th className="px-6 py-4 w-12 text-center">
-                    <Checkbox className="rounded-md border-slate-300" />
-                  </th>
                   <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Merchant
                   </th>
@@ -321,9 +318,6 @@ export default function Merchants() {
                       key={merchant.userId}
                       className="hover:bg-slate-50/30 transition-colors"
                     >
-                      <td className="px-6 py-5 w-12 text-center">
-                        <Checkbox className="rounded-md border-slate-300" />
-                      </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
