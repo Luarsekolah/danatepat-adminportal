@@ -35,7 +35,7 @@ function apiCreator(baseUrl: string) {
           typeof window !== "undefined" &&
           window.location.pathname.startsWith("/dashboard")
         ) {
-          window.location.href = env.VITE_APP_BASE_URL;
+          window.location.href = env.VITE_APP_BASE_URL || "/";
         }
       }
       // Return the full error object, not just error.response

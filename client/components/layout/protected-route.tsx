@@ -10,7 +10,7 @@ export const ProtectedRoute = () => {
   if (!isAuthenticated) {
     clearAuth();
     if (location.pathname.startsWith("/dashboard")) {
-      window.location.href = env.VITE_APP_BASE_URL;
+      window.location.href = env.VITE_APP_BASE_URL || "/";
     }
     return null;
   }
