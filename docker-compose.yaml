@@ -1,0 +1,11 @@
+services:
+  presidana-admin:
+    build:
+      context: .
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
+    image: itluarsekolah/presidana-admin:dev
+    container_name: presidana-admin
+    ports:
+      - "5173:80"
