@@ -191,7 +191,7 @@ export default function Programs() {
                   <stat.icon className="w-6 h-6" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-3xl font-extrabold text-slate-900">
+                  <p className="text-xl font-bold text-slate-900">
                     {stat.value}
                   </p>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
