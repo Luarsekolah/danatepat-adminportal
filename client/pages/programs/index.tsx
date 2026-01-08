@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { DashboardLayout } from "@/components/Layout";
 import {
   Plus,
@@ -51,6 +52,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function Programs() {
+  const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState<
     "all" | "DRAFT" | "ACTIVE"
   >("all");
@@ -310,7 +312,12 @@ export default function Programs() {
                               </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem className="cursor-pointer">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(`/dashboard/programs/${program.id}`)
+                                }
+                                className="cursor-pointer"
+                              >
                                 <Wallet className="size-4 mr-2" />
                                 Subprogram
                               </DropdownMenuItem>

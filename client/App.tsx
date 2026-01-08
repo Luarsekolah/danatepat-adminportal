@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Index from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Programs from "./pages/programs";
+import ProgramDetail from "./pages/programs/detail";
 import Merchants from "./pages/Merchants";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="dashboard" element={<ProtectedRoute />}>
             <Route index element={<Index />} />
             <Route path="programs" element={<Programs />} />
+            <Route path="programs/:programId" element={<ProgramDetail />} />
             <Route path="merchants" element={<Merchants />} />
             <Route path="audit" element={<Audit />} />
             <Route path="users" element={<Users />} />

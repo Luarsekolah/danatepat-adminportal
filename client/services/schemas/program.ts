@@ -68,14 +68,18 @@ export const createSubProgramPayloadSchema = z.object({
   description: z
     .string({ message: "Deskripsi harus diisi" })
     .min(1, { message: "Deskripsi harus diisi" }),
-  expTokenDate: z.string().optional(),
+  expTokenDate: z.date().optional(),
   anggaran: z
     .number({ message: "Anggaran harus berupa angka" })
     .positive({ message: "Anggaran harus lebih dari 0" }),
   dailyAllocationAmount: z
     .number({ message: "Alokasi harian harus berupa angka" })
     .positive({ message: "Alokasi harian harus lebih dari 0" }),
-  maxTrxPerDay: z.number().int().positive().optional(),
+  maxTrxPerDay: z
+    .number()
+    .or(z.nan())
+    .transform((val) => (Number.isNaN(val) ? undefined : val))
+    .optional(),
   kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
     message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
   }),
