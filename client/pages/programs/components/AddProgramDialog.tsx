@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import {
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DatePickerInput } from "@/components/ui/calendar";
 import { useCreateProgram } from "@/services/mutations/program";
 import {
   createProgramPayloadSchema,
@@ -38,7 +39,7 @@ export function AddProgramDialog({
     },
   });
 
-  const { register, handleSubmit, formState, reset } =
+  const { register, handleSubmit, formState, reset, control, watch } =
     useForm<CreateProgramPayload>({
       resolver: zodResolver(createProgramPayloadSchema),
       defaultValues: {
@@ -46,10 +47,11 @@ export function AddProgramDialog({
         description: "",
         startDate: "",
         endDate: "",
-        dailyAllocationAmount: 0,
-        currencyTokenName: "",
+        anggaran: 0,
       },
     });
+
+  const startDate = watch("startDate");
 
   const onSubmit = (data: CreateProgramPayload) => {
     createMutation.mutate(data);
@@ -108,11 +110,20 @@ export function AddProgramDialog({
               <Label htmlFor="startDate" className="text-sm font-bold">
                 Tanggal Mulai
               </Label>
-              <Input
-                id="startDate"
-                type="date"
-                className="h-9 border-slate-200"
-                {...register("startDate")}
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePickerInput
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                    }}
+                    placeholder="Pilih tanggal"
+                    displayFormat="dd MMMM yyyy"
+                    variant="outline"
+                  />
+                )}
               />
               {formState.errors.startDate && (
                 <p className="text-xs text-red-500">
@@ -125,11 +136,26 @@ export function AddProgramDialog({
               <Label htmlFor="endDate" className="text-sm font-bold">
                 Tanggal Akhir
               </Label>
-              <Input
-                id="endDate"
-                type="date"
-                className="h-9 border-slate-200"
-                {...register("endDate")}
+              <Controller
+                control={control}
+                name="endDate"
+                render={({ field }) => (
+                  <DatePickerInput
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                    }}
+                    placeholder="Pilih tanggal"
+                    displayFormat="dd MMMM yyyy"
+                    size="default"
+                    variant="outline"
+                    disabled={(date) => {
+                      if (!startDate) return false;
+                      const start = new Date(startDate);
+                      return date < start;
+                    }}
+                  />
+                )}
               />
               {formState.errors.endDate && (
                 <p className="text-xs text-red-500">
@@ -139,47 +165,25 @@ export function AddProgramDialog({
             </div>
           </div>
 
-          {/* Token Name and Daily Amount Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="currencyTokenName" className="text-sm font-bold">
-                Token Name
-              </Label>
-              <Input
-                id="currencyTokenName"
-                placeholder="e.g., SEMBAKO_TOKEN"
-                className="h-9 border-slate-200 uppercase"
-                {...register("currencyTokenName")}
-              />
-              {formState.errors.currencyTokenName && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.currencyTokenName.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label
-                htmlFor="dailyAllocationAmount"
-                className="text-sm font-bold"
-              >
-                Dana Harian (IDR)
-              </Label>
-              <Input
-                id="dailyAllocationAmount"
-                type="number"
-                placeholder="0"
-                className="h-9 border-slate-200"
-                {...register("dailyAllocationAmount", {
-                  valueAsNumber: true,
-                })}
-              />
-              {formState.errors.dailyAllocationAmount && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.dailyAllocationAmount.message}
-                </p>
-              )}
-            </div>
+          {/* Anggaran */}
+          <div className="space-y-1.5">
+            <Label htmlFor="anggaran" className="text-sm font-bold">
+              Anggaran (IDR)
+            </Label>
+            <Input
+              id="anggaran"
+              type="number"
+              placeholder="0"
+              className="h-9 border-slate-200"
+              {...register("anggaran", {
+                valueAsNumber: true,
+              })}
+            />
+            {formState.errors.anggaran && (
+              <p className="text-xs text-red-500">
+                {formState.errors.anggaran.message}
+              </p>
+            )}
           </div>
 
           {/* Form Actions */}
