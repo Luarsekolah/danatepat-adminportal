@@ -219,7 +219,7 @@ export function AddSubProgramDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="maxTrxPerDay" className="text-sm font-bold">
-                Max Transaksi Per Hari (Opsional)
+                Max Transaksi Per Hari
               </Label>
               <Input
                 id="maxTrxPerDay"

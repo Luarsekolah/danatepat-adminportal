@@ -76,10 +76,8 @@ export const createSubProgramPayloadSchema = z.object({
     .number({ message: "Alokasi harian harus berupa angka" })
     .positive({ message: "Alokasi harian harus lebih dari 0" }),
   maxTrxPerDay: z
-    .number()
-    .or(z.nan())
-    .transform((val) => (Number.isNaN(val) ? undefined : val))
-    .optional(),
+    .number({ message: "Maksimal transaksi per hari harus berupa angka" })
+    .positive({ message: "Maksimal transaksi per hari harus lebih dari 0" }),
   kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
     message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
   }),
