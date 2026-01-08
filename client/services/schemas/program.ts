@@ -10,24 +10,29 @@ import type {
  * Create Program request payload schema
  * Validates all required fields for creating a new program
  */
-export const createProgramPayloadSchema = z.object({
-  name: z
-    .string({ message: "Nama program harus berisi nilai" })
-    .min(1, { message: "Nama program harus diisi" })
-    .min(3, { message: "Nama program minimal 3 karakter" }),
-  description: z
-    .string({ message: "Deskripsi harus berisi nilai" })
-    .min(1, { message: "Deskripsi harus diisi" }),
-  startDate: z
-    .string({ message: "Tanggal mulai harus berisi nilai" })
-    .min(1, { message: "Tanggal mulai harus diisi" }),
-  endDate: z
-    .string({ message: "Tanggal akhir harus berisi nilai" })
-    .min(1, { message: "Tanggal akhir harus diisi" }),
-  anggaran: z
-    .number({ message: "Anggaran harus berupa angka" })
-    .positive({ message: "Anggaran harus lebih dari 0" }),
-});
+export const createProgramPayloadSchema = z
+  .object({
+    name: z
+      .string({ message: "Nama program harus diisi" })
+      .min(1, { message: "Nama program harus diisi" })
+      .min(3, { message: "Nama program minimal 3 karakter" }),
+    description: z
+      .string({ message: "Deskripsi harus diisi" })
+      .min(1, { message: "Deskripsi harus diisi" }),
+    startDate: z
+      .string({ message: "Tanggal mulai harus diisi" })
+      .min(1, { message: "Tanggal mulai harus diisi" }),
+    endDate: z
+      .string({ message: "Tanggal akhir harus diisi" })
+      .min(1, { message: "Tanggal akhir harus diisi" }),
+    anggaran: z
+      .number({ message: "Anggaran harus berupa angka" })
+      .positive({ message: "Anggaran harus lebih dari 0" }),
+  })
+  .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
+    message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",
+    path: ["endDate"],
+  });
 
 /**
  * Update Program request payload schema
@@ -58,10 +63,10 @@ export const listProgramQuerySchema = z
  */
 export const createSubProgramPayloadSchema = z.object({
   name: z
-    .string({ message: "Nama sub program harus berisi nilai" })
+    .string({ message: "Nama sub program harus diisi" })
     .min(1, { message: "Nama sub program harus diisi" }),
   description: z
-    .string({ message: "Deskripsi harus berisi nilai" })
+    .string({ message: "Deskripsi harus diisi" })
     .min(1, { message: "Deskripsi harus diisi" }),
   expTokenDate: z.string().optional(),
   anggaran: z
