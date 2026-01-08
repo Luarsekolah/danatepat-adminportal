@@ -54,6 +54,32 @@ export const registerMerchantPayloadSchema = z.object({
 });
 
 /**
+ * Bulk merchant registration item schema
+ * Optional fields for bulk registration
+ */
+export const bulkMerchantItemSchema = z.object({
+  email: z.string().min(1),
+  fullName: z.string().min(1),
+  phoneNumber: z.string().min(1),
+  nik: z.string().min(1),
+  blockchainWalletAddress: z.string().optional(),
+  businessName: z.string().min(1),
+  bankName: z.string().min(1),
+  bankAccountNumber: z.string().min(1),
+  kategori: z.string().min(1),
+  alamat: z.string().optional(),
+  latlon: z.string().optional(),
+});
+
+/**
+ * Bulk merchant registration payload schema
+ * Array of merchant data for bulk creation with program
+ */
+export const bulkRegisterMerchantPayloadSchema = z.array(
+  bulkMerchantItemSchema,
+);
+
+/**
  * Set merchant wilayah (territory) payload schema
  * Validates merchant operational area
  */
@@ -85,6 +111,10 @@ export const listMerchantQuerySchema = z
 export type RegisterMerchantPayload = z.infer<
   typeof registerMerchantPayloadSchema
 >;
+export type BulkMerchantItem = z.infer<typeof bulkMerchantItemSchema>;
+export type BulkRegisterMerchantPayload = z.infer<
+  typeof bulkRegisterMerchantPayloadSchema
+>;
 export type SetMerchantWilayahPayload = z.infer<
   typeof setMerchantWilayahPayloadSchema
 >;
@@ -92,6 +122,7 @@ export type ListMerchantQuery = z.infer<typeof listMerchantQuerySchema>;
 
 // Response type exports
 export type RegisterMerchantResponse = ApiResponse<MerchantData>;
+export type BulkRegisterMerchantResponse = ApiResponse<Record<string, unknown>>;
 export type GetMerchantProfilesResponse = ApiResponse<{
   content: MerchantData[];
   pageable: Record<string, unknown>;

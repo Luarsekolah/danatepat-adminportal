@@ -45,6 +45,8 @@ export const routes = {
   merchant: {
     profiles: "/merchant/api/merchant/profiles",
     register: "/merchant/api/merchant/register",
+    bulkRegisterWithProgram: (programId: number) =>
+      `/merchant/api/merchant/register/bulk-program/${programId}`,
     summary: "/merchant/api/merchant/summary",
     kota: "/merchant/api/merchant/kota",
     kecamatan: (idKota: string) => `/merchant/api/merchant/kecamatan/${idKota}`,
