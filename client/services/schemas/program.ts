@@ -15,26 +15,32 @@ export const createProgramPayloadSchema = z.object({
     .string({ message: "Nama program harus berisi nilai" })
     .min(1, { message: "Nama program harus diisi" })
     .min(3, { message: "Nama program minimal 3 karakter" }),
-  description: z.string().optional(),
+  description: z
+    .string({ message: "Deskripsi harus berisi nilai" })
+    .min(1, { message: "Deskripsi harus diisi" }),
   startDate: z
     .string({ message: "Tanggal mulai harus berisi nilai" })
     .min(1, { message: "Tanggal mulai harus diisi" }),
   endDate: z
     .string({ message: "Tanggal akhir harus berisi nilai" })
     .min(1, { message: "Tanggal akhir harus diisi" }),
-  dailyAllocationAmount: z
-    .number({ message: "Jumlah alokasi harian harus berupa angka" })
-    .positive({ message: "Jumlah alokasi harian harus lebih dari 0" }),
-  currencyTokenName: z
-    .string({ message: "Nama token harus berisi nilai" })
-    .min(1, { message: "Nama token harus diisi" }),
+  anggaran: z
+    .number({ message: "Anggaran harus berupa angka" })
+    .positive({ message: "Anggaran harus lebih dari 0" }),
 });
 
 /**
  * Update Program request payload schema
  */
-export const updateProgramPayloadSchema = createProgramPayloadSchema.extend({
-  status: z.enum(["DRAFT", "ACTIVE"]).optional(),
+export const updateProgramPayloadSchema = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
+  programManagerId: z.number().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  dailyAllocationAmount: z.number().positive().optional(),
+  currencyTokenName: z.string().optional(),
+  status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
 });
 
 /**
@@ -42,16 +48,54 @@ export const updateProgramPayloadSchema = createProgramPayloadSchema.extend({
  */
 export const listProgramQuerySchema = z
   .object({
-    status: z.enum(["DRAFT", "ACTIVE"]).optional(),
+    status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
   })
   .strict();
+
+/**
+ * Create Sub Program request payload schema
+ * For creating children programs under a parent program
+ */
+export const createSubProgramPayloadSchema = z.object({
+  name: z
+    .string({ message: "Nama sub program harus berisi nilai" })
+    .min(1, { message: "Nama sub program harus diisi" }),
+  description: z
+    .string({ message: "Deskripsi harus berisi nilai" })
+    .min(1, { message: "Deskripsi harus diisi" }),
+  expTokenDate: z.string().optional(),
+  anggaran: z
+    .number({ message: "Anggaran harus berupa angka" })
+    .positive({ message: "Anggaran harus lebih dari 0" }),
+  dailyAllocationAmount: z
+    .number({ message: "Alokasi harian harus berupa angka" })
+    .positive({ message: "Alokasi harian harus lebih dari 0" }),
+  maxTrxPerDay: z.number().int().positive().optional(),
+  kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
+    message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
+  }),
+});
+
+/**
+ * Array of sub programs for bulk creation
+ */
+export const createSubProgramsPayloadSchema = z.array(
+  createSubProgramPayloadSchema,
+);
 
 // Type exports
 export type CreateProgramPayload = z.infer<typeof createProgramPayloadSchema>;
 export type UpdateProgramPayload = z.infer<typeof updateProgramPayloadSchema>;
 export type ListProgramQuery = z.infer<typeof listProgramQuerySchema>;
+export type CreateSubProgramPayload = z.infer<
+  typeof createSubProgramPayloadSchema
+>;
+export type CreateSubProgramsPayload = z.infer<
+  typeof createSubProgramsPayloadSchema
+>;
 export type CreateProgramResponse = ApiResponse<ProgramData>;
 export type UpdateProgramResponse = ApiResponse<ProgramData>;
+export type CreateSubProgramsResponse = ApiResponse<ProgramData[]>;
 export type ListProgramResponse = ApiResponse<ProgramData[]>;
 export type GetProgramResponse = ApiResponse<ProgramData>;
 export type ProgramDashboardResponse = ApiResponse<ProgramDashboard>;

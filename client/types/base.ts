@@ -90,9 +90,14 @@ export interface ProgramData {
   programManagerId: number;
   startDate: string;
   endDate: string;
-  dailyAllocationAmount: number;
+  anggaran?: number;
+  dailyAllocationAmount?: number;
   currencyTokenName: string;
-  status: "DRAFT" | "ACTIVE";
+  status: "DRAFT" | "ACTIVE" | "INACTIVE";
+  kategori?: string | null;
+  parentProgram?: ProgramData | null;
+  expTokenDate?: string;
+  maxTrxPerDay?: number;
 }
 
 /**

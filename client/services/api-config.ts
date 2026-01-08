@@ -39,6 +39,8 @@ export const routes = {
     detail: (id: number) => `/program/api/programs/${id}`,
     update: (id: number) => `/program/api/programs/${id}`,
     dashboard: "/program/api/programs/dashboard",
+    createChildren: (parentId: number) =>
+      `/program/api/programs/${parentId}/children`,
   },
   merchant: {
     profiles: "/merchant/api/merchant/profiles",
