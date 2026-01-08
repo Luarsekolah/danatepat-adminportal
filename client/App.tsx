@@ -15,6 +15,7 @@ import Settings from "./pages/SettingLog";
 import Audit from "./pages/Audit";
 import { ProtectedRoute } from "./components/layout/protected-route";
 import { PublicRoute } from "./components/layout/public-route";
+import ProgramMerchant from "./pages/programs/merchant";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +38,10 @@ const App = () => (
             <Route index element={<Index />} />
             <Route path="programs" element={<Programs />} />
             <Route path="programs/:programId" element={<ProgramDetail />} />
+            <Route
+              path="programs/merchant/:programId"
+              element={<ProgramMerchant />}
+            />
             <Route path="merchants" element={<Merchants />} />
             <Route path="audit" element={<Audit />} />
             <Route path="users" element={<Users />} />

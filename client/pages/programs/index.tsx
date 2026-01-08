@@ -321,7 +321,14 @@ export default function Programs() {
                                 <Wallet className="size-4 mr-2" />
                                 Subprogram
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="cursor-pointer">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/programs/merchant/${program.id}`,
+                                  )
+                                }
+                                className="cursor-pointer"
+                              >
                                 <Store className="size-4 mr-2" />
                                 Daftar Merchant
                               </DropdownMenuItem>
