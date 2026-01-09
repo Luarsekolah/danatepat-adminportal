@@ -48,7 +48,7 @@ export const registerMerchantPayloadSchema = z.object({
   bankAccountNumber: z
     .string({ message: "Nomor rekening harus diisi" })
     .min(1, { message: "Nomor rekening harus diisi" }),
-  kategori: z.enum(["PANGAN"], {
+  kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
     message: "Kategori harus diisi",
   }),
 });
@@ -66,7 +66,7 @@ export const bulkMerchantItemSchema = z.object({
   businessName: z.string().min(1),
   bankName: z.string().min(1),
   bankAccountNumber: z.string().min(1),
-  kategori: z.string().min(1),
+  kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"]),
   alamat: z.string().optional(),
   latlon: z.string().optional(),
 });
