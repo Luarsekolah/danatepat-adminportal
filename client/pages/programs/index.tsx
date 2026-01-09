@@ -332,7 +332,14 @@ export default function Programs() {
                                 <Store className="size-4 mr-2" />
                                 Daftar Merchant
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="cursor-pointer">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/programs/beneficiary/${program.id}`,
+                                  )
+                                }
+                                className="cursor-pointer"
+                              >
                                 <Users className="size-4 mr-2" />
                                 Penerima Dana
                               </DropdownMenuItem>

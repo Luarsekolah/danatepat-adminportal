@@ -8,6 +8,7 @@ import Index from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Programs from "./pages/programs";
 import ProgramDetail from "./pages/programs/detail";
+import ProgramBeneficiary from "./pages/programs/beneficiary";
 import Merchants from "./pages/Merchants";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,10 @@ const App = () => (
             <Route
               path="programs/merchant/:programId"
               element={<ProgramMerchant />}
+            />
+            <Route
+              path="programs/beneficiary/:programId"
+              element={<ProgramBeneficiary />}
             />
             <Route path="merchants" element={<Merchants />} />
             <Route path="audit" element={<Audit />} />
