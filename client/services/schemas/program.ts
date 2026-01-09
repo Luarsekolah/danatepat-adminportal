@@ -100,9 +100,30 @@ export type CreateSubProgramPayload = z.infer<
 export type CreateSubProgramsPayload = z.infer<
   typeof createSubProgramsPayloadSchema
 >;
+// Response type exports
 export type CreateProgramResponse = ApiResponse<ProgramData>;
 export type UpdateProgramResponse = ApiResponse<ProgramData>;
 export type CreateSubProgramsResponse = ApiResponse<ProgramData[]>;
 export type ListProgramResponse = ApiResponse<ProgramData[]>;
 export type GetProgramResponse = ApiResponse<ProgramData>;
 export type ProgramDashboardResponse = ApiResponse<ProgramDashboard>;
+export type ListProgramChildrenResponse = ApiResponse<ProgramData[]>;
+
+/**
+ * Program users response types
+ */
+export interface ProgramUser {
+  id: number;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
+  role: "BENEFICIARY" | "MERCHANT";
+  status: string;
+}
+
+export interface ProgramUsersData {
+  beneficiaries: ProgramUser[];
+  merchants: ProgramUser[];
+}
+
+export type ListProgramUsersResponse = ApiResponse<ProgramUsersData>;

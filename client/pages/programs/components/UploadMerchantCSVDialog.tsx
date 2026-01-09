@@ -21,6 +21,7 @@ interface UploadMerchantCSVDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   programId: number;
+  expectedCategory?: "PANGAN" | "KESEHATAN" | "PENDIDIKAN";
   onSuccess?: () => void;
 }
 
@@ -34,6 +35,7 @@ export function UploadMerchantCSVDialog({
   open,
   onOpenChange,
   programId,
+  expectedCategory,
   onSuccess,
 }: UploadMerchantCSVDialogProps) {
   const [file, setFile] = useState<File | null>(null);
@@ -111,10 +113,23 @@ export function UploadMerchantCSVDialog({
             const validation = bulkMerchantItemSchema.safeParse(row);
 
             if (validation.success) {
+              const data = validation.data;
+              const errors: string[] = [];
+
+              // Additional validation: check if category matches expected category
+              if (expectedCategory && data.kategori !== expectedCategory) {
+                errors.push(
+                  `kategori: Harus "${expectedCategory}" sesuai dengan sub-program yang dipilih`,
+                );
+              }
+
+              const isValid = errors.length === 0;
+
               return {
-                ...validation.data,
+                ...data,
                 _rowNumber: index + 2, // +2 because of header and 0-based index
-                _isValid: true,
+                _isValid: isValid,
+                _errors: isValid ? undefined : errors,
               };
             } else {
               const errors = validation.error.issues.map(
@@ -178,7 +193,7 @@ export function UploadMerchantCSVDialog({
         businessName: "Warung Makan Sederhana",
         bankName: "BCA",
         bankAccountNumber: "1234567890",
-        kategori: "PANGAN",
+        kategori: expectedCategory || "PANGAN",
         alamat: "Jl. Raya No. 1",
         latlon: "-6.200000,106.816666",
       },
@@ -214,10 +229,26 @@ export function UploadMerchantCSVDialog({
           <DialogDescription>
             Upload file CSV untuk mendaftarkan merchant secara massal ke program
             ini
+            {expectedCategory && (
+              <span className="block mt-2 font-medium text-blue-600">
+                Kategori yang diharapkan: {expectedCategory}
+              </span>
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Category Info */}
+          {expectedCategory && (
+            <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+              <p className="text-xs text-amber-900">
+                <strong>Penting:</strong> Semua merchant dalam CSV harus
+                memiliki kategori <strong>{expectedCategory}</strong>
+              </p>
+            </div>
+          )}
+
           {/* Download Template */}
           <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex-1">

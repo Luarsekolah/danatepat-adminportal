@@ -83,8 +83,8 @@ export default function ProgramBeneficiary() {
           </div>
 
           {/* Table */}
-          <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
-            <table className="w-full">
+          <div className="overflow-x-auto border border-slate-200 rounded-lg overflow-hidden bg-white">
+            <table className="w-full min-w-max">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-3 text-left">

@@ -13,6 +13,12 @@ export const queryKeys = {
     details: () => [...queryKeys.programs.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.programs.details(), id] as const,
     dashboard: () => [...queryKeys.programs.all, "dashboard"] as const,
+    children: () => [...queryKeys.programs.all, "children"] as const,
+    childrenList: (parentId: number) =>
+      [...queryKeys.programs.children(), parentId] as const,
+    users: () => [...queryKeys.programs.all, "users"] as const,
+    usersList: (programId: number) =>
+      [...queryKeys.programs.users(), programId] as const,
   },
   merchants: {
     all: ["merchants"] as const,
@@ -41,6 +47,10 @@ export const routes = {
     dashboard: "/program/api/programs/dashboard",
     createChildren: (parentId: number) =>
       `/program/api/programs/${parentId}/children`,
+    listChildren: (parentId: number) =>
+      `/program/api/programs/${parentId}/children`,
+    listUsers: (programId: number) =>
+      `/program/api/programs/${programId}/users`,
   },
   merchant: {
     profiles: "/merchant/api/merchant/profiles",
