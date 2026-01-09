@@ -19,12 +19,8 @@ export const createProgramPayloadSchema = z
     description: z
       .string({ message: "Deskripsi harus diisi" })
       .min(1, { message: "Deskripsi harus diisi" }),
-    startDate: z
-      .string({ message: "Tanggal mulai harus diisi" })
-      .min(1, { message: "Tanggal mulai harus diisi" }),
-    endDate: z
-      .string({ message: "Tanggal akhir harus diisi" })
-      .min(1, { message: "Tanggal akhir harus diisi" }),
+    startDate: z.date("Tanggal mulai harus diisi"),
+    endDate: z.date("Tanggal akhir harus diisi"),
     anggaran: z
       .number({ message: "Anggaran harus berupa angka" })
       .positive({ message: "Anggaran harus lebih dari 0" }),
