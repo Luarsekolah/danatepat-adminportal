@@ -9,12 +9,9 @@ import {
   CheckCircle2,
   Coins,
   Users,
-  Eye,
-  Edit,
   Briefcase,
   Loader2,
   MoreVertical,
-  Trash2,
   Wallet,
   Store,
   SquarePen,
@@ -352,10 +349,6 @@ export default function Programs() {
                               >
                                 <SquarePen className="size-4 mr-2" />
                                 Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="cursor-pointer text-red-600 hover:bg-red-50">
-                                <Trash2 className="size-4 mr-2" />
-                                Hapus
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
