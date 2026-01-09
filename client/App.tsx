@@ -6,7 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Index from "./pages/Dashboard";
 import Login from "./pages/Login";
-import Programs from "./pages/Programs";
+import Programs from "./pages/programs";
+import ProgramDetail from "./pages/programs/detail";
+import ProgramBeneficiary from "./pages/programs/beneficiary";
 import Merchants from "./pages/Merchants";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
@@ -14,6 +16,7 @@ import Settings from "./pages/SettingLog";
 import Audit from "./pages/Audit";
 import { ProtectedRoute } from "./components/layout/protected-route";
 import { PublicRoute } from "./components/layout/public-route";
+import ProgramMerchant from "./pages/programs/merchant";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +38,15 @@ const App = () => (
           <Route path="dashboard" element={<ProtectedRoute />}>
             <Route index element={<Index />} />
             <Route path="programs" element={<Programs />} />
+            <Route path="programs/:programId" element={<ProgramDetail />} />
+            <Route
+              path="programs/merchant/:programId"
+              element={<ProgramMerchant />}
+            />
+            <Route
+              path="programs/beneficiary/:programId"
+              element={<ProgramBeneficiary />}
+            />
             <Route path="merchants" element={<Merchants />} />
             <Route path="audit" element={<Audit />} />
             <Route path="users" element={<Users />} />

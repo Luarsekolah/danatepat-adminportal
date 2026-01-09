@@ -5,10 +5,63 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { toast } from "sonner";
 import type {
   RegisterMerchantPayload,
+  BulkRegisterMerchantPayload,
   SetMerchantWilayahPayload,
   RegisterMerchantResponse,
+  BulkRegisterMerchantResponse,
   SetMerchantWilayahResponse,
 } from "@/services/schemas/merchant";
+
+/**
+ * Hook for bulk registering merchants with a program
+ * Creates multiple merchant accounts associated with a program
+ *
+ * @example
+ * const { mutate, isPending } = useBulkRegisterMerchantWithProgram(123, {
+ *   onSuccess: () => {
+ *     queryClient.invalidateQueries({ queryKey: ['merchants'] });
+ *   }
+ * });
+ * mutate([{ email: 'test@test.com', fullName: 'Test', ... }]);
+ */
+export function useBulkRegisterMerchantWithProgram(
+  programId: number,
+  options?: Omit<
+    UseMutationOptions<
+      BulkRegisterMerchantResponse,
+      Error,
+      BulkRegisterMerchantPayload
+    >,
+    "mutationFn"
+  >,
+) {
+  return useMutation<
+    BulkRegisterMerchantResponse,
+    Error,
+    BulkRegisterMerchantPayload
+  >({
+    mutationFn: async (payload) => {
+      const res = await mainApi.post(
+        routes.merchant.bulkRegisterWithProgram(programId),
+        payload,
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Merchant berhasil terdaftar secara masal!", {
+        description:
+          data.message || "Semua merchant telah ditambahkan ke program",
+      });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast.error("Gagal mendaftarkan merchant secara masal", {
+        description: errorMessage,
+      });
+    },
+    ...options,
+  });
+}
 
 /**
  * Hook for registering a new merchant

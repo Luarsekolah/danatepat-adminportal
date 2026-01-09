@@ -9,6 +9,10 @@ import type {
   UpdateProgramPayload,
   UpdateProgramResponse,
 } from "@/types/program";
+import type {
+  CreateSubProgramsPayload,
+  CreateSubProgramsResponse,
+} from "../schemas/program";
 
 /**
  * Hook for creating a new program
@@ -79,6 +83,56 @@ export function useUpdateProgram(
     onError: (error) => {
       const errorMessage = getErrorMessage(error);
       toast.error("Gagal memperbarui program", {
+        description: errorMessage,
+      });
+    },
+    ...options,
+  });
+}
+
+/**
+ * Hook for creating sub-programs under a parent program
+ *
+ * @example
+ * const { mutate, isPending } = useCreateSubPrograms(1, {
+ *   onSuccess: () => {
+ *     queryClient.invalidateQueries({ queryKey: ['programs'] });
+ *   }
+ * });
+ * mutate([{ name: 'Sub Program', kategori: 'PANGAN', ... }]);
+ */
+export function useCreateSubPrograms(
+  parentProgramId: number,
+  options?: Omit<
+    UseMutationOptions<
+      CreateSubProgramsResponse,
+      Error,
+      CreateSubProgramsPayload
+    >,
+    "mutationFn"
+  >,
+) {
+  return useMutation<
+    CreateSubProgramsResponse,
+    Error,
+    CreateSubProgramsPayload
+  >({
+    mutationFn: async (payload) => {
+      const res = await mainApi.post(
+        routes.program.createChildren(parentProgramId),
+        payload,
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Sub program berhasil dibuat!", {
+        description:
+          data.message || `${data.data.length} sub program telah ditambahkan`,
+      });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast.error("Gagal membuat sub program", {
         description: errorMessage,
       });
     },

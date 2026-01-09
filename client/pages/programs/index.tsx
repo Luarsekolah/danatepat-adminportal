@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { DashboardLayout } from "@/components/Layout";
 import {
   Plus,
@@ -8,12 +9,14 @@ import {
   CheckCircle2,
   Coins,
   Users,
-  Eye,
-  Edit,
   Briefcase,
   Loader2,
+  MoreVertical,
+  Wallet,
+  Store,
+  SquarePen,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -23,12 +26,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   useListProgram,
   useProgramDashboard,
 } from "@/services/queries/program";
-import { AddProgramDialog } from "@/components/AddProgramDialog";
-import { EditProgramDialog } from "@/components/EditProgramDialog";
-import { ViewProgramDialog } from "@/components/ViewProgramDialog";
+import { AddProgramDialog } from "@/pages/programs/components/AddProgramDialog";
+import { EditProgramDialog } from "@/pages/programs/components/EditProgramDialog";
+import { ViewProgramDialog } from "@/pages/programs/components/ViewProgramDialog";
 import { toast } from "sonner";
 import type { ProgramData } from "@/types/base";
 
@@ -40,6 +49,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function Programs() {
+  const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState<
     "all" | "DRAFT" | "ACTIVE"
   >("all");
@@ -230,13 +240,10 @@ export default function Programs() {
                       Nama Program
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Token Name
+                      Donatur
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Dana Harian
-                    </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Periode
+                      Anggaran
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Status
@@ -256,17 +263,16 @@ export default function Programs() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
                             {CATEGORY_ICONS[
-                              program.currencyTokenName?.toUpperCase() ||
-                                "default"
+                              program.kategori?.toUpperCase() || "default"
                             ] || CATEGORY_ICONS.default}
                           </div>
                           <div>
                             <p className="text-sm font-bold text-slate-900">
                               {program.name}
                             </p>
-                            {program.description && (
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate w-48">
-                                {program.description}
+                            {program.startDate && (
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                Mulai: {formatDate(program.startDate)}
                               </p>
                             )}
                           </div>
@@ -274,21 +280,13 @@ export default function Programs() {
                       </td>
                       <td className="px-6 py-5">
                         <p className="text-sm font-bold text-slate-700">
-                          {program.currencyTokenName}
+                          Yayasan Peduli Jakarta
                         </p>
                       </td>
                       <td className="px-6 py-5 text-sm font-bold text-slate-900">
-                        {formatCurrency(program.dailyAllocationAmount)}
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-bold text-slate-400">
-                            Mulai: {formatDate(program.startDate)}
-                          </p>
-                          <p className="text-[10px] font-bold text-slate-400">
-                            Akhir: {formatDate(program.endDate)}
-                          </p>
-                        </div>
+                        {program.anggaran
+                          ? formatCurrency(program.anggaran)
+                          : "—"}
                       </td>
                       <td className="px-6 py-5">
                         <span
@@ -303,26 +301,57 @@ export default function Programs() {
                         </span>
                       </td>
                       <td className="px-6 py-5">
-                        <div className="flex items-center justify-center gap-3">
-                          <button
-                            className="p-2 text-slate-400 hover:text-[#1E6CF6] hover:bg-blue-50 rounded-lg transition-all"
-                            title="View"
-                            onClick={() => {
-                              setSelectedProgram(program);
-                              setViewDialogOpen(true);
-                            }}
-                          >
-                            <Eye className="w-5 h-5" />
-                          </button>
-                          <button
-                            className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all"
-                            onClick={() => {
-                              setSelectedProgram(program);
-                              setEditDialogOpen(true);
-                            }}
-                          >
-                            <Edit className="w-5 h-5" />
-                          </button>
+                        <div className="flex items-center justify-center">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+                                <MoreVertical className="w-5 h-5" />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(`/dashboard/programs/${program.id}`)
+                                }
+                                className="cursor-pointer"
+                              >
+                                <Wallet className="size-4 mr-2" />
+                                Subprogram
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/programs/merchant/${program.id}`,
+                                  )
+                                }
+                                className="cursor-pointer"
+                              >
+                                <Store className="size-4 mr-2" />
+                                Daftar Merchant
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/programs/beneficiary/${program.id}`,
+                                  )
+                                }
+                                className="cursor-pointer"
+                              >
+                                <Users className="size-4 mr-2" />
+                                Penerima Dana
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedProgram(program);
+                                  setEditDialogOpen(true);
+                                }}
+                                className="cursor-pointer"
+                              >
+                                <SquarePen className="size-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </td>
                     </tr>
@@ -370,31 +399,4 @@ export default function Programs() {
       />
     </DashboardLayout>
   );
-}
-
-/**
- * Format number as IDR currency
- */
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-/**
- * Format date to Indonesian format (DD/MM/YYYY)
- */
-function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }).format(date);
-  } catch {
-    return dateString;
-  }
 }
