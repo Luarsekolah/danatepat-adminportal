@@ -12,7 +12,9 @@ import {
   BookOpen,
   Heart,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { UploadMerchantCSVDialog } from "./components/UploadMerchantCSVDialog";
+import { useState } from "react";
 
 const mockMerchants = [
   {
@@ -46,6 +48,10 @@ const mockMerchants = [
 
 export default function ProgramMerchant() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+
+  const programId = id ? parseInt(id, 10) : 0;
 
   return (
     <DashboardLayout>
@@ -85,43 +91,66 @@ export default function ProgramMerchant() {
           </TabsList>
 
           <TabsContent value="makan-siang" className="mt-6">
-            <MerchantTable merchants={mockMerchants} />
+            <MerchantTable
+              merchants={mockMerchants}
+              onUploadClick={() => setUploadDialogOpen(true)}
+            />
           </TabsContent>
 
           <TabsContent value="buku" className="mt-6">
-            <MerchantTable merchants={mockMerchants} />
+            <MerchantTable
+              merchants={mockMerchants}
+              onUploadClick={() => setUploadDialogOpen(true)}
+            />
           </TabsContent>
 
           <TabsContent value="pendidikan" className="mt-6">
-            <MerchantTable merchants={mockMerchants} />
+            <MerchantTable
+              merchants={mockMerchants}
+              onUploadClick={() => setUploadDialogOpen(true)}
+            />
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Upload CSV Dialog */}
+      <UploadMerchantCSVDialog
+        open={uploadDialogOpen}
+        onOpenChange={setUploadDialogOpen}
+        programId={programId}
+        onSuccess={() => {
+          // TODO: Refresh merchant list here
+          console.log("Merchants uploaded successfully");
+        }}
+      />
     </DashboardLayout>
   );
 }
 
-function MerchantTable({ merchants }: { merchants: typeof mockMerchants }) {
+function MerchantTable({
+  merchants,
+  onUploadClick,
+}: {
+  merchants: typeof mockMerchants;
+  onUploadClick: () => void;
+}) {
   return (
     <div className="space-y-6">
       {/* Header with Actions */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Daftar Merchant</h2>
-        <div className="flex gap-3">
-          <Button variant="outline" className="gap-2">
-            <Plus className="h-4 w-4" />
-            Tambah Data
-          </Button>
-          <Button className="gap-2 bg-[#1E6CF6] hover:bg-blue-700">
-            <Upload className="h-4 w-4" />
-            Unggah CSV
-          </Button>
-        </div>
+        <Button
+          className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"
+          onClick={onUploadClick}
+        >
+          <Upload className="h-4 w-4" />
+          Unggah CSV
+        </Button>
       </div>
 
       {/* Table */}
-      <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
-        <table className="w-full">
+      <div className="overflow-x-auto border border-slate-200 rounded-lg overflow-hidden bg-white">
+        <table className="w-full min-w-max">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               <th className="px-6 py-3 text-left">
