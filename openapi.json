@@ -10,8 +10,12 @@
   },
   "servers": [
     {
+      "url": "http://localhost:8080",
+      "description": "Development server (local)"
+    },
+    {
       "url": "https://dev.presidana.id",
-      "description": "Development server"
+      "description": "Development server (remote)"
     }
   ],
   "components": {
@@ -20,6 +24,42 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "sort": {
+            "type": "object",
+            "properties": {
+              "empty": {
+                "type": "boolean"
+              },
+              "sorted": {
+                "type": "boolean"
+              },
+              "unsorted": {
+                "type": "boolean"
+              }
+            }
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
       }
     }
   },
@@ -119,6 +159,100 @@
         }
       }
     },
+    "/users/bulk/program/{programId}": {
+      "post": {
+        "summary": "Membuat user secara masal",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "programId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Program ID untuk bulk user creation"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "users": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "email",
+                        "passwordHash",
+                        "fullName",
+                        "phoneNumber",
+                        "role",
+                        "nik"
+                      ],
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "aris@presidana.id"
+                        },
+                        "passwordHash": {
+                          "type": "string"
+                        },
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "phoneNumber": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "BENEFICIARY",
+                            "MERCHANT",
+                            "ADMIN"
+                          ]
+                        },
+                        "nik": {
+                          "type": "string"
+                        },
+                        "blockchainWalletAddress": {
+                          "type": "string"
+                        },
+                        "dateOfBirth": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "ktpPhotoUrl": {
+                          "type": "string"
+                        },
+                        "selfiePhotoUrl": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Users created successfully"
+          }
+        }
+      }
+    },
     "/program/api/programs": {
       "post": {
         "summary": "Membuat program",
@@ -173,75 +307,7 @@
         },
         "responses": {
           "201": {
-            "description": "Program created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer"
-                        },
-                        "name": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "type": "string"
-                        },
-                        "programManagerId": {
-                          "type": "integer"
-                        },
-                        "startDate": {
-                          "type": "string",
-                          "format": "date"
-                        },
-                        "endDate": {
-                          "type": "string",
-                          "format": "date"
-                        },
-                        "anggaran": {
-                          "type": "number"
-                        },
-                        "currencyTokenName": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "DRAFT",
-                            "ACTIVE",
-                            "INACTIVE"
-                          ]
-                        },
-                        "kategori": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "parentProgram": {
-                          "type": "object",
-                          "nullable": true
-                        }
-                      }
-                    },
-                    "timestamp": {
-                      "type": "integer"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Program created successfully"
           }
         }
       },
@@ -252,65 +318,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "description": {
-                            "type": "string"
-                          },
-                          "programManagerId": {
-                            "type": "integer"
-                          },
-                          "startDate": {
-                            "type": "string",
-                            "format": "date"
-                          },
-                          "endDate": {
-                            "type": "string",
-                            "format": "date"
-                          },
-                          "dailyAllocationAmount": {
-                            "type": "number"
-                          },
-                          "currencyTokenName": {
-                            "type": "string"
-                          },
-                          "status": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "timestamp": {
-                      "type": "integer"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -334,62 +342,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer"
-                        },
-                        "name": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "type": "string"
-                        },
-                        "programManagerId": {
-                          "type": "integer"
-                        },
-                        "startDate": {
-                          "type": "string",
-                          "format": "date"
-                        },
-                        "endDate": {
-                          "type": "string",
-                          "format": "date"
-                        },
-                        "dailyAllocationAmount": {
-                          "type": "number"
-                        },
-                        "currencyTokenName": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "timestamp": {
-                      "type": "integer"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       },
@@ -444,7 +397,12 @@
                     "type": "string"
                   },
                   "status": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                      "DRAFT",
+                      "ACTIVE",
+                      "INACTIVE"
+                    ]
                   }
                 }
               }
@@ -476,7 +434,8 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "Parent Program ID"
           }
         ],
         "requestBody": {
@@ -492,8 +451,8 @@
                     "description",
                     "anggaran",
                     "dailyAllocationAmount",
-                    "kategori",
-                    "maxTrxPerDay"
+                    "maxTrxPerDay",
+                    "kategori"
                   ],
                   "properties": {
                     "name": {
@@ -534,11 +493,9 @@
             "description": "Programs created successfully"
           }
         }
-      }
-    },
-    "/program/api/programs/dashboard": {
+      },
       "get": {
-        "summary": "Dashboard statistik program",
+        "summary": "Mengambil daftar sub program (children) dari sebuah program",
         "tags": [
           "Programs"
         ],
@@ -547,53 +504,16 @@
             "bearerAuth": []
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "totalPrograms": {
-                          "type": "integer"
-                        },
-                        "totalActivePrograms": {
-                          "type": "integer"
-                        },
-                        "totalDailyAllocationAmount": {
-                          "type": "number"
-                        }
-                      }
-                    },
-                    "timestamp": {
-                      "type": "integer"
-                    }
-                  }
-                }
-              }
-            }
+        "parameters": [
+          {
+            "name": "parentIdProgram",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Parent Program ID"
           }
-        }
-      }
-    },
-    "/merchant/api/merchant/kota": {
-      "get": {
-        "summary": "Mengambil data wilayah kota",
-        "tags": [
-          "Merchant - Wilayah"
         ],
         "responses": {
           "200": {
@@ -618,10 +538,63 @@
                         "type": "object",
                         "properties": {
                           "id": {
+                            "type": "integer"
+                          },
+                          "name": {
                             "type": "string"
                           },
-                          "kota": {
+                          "description": {
                             "type": "string"
+                          },
+                          "programManagerId": {
+                            "type": "integer"
+                          },
+                          "startDate": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true
+                          },
+                          "endDate": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true
+                          },
+                          "dailyAllocationAmount": {
+                            "type": "number"
+                          },
+                          "anggaran": {
+                            "type": "number"
+                          },
+                          "currencyTokenName": {
+                            "type": "string"
+                          },
+                          "expTokenDate": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "maxTrxPerDay": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "DRAFT",
+                              "ACTIVE",
+                              "INACTIVE"
+                            ]
+                          },
+                          "kategori": {
+                            "type": "string",
+                            "enum": [
+                              "PANGAN",
+                              "KESEHATAN",
+                              "PENDIDIKAN"
+                            ]
+                          },
+                          "parentProgram": {
+                            "type": "object",
+                            "nullable": true
                           }
                         }
                       }
@@ -633,6 +606,150 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/program/api/programs/{programId}/users": {
+      "get": {
+        "summary": "Mengambil daftar pengguna (beneficiaries dan merchants) dalam sebuah program",
+        "tags": [
+          "Programs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "programId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Program ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "beneficiaries": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "phoneNumber": {
+                                "type": "string"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "BENEFICIARY"
+                                ]
+                              },
+                              "status": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "merchants": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "phoneNumber": {
+                                "type": "string"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "MERCHANT"
+                                ]
+                              },
+                              "status": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/program/api/programs/dashboard": {
+      "get": {
+        "summary": "Dashboard statistik program",
+        "tags": [
+          "Programs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/merchant/api/merchant/kota": {
+      "get": {
+        "summary": "Mengambil data wilayah kota",
+        "tags": [
+          "Merchant - Wilayah"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -896,7 +1013,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Filter by kota (city)"
           }
         ],
         "responses": {
@@ -919,39 +1037,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "totalMerchant": {
-                          "type": "integer"
-                        },
-                        "totalMerchantAktif": {
-                          "type": "integer"
-                        },
-                        "totalMerchantPending": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -1234,5 +1320,16 @@
         }
       }
     }
+  },
+  "x-rateLimit": {
+    "description": "API dibatasi hingga 1000 requests per jam per token",
+    "headers": {
+      "X-RateLimit-Limit": "1000",
+      "X-RateLimit-Remaining": "999",
+      "X-RateLimit-Reset": "1640275200"
+    }
+  },
+  "x-versioning": {
+    "description": "API menggunakan versioning di URL path. Versi saat ini adalah v1. Jika ada perubahan breaking changes, versi baru akan dirilis dengan path yang berbeda."
   }
 }
