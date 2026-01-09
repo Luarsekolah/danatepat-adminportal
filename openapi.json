@@ -492,7 +492,8 @@
                     "description",
                     "anggaran",
                     "dailyAllocationAmount",
-                    "kategori"
+                    "kategori",
+                    "maxTrxPerDay"
                   ],
                   "properties": {
                     "name": {
