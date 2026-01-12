@@ -113,6 +113,7 @@ export function UploadMerchantCSVDialog({
               kategori: (expectedCategory ??
                 (row as BulkMerchantItem)
                   .kategori) as BulkMerchantItem["kategori"],
+              blockchainWalletAddress: "" as const,
             };
 
             const validation =

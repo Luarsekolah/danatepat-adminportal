@@ -43,6 +43,7 @@ export function UploadBeneficiaryCSVDialog({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const programId = subProgram?.id || 0;
+  const expectedCategory = subProgram?.kategori;
 
   const bulkCreateMutation = useBulkCreateBeneficiariesWithProgram(programId, {
     onSuccess: () => {
@@ -104,8 +105,12 @@ export function UploadBeneficiaryCSVDialog({
             // Auto-apply default passwordHash and role for beneficiaries
             const rowWithDefaults: BulkBeneficiaryItem = {
               ...(row as BulkBeneficiaryItem),
+              kategori: (expectedCategory ??
+                (row as BulkBeneficiaryItem)
+                  .kategori) as BulkBeneficiaryItem["kategori"],
               passwordHash: "password12345" as const,
               role: "BENEFICIARY" as const,
+              blockchainWalletAddress: "" as const,
             };
 
             const validation =
