@@ -2,9 +2,12 @@ import * as React from "react";
 import { useParams, useNavigate } from "react-router";
 import { DashboardLayout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, Plus } from "lucide-react";
-import { useGetProgram } from "@/services/queries/program";
-import { formatCurrency } from "@/lib/utils";
+import { Loader2, ChevronLeft, Plus, Users, Store, Wallet } from "lucide-react";
+import {
+  useGetProgram,
+  useListProgramChildren,
+} from "@/services/queries/program";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { AddSubProgramDialog } from "./components/AddSubProgramDialog";
 
@@ -19,14 +22,17 @@ export default function ProgramDetail() {
   const { programId } = useParams<{ programId: string }>();
   const navigate = useNavigate();
   const programData = useGetProgram(Number(programId));
+  const subProgramsQuery = useListProgramChildren(Number(programId));
 
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const program = programData.data?.data;
+  const subPrograms = subProgramsQuery.data?.data ?? [];
 
   const handleDialogSuccess = () => {
     setIsDialogOpen(false);
     programData.refetch();
+    subProgramsQuery.refetch();
   };
 
   if (programData.isLoading) {
@@ -139,15 +145,117 @@ export default function ProgramDetail() {
             <h3 className="text-lg font-extrabold text-slate-900">
               Daftar Sub Program
             </h3>
+            <div className="flex items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigate(`/dashboard/programs/beneficiary/${programId}`)
+                }
+                className="gap-1.5"
+              >
+                <Users className="w-3.5 h-3.5" />
+                Penerima
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigate(`/dashboard/programs/merchant/${programId}`)
+                }
+                className="gap-1.5"
+              >
+                <Store className="w-3.5 h-3.5" />
+                Merchant
+              </Button>
+            </div>
           </div>
 
-          <div className="p-6">
-            <div className="text-center py-12 text-slate-400">
-              <p className="text-sm font-medium">
-                Belum ada sub program. Klik "Tambah Sub Program" untuk
-                menambahkan.
-              </p>
-            </div>
+          <div className="overflow-x-auto">
+            {subProgramsQuery.isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+              </div>
+            ) : subPrograms.length === 0 ? (
+              <div className="text-center py-12 text-slate-400">
+                <p className="text-sm font-medium">
+                  Belum ada sub program. Klik "Tambah Sub Program" untuk
+                  menambahkan.
+                </p>
+              </div>
+            ) : (
+              <table className="w-full min-w-max text-left">
+                <thead>
+                  <tr className="bg-slate-50/50">
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Nama Sub Program
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Kategori
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Alokasi Harian
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Periode
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {subPrograms.map((subProgram) => (
+                    <tr
+                      key={subProgram.id}
+                      className="hover:bg-slate-50/30 transition-colors"
+                    >
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
+                            {CATEGORY_ICONS[
+                              subProgram.kategori?.toUpperCase() || "default"
+                            ] || CATEGORY_ICONS.default}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-slate-900">
+                              {subProgram.name}
+                            </p>
+                            {subProgram.description && (
+                              <p className="text-xs text-slate-500 mt-0.5">
+                                {subProgram.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5">
+                        <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600">
+                          {subProgram.kategori || "—"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-sm font-bold text-slate-900">
+                        {subProgram.dailyAllocationAmount
+                          ? formatCurrency(subProgram.dailyAllocationAmount)
+                          : "—"}
+                      </td>
+                      <td className="px-6 py-5">
+                        <div className="text-xs text-slate-600">
+                          {!subProgram.startDate && !subProgram.endDate && "—"}
+                          {subProgram.startDate && (
+                            <p className="font-medium">
+                              {formatDate(subProgram.startDate)}
+                            </p>
+                          )}
+                          {subProgram.endDate && (
+                            <p className="text-slate-400">
+                              s/d {formatDate(subProgram.endDate)}
+                            </p>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 

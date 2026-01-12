@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import {
@@ -20,12 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUpdateProgram } from "@/services/mutations/program";
+import {
+  usePublishProgram,
+  useUpdateProgram,
+} from "@/services/mutations/program";
 import {
   updateProgramPayloadSchema,
   type UpdateProgramPayload,
 } from "@/services/schemas/program";
 import type { ProgramData } from "@/types/base";
+import { DatePickerInput } from "@/components/ui/calendar";
+import { InputPrice } from "@/components/ui/input-price";
 
 interface EditProgramDialogProps {
   open: boolean;
@@ -40,28 +45,34 @@ export function EditProgramDialog({
   program,
   onSuccess,
 }: EditProgramDialogProps) {
-  const updateMutation = useUpdateProgram(program?.id ?? 0, {
-    onSuccess: () => {
+  const initialProgramStatus = program?.status;
+  const publishProgramMutation = usePublishProgram(program?.id);
+  const updateMutation = useUpdateProgram(program?.id, {
+    onSuccess: (data) => {
       reset();
       onOpenChange(false);
+      if (initialProgramStatus === "DRAFT" && data.data.status === "ACTIVE") {
+        publishProgramMutation.mutate();
+      }
       onSuccess?.();
     },
   });
 
-  const { register, handleSubmit, formState, reset, watch, setValue } =
+  const { register, handleSubmit, formState, reset, watch, setValue, control } =
     useForm<UpdateProgramPayload>({
       resolver: zodResolver(updateProgramPayloadSchema),
       defaultValues: {
         name: program?.name ?? "",
         description: program?.description ?? "",
-        startDate: program?.startDate ?? "",
-        endDate: program?.endDate ?? "",
+        startDate: new Date(program?.startDate) ?? null,
+        endDate: new Date(program?.endDate) ?? null,
         dailyAllocationAmount: program?.dailyAllocationAmount ?? 0,
         currencyTokenName: program?.currencyTokenName ?? "",
         status: (program?.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
       },
     });
 
+  const startDate = watch("startDate");
   const status = watch("status");
 
   // Update form values when program prop changes
@@ -70,8 +81,8 @@ export function EditProgramDialog({
       reset({
         name: program.name,
         description: program.description ?? "",
-        startDate: program.startDate,
-        endDate: program.endDate,
+        startDate: new Date(program.startDate),
+        endDate: new Date(program.endDate),
         dailyAllocationAmount: program.dailyAllocationAmount,
         currencyTokenName: program.currencyTokenName,
         status: (program.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
@@ -138,11 +149,20 @@ export function EditProgramDialog({
               <Label htmlFor="startDate" className="text-sm font-bold">
                 Tanggal Mulai
               </Label>
-              <Input
-                id="startDate"
-                type="date"
-                className="h-9 border-slate-200"
-                {...register("startDate")}
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePickerInput
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                    }}
+                    placeholder="Pilih tanggal"
+                    displayFormat="dd MMMM yyyy"
+                    variant="outline"
+                  />
+                )}
               />
               {formState.errors.startDate && (
                 <p className="text-xs text-red-500">
@@ -155,11 +175,25 @@ export function EditProgramDialog({
               <Label htmlFor="endDate" className="text-sm font-bold">
                 Tanggal Akhir
               </Label>
-              <Input
-                id="endDate"
-                type="date"
-                className="h-9 border-slate-200"
-                {...register("endDate")}
+              <Controller
+                control={control}
+                name="endDate"
+                render={({ field }) => (
+                  <DatePickerInput
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                    }}
+                    placeholder="Pilih tanggal"
+                    displayFormat="dd MMMM yyyy"
+                    variant="outline"
+                    disabled={(date) => {
+                      if (!startDate) return false;
+                      const start = new Date(startDate);
+                      return date < start;
+                    }}
+                  />
+                )}
               />
               {formState.errors.endDate && (
                 <p className="text-xs text-red-500">
@@ -193,16 +227,20 @@ export function EditProgramDialog({
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
               >
-                Dana Harian (IDR)
+                Dana Harian
               </Label>
-              <Input
-                id="dailyAllocationAmount"
-                type="number"
-                placeholder="0"
-                className="h-9 border-slate-200"
-                {...register("dailyAllocationAmount", {
-                  valueAsNumber: true,
-                })}
+              <Controller
+                control={control}
+                name="dailyAllocationAmount"
+                render={({ field }) => (
+                  <InputPrice
+                    id="dailyAllocationAmount"
+                    value={field.value}
+                    defaultValue={field.value}
+                    onChange={field.onChange}
+                    decimalScale={0}
+                  />
+                )}
               />
               {formState.errors.dailyAllocationAmount && (
                 <p className="text-xs text-red-500">
@@ -217,6 +255,10 @@ export function EditProgramDialog({
             <Label htmlFor="status" className="text-sm font-bold">
               Status
             </Label>
+            <p className="text-xs text-slate-500">
+              * Dengan mengganti status menjadi Aktif, maka program akan mulai
+              beroperasi
+            </p>
             <Select
               value={status}
               onValueChange={(value) =>

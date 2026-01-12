@@ -13,6 +13,12 @@ export const queryKeys = {
     details: () => [...queryKeys.programs.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.programs.details(), id] as const,
     dashboard: () => [...queryKeys.programs.all, "dashboard"] as const,
+    children: () => [...queryKeys.programs.all, "children"] as const,
+    childrenList: (parentId: number) =>
+      [...queryKeys.programs.children(), parentId] as const,
+    beneficiaries: () => [...queryKeys.programs.all, "beneficiaries"] as const,
+    beneficiariesList: (programId: number) =>
+      [...queryKeys.programs.beneficiaries(), programId] as const,
   },
   merchants: {
     all: ["merchants"] as const,
@@ -33,14 +39,23 @@ export const routes = {
   auth: {
     login: "/auth/login",
   },
+  beneficiary: {
+    bulkCreateWithProgram: (programId: number) =>
+      `/users/bulk/program/${programId}`,
+  },
   program: {
     list: "/program/api/programs",
     create: "/program/api/programs",
     detail: (id: number) => `/program/api/programs/${id}`,
     update: (id: number) => `/program/api/programs/${id}`,
+    publish: (id: number) => `/program/api/programs/${id}/publish`,
     dashboard: "/program/api/programs/dashboard",
     createChildren: (parentId: number) =>
       `/program/api/programs/${parentId}/children`,
+    listChildren: (parentId: number) =>
+      `/program/api/programs/${parentId}/children`,
+    listUsers: (programId: number) =>
+      `/program/api/programs/${programId}/users`,
   },
   merchant: {
     profiles: "/merchant/api/merchant/profiles",

@@ -19,12 +19,8 @@ export const createProgramPayloadSchema = z
     description: z
       .string({ message: "Deskripsi harus diisi" })
       .min(1, { message: "Deskripsi harus diisi" }),
-    startDate: z
-      .string({ message: "Tanggal mulai harus diisi" })
-      .min(1, { message: "Tanggal mulai harus diisi" }),
-    endDate: z
-      .string({ message: "Tanggal akhir harus diisi" })
-      .min(1, { message: "Tanggal akhir harus diisi" }),
+    startDate: z.date("Tanggal mulai harus diisi"),
+    endDate: z.date("Tanggal akhir harus diisi"),
     anggaran: z
       .number({ message: "Anggaran harus berupa angka" })
       .positive({ message: "Anggaran harus lebih dari 0" }),
@@ -37,16 +33,21 @@ export const createProgramPayloadSchema = z
 /**
  * Update Program request payload schema
  */
-export const updateProgramPayloadSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  programManagerId: z.number().optional(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  dailyAllocationAmount: z.number().positive().optional(),
-  currencyTokenName: z.string().optional(),
-  status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
-});
+export const updateProgramPayloadSchema = z
+  .object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    programManagerId: z.number().optional(),
+    startDate: z.date("Tanggal mulai harus diisi"),
+    endDate: z.date("Tanggal akhir harus diisi"),
+    dailyAllocationAmount: z.number().positive().optional(),
+    currencyTokenName: z.string().optional(),
+    status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
+  })
+  .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
+    message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",
+    path: ["endDate"],
+  });
 
 /**
  * Query parameters for listing programs
@@ -100,9 +101,32 @@ export type CreateSubProgramPayload = z.infer<
 export type CreateSubProgramsPayload = z.infer<
   typeof createSubProgramsPayloadSchema
 >;
+// Response type exports
 export type CreateProgramResponse = ApiResponse<ProgramData>;
 export type UpdateProgramResponse = ApiResponse<ProgramData>;
 export type CreateSubProgramsResponse = ApiResponse<ProgramData[]>;
 export type ListProgramResponse = ApiResponse<ProgramData[]>;
 export type GetProgramResponse = ApiResponse<ProgramData>;
 export type ProgramDashboardResponse = ApiResponse<ProgramDashboard>;
+export type ListProgramChildrenResponse = ApiResponse<ProgramData[]>;
+
+export type PublishProgramResponse = ApiResponse<ProgramData>;
+
+/**
+ * Program users response types
+ */
+export interface ProgramUser {
+  id: number;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
+  role: "BENEFICIARY" | "MERCHANT";
+  status: string;
+}
+
+export interface ProgramUsersData {
+  beneficiaries: ProgramUser[];
+  merchants: ProgramUser[];
+}
+
+export type ListProgramUsersResponse = ApiResponse<ProgramUsersData>;

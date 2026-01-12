@@ -10,6 +10,11 @@ import type {
   ListProgramResponse,
   GetProgramResponse,
   ProgramDashboardResponse,
+  ListProgramChildrenResponse,
+  PublishProgramResponse,
+  ProgramUser,
+  ProgramUsersData,
+  ListProgramUsersResponse,
 } from "@/services/schemas/program";
 
 export type {
@@ -24,4 +29,9 @@ export type {
   ListProgramResponse as ListProgramsResponse,
   GetProgramResponse,
   ProgramDashboardResponse,
+  ListProgramChildrenResponse,
+  PublishProgramResponse,
+  ProgramUser,
+  ProgramUsersData,
+  ListProgramUsersResponse,
 };

@@ -1,6 +1,10 @@
-import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationOptions,
+} from "@tanstack/react-query";
 import { mainApi } from "../api";
-import { routes } from "../api-config";
+import { queryKeys, routes } from "../api-config";
 import { getErrorMessage } from "@/lib/error-utils";
 import { toast } from "sonner";
 import type {
@@ -8,6 +12,7 @@ import type {
   CreateProgramResponse,
   UpdateProgramPayload,
   UpdateProgramResponse,
+  PublishProgramResponse,
 } from "@/types/program";
 import type {
   CreateSubProgramsPayload,
@@ -133,6 +138,53 @@ export function useCreateSubPrograms(
     onError: (error) => {
       const errorMessage = getErrorMessage(error);
       toast.error("Gagal membuat sub program", {
+        description: errorMessage,
+      });
+    },
+    ...options,
+  });
+}
+
+/**
+ * Hook for publishing a program
+ * Transitions a program from DRAFT to ACTIVE status
+ *
+ * @example
+ * const { mutate, isPending } = usePublishProgram(1, {
+ *   onSuccess: () => {
+ *     queryClient.invalidateQueries({ queryKey: ['programs'] });
+ *   }
+ * });
+ * mutate();
+ */
+export function usePublishProgram(
+  programId: number,
+  options?: Omit<
+    UseMutationOptions<PublishProgramResponse, Error, void>,
+    "mutationFn"
+  >,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<PublishProgramResponse, Error, void>({
+    mutationFn: async () => {
+      const res = await mainApi.post(routes.program.publish(programId));
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.programs.detail(programId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.programs.lists(),
+      });
+      toast.success("Program berhasil dipublikasikan!", {
+        description: data.message || "Program status berubah menjadi Aktif",
+      });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast.error("Gagal mempublikasikan program", {
         description: errorMessage,
       });
     },
