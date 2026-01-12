@@ -160,12 +160,23 @@ export default function ProgramMerchant() {
   );
 }
 
+interface MerchantItem {
+  id: number;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
+  role: "BENEFICIARY" | "MERCHANT";
+  status: string;
+  businessName?: string;
+  nik?: string;
+  kategori?: string;
+}
 function MerchantTable({
   merchants,
   isLoading,
   onUploadClick,
 }: {
-  merchants: any[];
+  merchants: MerchantItem[];
   isLoading: boolean;
   onUploadClick: () => void;
 }) {
