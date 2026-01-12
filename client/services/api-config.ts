@@ -16,9 +16,9 @@ export const queryKeys = {
     children: () => [...queryKeys.programs.all, "children"] as const,
     childrenList: (parentId: number) =>
       [...queryKeys.programs.children(), parentId] as const,
-    users: () => [...queryKeys.programs.all, "users"] as const,
-    usersList: (programId: number) =>
-      [...queryKeys.programs.users(), programId] as const,
+    beneficiaries: () => [...queryKeys.programs.all, "beneficiaries"] as const,
+    beneficiariesList: (programId: number) =>
+      [...queryKeys.programs.beneficiaries(), programId] as const,
   },
   merchants: {
     all: ["merchants"] as const,
@@ -38,6 +38,10 @@ export const queryKeys = {
 export const routes = {
   auth: {
     login: "/auth/login",
+  },
+  beneficiary: {
+    bulkCreateWithProgram: (programId: number) =>
+      `/users/bulk/program/${programId}`,
   },
   program: {
     list: "/program/api/programs",
