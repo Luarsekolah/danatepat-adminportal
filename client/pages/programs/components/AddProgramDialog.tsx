@@ -45,8 +45,8 @@ export function AddProgramDialog({
       defaultValues: {
         name: "",
         description: "",
-        startDate: "",
-        endDate: "",
+        startDate: null,
+        endDate: null,
         anggaran: 0,
       },
     });

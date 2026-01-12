@@ -124,7 +124,7 @@ export function useListProgramUsers(
   >,
 ) {
   return useQuery<ListProgramUsersResponse, Error>({
-    queryKey: queryKeys.programs.usersList(programId),
+    queryKey: queryKeys.programs.beneficiariesList(programId),
     queryFn: async () => {
       const res = await mainApi.get(routes.program.listUsers(programId));
       return res.data;

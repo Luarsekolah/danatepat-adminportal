@@ -145,9 +145,30 @@ export default function ProgramDetail() {
             <h3 className="text-lg font-extrabold text-slate-900">
               Daftar Sub Program
             </h3>
-            <p className="text-sm text-slate-500 font-medium">
-              {subPrograms.length} sub program
-            </p>
+            <div className="flex items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigate(`/dashboard/programs/beneficiary/${programId}`)
+                }
+                className="gap-1.5"
+              >
+                <Users className="w-3.5 h-3.5" />
+                Penerima
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigate(`/dashboard/programs/merchant/${programId}`)
+                }
+                className="gap-1.5"
+              >
+                <Store className="w-3.5 h-3.5" />
+                Merchant
+              </Button>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -177,9 +198,6 @@ export default function ProgramDetail() {
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Periode
-                    </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">
-                      Aksi
                     </th>
                   </tr>
                 </thead>
@@ -220,6 +238,7 @@ export default function ProgramDetail() {
                       </td>
                       <td className="px-6 py-5">
                         <div className="text-xs text-slate-600">
+                          {!subProgram.startDate && !subProgram.endDate && "—"}
                           {subProgram.startDate && (
                             <p className="font-medium">
                               {formatDate(subProgram.startDate)}
@@ -230,36 +249,6 @@ export default function ProgramDetail() {
                               s/d {formatDate(subProgram.endDate)}
                             </p>
                           )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center justify-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              navigate(
-                                `/dashboard/programs/beneficiary/${subProgram.id}`,
-                              )
-                            }
-                            className="gap-1.5"
-                          >
-                            <Users className="w-3.5 h-3.5" />
-                            Penerima
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              navigate(
-                                `/dashboard/programs/merchant/${programId}`,
-                              )
-                            }
-                            className="gap-1.5"
-                          >
-                            <Store className="w-3.5 h-3.5" />
-                            Merchant
-                          </Button>
                         </div>
                       </td>
                     </tr>
