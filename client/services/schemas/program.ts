@@ -105,6 +105,8 @@ export type GetProgramResponse = ApiResponse<ProgramData>;
 export type ProgramDashboardResponse = ApiResponse<ProgramDashboard>;
 export type ListProgramChildrenResponse = ApiResponse<ProgramData[]>;
 
+export type PublishProgramResponse = ApiResponse<ProgramData>;
+
 /**
  * Program users response types
  */

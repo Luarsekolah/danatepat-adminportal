@@ -48,6 +48,7 @@ export const routes = {
     create: "/program/api/programs",
     detail: (id: number) => `/program/api/programs/${id}`,
     update: (id: number) => `/program/api/programs/${id}`,
+    publish: (id: number) => `/program/api/programs/${id}/publish`,
     dashboard: "/program/api/programs/dashboard",
     createChildren: (parentId: number) =>
       `/program/api/programs/${parentId}/children`,
