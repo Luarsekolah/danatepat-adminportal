@@ -33,16 +33,21 @@ export const createProgramPayloadSchema = z
 /**
  * Update Program request payload schema
  */
-export const updateProgramPayloadSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  programManagerId: z.number().optional(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  dailyAllocationAmount: z.number().positive().optional(),
-  currencyTokenName: z.string().optional(),
-  status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
-});
+export const updateProgramPayloadSchema = z
+  .object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    programManagerId: z.number().optional(),
+    startDate: z.date("Tanggal mulai harus diisi"),
+    endDate: z.date("Tanggal akhir harus diisi"),
+    dailyAllocationAmount: z.number().positive().optional(),
+    currencyTokenName: z.string().optional(),
+    status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
+  })
+  .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
+    message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",
+    path: ["endDate"],
+  });
 
 /**
  * Query parameters for listing programs
