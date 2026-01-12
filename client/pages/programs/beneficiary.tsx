@@ -11,6 +11,7 @@ import {
   useListProgramUsers,
 } from "@/services/queries/program";
 import { ProgramUser } from "@/types/program";
+import { ProgramData } from "@/types/base";
 
 export default function ProgramBeneficiary() {
   const navigate = useNavigate();
@@ -129,6 +130,7 @@ export default function ProgramBeneficiary() {
                 <BeneficiaryTable
                   parentProgramName={subPrograms[0].parentProgram.name}
                   beneficiaries={beneficiaries}
+                  subProgram={subProgram}
                   isLoading={programUsersQuery.isLoading}
                   onUploadClick={() => setUploadDialogOpen(true)}
                 />
@@ -154,11 +156,13 @@ export default function ProgramBeneficiary() {
 function BeneficiaryTable({
   parentProgramName,
   beneficiaries,
+  subProgram,
   isLoading,
   onUploadClick,
 }: {
   parentProgramName: string;
   beneficiaries: ProgramUser[];
+  subProgram: ProgramData;
   isLoading: boolean;
   onUploadClick: () => void;
 }) {
@@ -168,7 +172,12 @@ function BeneficiaryTable({
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold">Penerima Dana</h2>
-          <p className="text-slate-600">Dari program "{parentProgramName}"</p>
+          <p className="text-sm text-slate-600">
+            Penerima dana
+            <span className="font-semibold"> {subProgram.name} </span>
+            dari program
+            <span className="font-semibold"> {parentProgramName} </span>
+          </p>
         </div>
         <Button
           className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"

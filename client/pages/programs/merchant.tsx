@@ -15,6 +15,14 @@ import {
   useListProgramChildren,
   useListProgramUsers,
 } from "@/services/queries/program";
+import { ProgramData } from "@/types/base";
+
+const CATEGORY_ICONS: Record<string, string> = {
+  PANGAN: "🍴",
+  PENDIDIKAN: "🎓",
+  KESEHATAN: "🏥",
+  default: "📋",
+} as const;
 
 export default function ProgramMerchant() {
   const navigate = useNavigate();
@@ -132,6 +140,7 @@ export default function ProgramMerchant() {
               >
                 <MerchantTable
                   parentProgramName={subPrograms[0].parentProgram.name}
+                  subProgram={subProgram}
                   merchants={merchants}
                   isLoading={programUsersQuery.isLoading}
                   onUploadClick={() => setUploadDialogOpen(true)}
@@ -168,11 +177,13 @@ interface MerchantItem {
 }
 function MerchantTable({
   parentProgramName,
+  subProgram,
   merchants,
   isLoading,
   onUploadClick,
 }: {
   parentProgramName: string;
+  subProgram: ProgramData;
   merchants: MerchantItem[];
   isLoading: boolean;
   onUploadClick: () => void;
@@ -183,7 +194,12 @@ function MerchantTable({
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold">Daftar Merchant</h2>
-          <p className="text-slate-600">Dari program "{parentProgramName}"</p>
+          <p className="text-sm text-slate-600">
+            Merchant
+            <span className="font-semibold"> {subProgram.name} </span>
+            dari program
+            <span className="font-semibold"> {parentProgramName} </span>
+          </p>
         </div>
         <Button
           className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"
@@ -234,7 +250,9 @@ function MerchantTable({
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                          <Utensils className="h-5 w-5 text-blue-600" />
+                          {CATEGORY_ICONS[
+                            subProgram.kategori?.toUpperCase() || "default"
+                          ] || CATEGORY_ICONS.default}
                         </div>
                         <div>
                           <p className="font-medium text-slate-900">
