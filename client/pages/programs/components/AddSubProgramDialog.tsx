@@ -26,6 +26,7 @@ import {
   createSubProgramPayloadSchema,
   type CreateSubProgramPayload,
 } from "@/services/schemas/program";
+import { InputPrice } from "@/components/ui/input-price";
 
 interface AddSubProgramDialogProps {
   open: boolean;
@@ -146,16 +147,19 @@ export function AddSubProgramDialog({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="anggaran" className="text-sm font-bold">
-                Anggaran (IDR)
+                Anggaran
               </Label>
-              <Input
-                id="anggaran"
-                type="number"
-                placeholder="0"
-                className="h-9 border-slate-200"
-                {...register("anggaran", {
-                  valueAsNumber: true,
-                })}
+              <Controller
+                control={control}
+                name="anggaran"
+                render={({ field }) => (
+                  <InputPrice
+                    id="anggaran"
+                    value={field.value}
+                    onChange={field.onChange}
+                    decimalScale={0}
+                  />
+                )}
               />
               {formState.errors.anggaran && (
                 <p className="text-xs text-red-500">
@@ -169,16 +173,19 @@ export function AddSubProgramDialog({
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
               >
-                Alokasi Harian (IDR)
+                Alokasi Harian
               </Label>
-              <Input
-                id="dailyAllocationAmount"
-                type="number"
-                placeholder="0"
-                className="h-9 border-slate-200"
-                {...register("dailyAllocationAmount", {
-                  valueAsNumber: true,
-                })}
+              <Controller
+                control={control}
+                name="dailyAllocationAmount"
+                render={({ field }) => (
+                  <InputPrice
+                    id="dailyAllocationAmount"
+                    value={field.value}
+                    onChange={field.onChange}
+                    decimalScale={0}
+                  />
+                )}
               />
               {formState.errors.dailyAllocationAmount && (
                 <p className="text-xs text-red-500">
@@ -221,14 +228,17 @@ export function AddSubProgramDialog({
               <Label htmlFor="maxTrxPerDay" className="text-sm font-bold">
                 Max Transaksi Per Hari
               </Label>
-              <Input
-                id="maxTrxPerDay"
-                type="number"
-                placeholder="0"
-                className="h-9 border-slate-200"
-                {...register("maxTrxPerDay", {
-                  valueAsNumber: true,
-                })}
+              <Controller
+                control={control}
+                name="maxTrxPerDay"
+                render={({ field }) => (
+                  <InputPrice
+                    id="maxTrxPerDay"
+                    value={field.value}
+                    onChange={field.onChange}
+                    decimalScale={0}
+                  />
+                )}
               />
               {formState.errors.maxTrxPerDay && (
                 <p className="text-xs text-red-500">

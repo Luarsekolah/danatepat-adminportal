@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePickerInput } from "@/components/ui/calendar";
+import { InputPrice } from "@/components/ui/input-price";
 import { useCreateProgram } from "@/services/mutations/program";
 import {
   createProgramPayloadSchema,
@@ -168,16 +169,19 @@ export function AddProgramDialog({
           {/* Anggaran */}
           <div className="space-y-1.5">
             <Label htmlFor="anggaran" className="text-sm font-bold">
-              Anggaran (IDR)
+              Anggaran
             </Label>
-            <Input
-              id="anggaran"
-              type="number"
-              placeholder="0"
-              className="h-9 border-slate-200"
-              {...register("anggaran", {
-                valueAsNumber: true,
-              })}
+            <Controller
+              control={control}
+              name="anggaran"
+              render={({ field }) => (
+                <InputPrice
+                  id="anggaran"
+                  value={field.value}
+                  onChange={field.onChange}
+                  decimalScale={0}
+                />
+              )}
             />
             {formState.errors.anggaran && (
               <p className="text-xs text-red-500">

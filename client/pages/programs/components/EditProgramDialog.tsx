@@ -30,6 +30,7 @@ import {
 } from "@/services/schemas/program";
 import type { ProgramData } from "@/types/base";
 import { DatePickerInput } from "@/components/ui/calendar";
+import { InputPrice } from "@/components/ui/input-price";
 
 interface EditProgramDialogProps {
   open: boolean;
@@ -226,16 +227,20 @@ export function EditProgramDialog({
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
               >
-                Dana Harian (IDR)
+                Dana Harian
               </Label>
-              <Input
-                id="dailyAllocationAmount"
-                type="number"
-                placeholder="0"
-                className="h-9 border-slate-200"
-                {...register("dailyAllocationAmount", {
-                  valueAsNumber: true,
-                })}
+              <Controller
+                control={control}
+                name="dailyAllocationAmount"
+                render={({ field }) => (
+                  <InputPrice
+                    id="dailyAllocationAmount"
+                    value={field.value}
+                    defaultValue={field.value}
+                    onChange={field.onChange}
+                    decimalScale={0}
+                  />
+                )}
               />
               {formState.errors.dailyAllocationAmount && (
                 <p className="text-xs text-red-500">
