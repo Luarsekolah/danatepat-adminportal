@@ -139,3 +139,41 @@ export type GetMerchantSummaryResponse = ApiResponse<MerchantSummary>;
 export type SetMerchantWilayahResponse = ApiResponse<Record<string, unknown>>;
 export type GetKotaListResponse = ApiResponse<Kota[]>;
 export type GetKecamatanListResponse = ApiResponse<Kecamatan[]>;
+
+/**
+ * Update merchant profile payload schema
+ * All fields are optional for partial updates
+ */
+export const updateMerchantProfilePayloadSchema = z.object({
+  businessName: z.string().min(1).optional(),
+  bankName: z.string().min(1).optional(),
+  bankAccountNumber: z.string().min(1).optional(),
+  bankAccountHolder: z.string().min(1).optional(),
+  kategori: z.string().min(1).optional(),
+  status: z.string().min(1).optional(),
+  qrisData: z.string().optional(),
+  alamat: z.string().optional(),
+  latlon: z.string().optional(),
+});
+
+/**
+ * Merchant profile/detail response type
+ */
+export interface MerchantProfile {
+  userId: number;
+  businessName: string;
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountHolder: string;
+  kategori: string;
+  status: string;
+  qrisData: string;
+  alamat: string | null;
+  latlon: string | null;
+}
+
+export type GetMerchantProfileResponse = ApiResponse<MerchantProfile>;
+export type UpdateMerchantProfilePayload = z.infer<
+  typeof updateMerchantProfilePayloadSchema
+>;
+export type UpdateMerchantProfileResponse = ApiResponse<MerchantProfile>;

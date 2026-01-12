@@ -3,6 +3,7 @@ import { mainApi } from "../api";
 import { routes, queryKeys } from "../api-config";
 import type {
   GetMerchantProfilesResponse,
+  GetMerchantProfileResponse,
   GetMerchantSummaryResponse,
   GetKotaListResponse,
   GetKecamatanListResponse,
@@ -30,6 +31,31 @@ export function useListMerchant(
       const res = await mainApi.get(routes.merchant.profiles, {
         params: filters,
       });
+      return res.data;
+    },
+    ...options,
+  });
+}
+
+/**
+ * Hook for fetching merchant profile/detail by ID
+ * Returns detailed merchant information
+ *
+ * @example
+ * const profileQuery = useGetMerchantProfile(2);
+ * const profile = profileQuery.data?.data;
+ */
+export function useGetMerchantProfile(
+  merchantId: number,
+  options?: Omit<
+    UseQueryOptions<GetMerchantProfileResponse, Error>,
+    "queryKey" | "queryFn"
+  >,
+) {
+  return useQuery<GetMerchantProfileResponse, Error>({
+    queryKey: queryKeys.merchants.profile(merchantId),
+    queryFn: async () => {
+      const res = await mainApi.get(routes.merchant.profile(merchantId));
       return res.data;
     },
     ...options,

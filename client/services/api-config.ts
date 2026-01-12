@@ -25,6 +25,9 @@ export const queryKeys = {
     lists: () => [...queryKeys.merchants.all, "list"] as const,
     list: (filters?: ListMerchantQuery) =>
       [...queryKeys.merchants.lists(), filters] as const,
+    profiles: () => [...queryKeys.merchants.all, "profile"] as const,
+    profile: (merchantId: number) =>
+      [...queryKeys.merchants.profiles(), merchantId] as const,
     summaries: () => [...queryKeys.merchants.all, "summary"] as const,
     summary: () => [...queryKeys.merchants.summaries()] as const,
     kotas: () => [...queryKeys.merchants.all, "kota"] as const,
@@ -59,6 +62,10 @@ export const routes = {
   },
   merchant: {
     profiles: "/merchant/api/merchant/profiles",
+    profile: (merchantId: number) =>
+      `/merchant/api/merchant/${merchantId}/profile`,
+    updateProfile: (merchantId: number) =>
+      `/merchant/api/merchant/${merchantId}/profile`,
     register: "/merchant/api/merchant/register",
     bulkRegisterWithProgram: (programId: number) =>
       `/merchant/api/merchant/register/bulk-program/${programId}`,

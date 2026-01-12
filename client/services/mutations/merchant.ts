@@ -1,15 +1,21 @@
-import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationOptions,
+} from "@tanstack/react-query";
 import { mainApi } from "../api";
-import { routes } from "../api-config";
+import { queryKeys, routes } from "../api-config";
 import { getErrorMessage } from "@/lib/error-utils";
 import { toast } from "sonner";
 import type {
   RegisterMerchantPayload,
   BulkRegisterMerchantPayload,
   SetMerchantWilayahPayload,
+  UpdateMerchantProfilePayload,
   RegisterMerchantResponse,
   BulkRegisterMerchantResponse,
   SetMerchantWilayahResponse,
+  UpdateMerchantProfileResponse,
 } from "@/services/schemas/merchant";
 
 /**
@@ -148,6 +154,64 @@ export function useSetMerchantWilayah(
     onError: (error) => {
       const errorMessage = getErrorMessage(error);
       toast.error("Gagal mengatur wilayah merchant", {
+        description: errorMessage,
+      });
+    },
+    ...options,
+  });
+}
+
+/**
+ * Hook for updating merchant profile
+ * Updates merchant profile information
+ *
+ * @example
+ * const { mutate, isPending } = useUpdateMerchantProfile(2, {
+ *   onSuccess: () => {
+ *     queryClient.invalidateQueries({ queryKey: ['merchants'] });
+ *   }
+ * });
+ * mutate({ businessName: 'Updated Name', alamat: 'New Address' });
+ */
+export function useUpdateMerchantProfile(
+  merchantId: number,
+  options?: Omit<
+    UseMutationOptions<
+      UpdateMerchantProfileResponse,
+      Error,
+      UpdateMerchantProfilePayload
+    >,
+    "mutationFn"
+  >,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    UpdateMerchantProfileResponse,
+    Error,
+    UpdateMerchantProfilePayload
+  >({
+    mutationFn: async (payload) => {
+      const res = await mainApi.put(
+        routes.merchant.updateProfile(merchantId),
+        payload,
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.merchants.profile(merchantId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.merchants.lists(),
+      });
+      toast.success("Profil merchant berhasil diperbarui!", {
+        description: data.message || "Perubahan profil telah disimpan",
+      });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast.error("Gagal memperbarui profil merchant", {
         description: errorMessage,
       });
     },
