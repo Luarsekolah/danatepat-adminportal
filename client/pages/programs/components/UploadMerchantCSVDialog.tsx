@@ -91,8 +91,6 @@ export function UploadMerchantCSVDialog({
           "nomor rekening": "bankAccountNumber",
           "account number": "bankAccountNumber",
           rekening: "bankAccountNumber",
-          kategori: "kategori",
-          category: "kategori",
           alamat: "alamat",
           address: "alamat",
           latlon: "latlon",
@@ -110,38 +108,35 @@ export function UploadMerchantCSVDialog({
         // Validate and process parsed data
         const processedData: ParsedRowWithValidation[] = results.data.map(
           (row, index) => {
-            const validation = bulkMerchantItemSchema.safeParse(row);
+            // Auto-apply kategori from expectedCategory so the user doesn't need to provide it
+            const rowWithCategory: BulkMerchantItem = {
+              ...(row as BulkMerchantItem),
+              kategori: (expectedCategory ??
+                (row as BulkMerchantItem)
+                  .kategori) as BulkMerchantItem["kategori"],
+            };
+
+            const validation =
+              bulkMerchantItemSchema.safeParse(rowWithCategory);
 
             if (validation.success) {
-              const data = validation.data;
-              const errors: string[] = [];
-
-              // Additional validation: check if category matches expected category
-              if (expectedCategory && data.kategori !== expectedCategory) {
-                errors.push(
-                  `kategori: Harus "${expectedCategory}" sesuai dengan sub-program yang dipilih`,
-                );
-              }
-
-              const isValid = errors.length === 0;
-
               return {
-                ...data,
+                ...validation.data,
                 _rowNumber: index + 2, // +2 because of header and 0-based index
-                _isValid: isValid,
-                _errors: isValid ? undefined : errors,
-              };
-            } else {
-              const errors = validation.error.issues.map(
-                (err) => `${err.path.join(".")}: ${err.message}`,
-              );
-              return {
-                ...(row as BulkMerchantItem),
-                _rowNumber: index + 2,
-                _isValid: false,
-                _errors: errors,
+                _isValid: true,
+                _errors: undefined,
               };
             }
+
+            const errors = validation.error.issues.map(
+              (err) => `${err.path.join(".")}: ${err.message}`,
+            );
+            return {
+              ...rowWithCategory,
+              _rowNumber: index + 2,
+              _isValid: false,
+              _errors: errors,
+            };
           },
         );
 
@@ -183,7 +178,7 @@ export function UploadMerchantCSVDialog({
   };
 
   const handleDownloadTemplate = () => {
-    const template: BulkMerchantItem[] = [
+    const template: Omit<BulkMerchantItem, "kategori">[] = [
       {
         email: "merchant@example.com",
         fullName: "Nama Lengkap",
@@ -193,7 +188,6 @@ export function UploadMerchantCSVDialog({
         businessName: "Warung Makan Sederhana",
         bankName: "BCA",
         bankAccountNumber: "1234567890",
-        kategori: expectedCategory || "PANGAN",
         alamat: "Jl. Raya No. 1",
         latlon: "-6.200000,106.816666",
       },
@@ -228,27 +222,11 @@ export function UploadMerchantCSVDialog({
           <DialogTitle>Unggah CSV Merchant</DialogTitle>
           <DialogDescription>
             Upload file CSV untuk mendaftarkan merchant secara massal ke program
-            ini
-            {expectedCategory && (
-              <span className="block mt-2 font-medium text-blue-600">
-                Kategori yang diharapkan: {expectedCategory}
-              </span>
-            )}
+            ini. Kategori akan otomatis disesuaikan dengan sub-program aktif.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Category Info */}
-          {expectedCategory && (
-            <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-              <p className="text-xs text-amber-900">
-                <strong>Penting:</strong> Semua merchant dalam CSV harus
-                memiliki kategori <strong>{expectedCategory}</strong>
-              </p>
-            </div>
-          )}
-
           {/* Download Template */}
           <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex-1">
@@ -386,9 +364,6 @@ export function UploadMerchantCSVDialog({
                       <th className="px-3 py-2 text-left font-medium">
                         Nama Bisnis
                       </th>
-                      <th className="px-3 py-2 text-left font-medium">
-                        Kategori
-                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -410,7 +385,6 @@ export function UploadMerchantCSVDialog({
                         <td className="px-3 py-2">{row.email || "-"}</td>
                         <td className="px-3 py-2">{row.fullName || "-"}</td>
                         <td className="px-3 py-2">{row.businessName || "-"}</td>
-                        <td className="px-3 py-2">{row.kategori || "-"}</td>
                       </tr>
                     ))}
                   </tbody>
