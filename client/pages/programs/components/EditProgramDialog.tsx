@@ -20,7 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUpdateProgram } from "@/services/mutations/program";
+import {
+  usePublishProgram,
+  useUpdateProgram,
+} from "@/services/mutations/program";
 import {
   updateProgramPayloadSchema,
   type UpdateProgramPayload,
@@ -40,10 +43,15 @@ export function EditProgramDialog({
   program,
   onSuccess,
 }: EditProgramDialogProps) {
+  const initialProgramStatus = program?.status;
+  const publishProgramMutation = usePublishProgram(program.id);
   const updateMutation = useUpdateProgram(program?.id ?? 0, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       reset();
       onOpenChange(false);
+      if (initialProgramStatus === "DRAFT" && data.data.status === "ACTIVE") {
+        publishProgramMutation.mutate();
+      }
       onSuccess?.();
     },
   });
@@ -217,6 +225,10 @@ export function EditProgramDialog({
             <Label htmlFor="status" className="text-sm font-bold">
               Status
             </Label>
+            <p className="text-xs text-slate-500">
+              * Dengan mengganti status menjadi Aktif, maka program akan mulai
+              beroperasi
+            </p>
             <Select
               value={status}
               onValueChange={(value) =>
