@@ -220,16 +220,12 @@ export function UploadBeneficiaryCSVDialog({
                 dihasilkan.
               </p>
               {subProgram && (
-                <div className="pt-1 border-t border-slate-300">
-                  <p className="text-xs font-medium text-slate-700">
-                    Sub-Program:{" "}
-                    <span className="text-blue-600">{subProgram.name}</span>
-                  </p>
-                  <p className="text-xs text-slate-600">
-                    Kategori:{" "}
-                    <span className="font-medium text-slate-700">
-                      {subProgram.kategori}
-                    </span>
+                <div className="pt-1 space-y-1 border-t border-slate-300 text-sm">
+                  <p className="font-medium text-slate-600">
+                    Untuk Sub-Program{" "}
+                    <span className="font-semibold">{subProgram.name}</span> di
+                    kategori{" "}
+                    <span className="font-semibold">{subProgram.kategori}</span>
                   </p>
                 </div>
               )}

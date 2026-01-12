@@ -227,11 +227,9 @@ export function UploadMerchantCSVDialog({
               {subProgram && (
                 <div className="pt-1 space-y-1 border-t border-slate-300 text-sm">
                   <p className="font-medium text-slate-600">
-                    Sub-Program:{" "}
-                    <span className="font-semibold">{subProgram.name}</span>
-                  </p>
-                  <p className="text-slate-600">
-                    Kategori:{" "}
+                    Untuk Sub-Program{" "}
+                    <span className="font-semibold">{subProgram.name}</span> di
+                    kategori{" "}
                     <span className="font-semibold">{subProgram.kategori}</span>
                   </p>
                 </div>
