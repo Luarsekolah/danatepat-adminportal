@@ -16,12 +16,12 @@ import {
   bulkMerchantItemSchema,
   type BulkMerchantItem,
 } from "@/services/schemas/merchant";
+import { ProgramData } from "@/types/base";
 
 interface UploadMerchantCSVDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  programId: number;
-  expectedCategory?: "PANGAN" | "KESEHATAN" | "PENDIDIKAN";
+  subProgram?: ProgramData;
   onSuccess?: () => void;
 }
 
@@ -34,14 +34,16 @@ interface ParsedRowWithValidation extends BulkMerchantItem {
 export function UploadMerchantCSVDialog({
   open,
   onOpenChange,
-  programId,
-  expectedCategory,
+  subProgram,
   onSuccess,
 }: UploadMerchantCSVDialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<ParsedRowWithValidation[]>([]);
   const [parseErrors, setParseErrors] = useState<Papa.ParseError[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const programId = subProgram?.id || 0;
+  const expectedCategory = subProgram?.kategori;
 
   const bulkRegisterMutation = useBulkRegisterMerchantWithProgram(programId, {
     onSuccess: () => {
@@ -217,8 +219,24 @@ export function UploadMerchantCSVDialog({
         <DialogHeader>
           <DialogTitle>Unggah CSV Merchant</DialogTitle>
           <DialogDescription>
-            Upload file CSV untuk mendaftarkan merchant secara massal ke program
-            ini. Kategori akan otomatis disesuaikan dengan sub-program aktif.
+            <div className="space-y-2">
+              <p>
+                Upload file CSV untuk mendaftarkan merchant secara massal ke
+                sub-program ini.
+              </p>
+              {subProgram && (
+                <div className="pt-1 space-y-1 border-t border-slate-300 text-sm">
+                  <p className="font-medium text-slate-600">
+                    Sub-Program:{" "}
+                    <span className="font-semibold">{subProgram.name}</span>
+                  </p>
+                  <p className="text-slate-600">
+                    Kategori:{" "}
+                    <span className="font-semibold">{subProgram.kategori}</span>
+                  </p>
+                </div>
+              )}
+            </div>
           </DialogDescription>
         </DialogHeader>
 

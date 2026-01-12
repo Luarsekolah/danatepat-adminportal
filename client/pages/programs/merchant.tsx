@@ -1,16 +1,11 @@
 import { DashboardLayout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ChevronLeft,
   ChevronRight,
-  Plus,
   Upload,
-  Trash2,
   Utensils,
-  BookOpen,
-  Heart,
   Loader2,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
@@ -43,11 +38,11 @@ export default function ProgramMerchant() {
 
   // Get current sub-program category
   const currentSubProgram = subPrograms.find((sp) => sp.id === currentActiveId);
-  const currentCategory = currentSubProgram?.kategori as
-    | "PANGAN"
-    | "KESEHATAN"
-    | "PENDIDIKAN"
-    | undefined;
+  // const currentCategory = currentSubProgram?.kategori as
+  //   | "PANGAN"
+  //   | "KESEHATAN"
+  //   | "PENDIDIKAN"
+  //   | undefined;
 
   // Fetch merchants for the current active sub-program
   const programUsersQuery = useListProgramUsers(currentActiveId, {
@@ -150,8 +145,7 @@ export default function ProgramMerchant() {
       <UploadMerchantCSVDialog
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
-        programId={currentActiveId}
-        expectedCategory={currentCategory}
+        subProgram={currentSubProgram}
         onSuccess={() => {
           programUsersQuery.refetch();
         }}

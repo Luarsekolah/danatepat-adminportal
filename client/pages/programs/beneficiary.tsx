@@ -1,16 +1,8 @@
 import { DashboardLayout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Upload,
-  Trash2,
-  Loader2,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Upload, Loader2 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { UploadBeneficiaryCSVDialog } from "./components/UploadBeneficiaryCSVDialog";
 import { useState } from "react";
@@ -148,8 +140,7 @@ export default function ProgramBeneficiary() {
       <UploadBeneficiaryCSVDialog
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
-        programId={currentActiveId}
-        expectedCategory={currentCategory}
+        subProgram={currentSubProgram}
         onSuccess={() => {
           programUsersQuery.refetch();
         }}

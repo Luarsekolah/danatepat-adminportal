@@ -16,12 +16,12 @@ import {
   bulkBeneficiaryItemSchema,
   type BulkBeneficiaryItem,
 } from "@/services/schemas/beneficiary";
+import { ProgramData } from "@/types/base";
 
 interface UploadBeneficiaryCSVDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  programId: number;
-  expectedCategory?: "PANGAN" | "KESEHATAN" | "PENDIDIKAN";
+  subProgram?: ProgramData;
   onSuccess?: () => void;
 }
 
@@ -34,14 +34,15 @@ interface ParsedRowWithValidation extends BulkBeneficiaryItem {
 export function UploadBeneficiaryCSVDialog({
   open,
   onOpenChange,
-  programId,
-  expectedCategory,
+  subProgram,
   onSuccess,
 }: UploadBeneficiaryCSVDialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<ParsedRowWithValidation[]>([]);
   const [parseErrors, setParseErrors] = useState<Papa.ParseError[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const programId = subProgram?.id || 0;
 
   const bulkCreateMutation = useBulkCreateBeneficiariesWithProgram(programId, {
     onSuccess: () => {
@@ -212,8 +213,27 @@ export function UploadBeneficiaryCSVDialog({
         <DialogHeader>
           <DialogTitle>Unggah CSV Penerima Dana</DialogTitle>
           <DialogDescription>
-            Upload file CSV untuk mendaftarkan penerima dana (beneficiary)
-            secara massal ke program ini. Password akan otomatis dihasilkan.
+            <div className="space-y-2">
+              <p>
+                Upload file CSV untuk mendaftarkan penerima dana (beneficiary)
+                secara massal ke sub-program ini. Password akan otomatis
+                dihasilkan.
+              </p>
+              {subProgram && (
+                <div className="pt-1 border-t border-slate-300">
+                  <p className="text-xs font-medium text-slate-700">
+                    Sub-Program:{" "}
+                    <span className="text-blue-600">{subProgram.name}</span>
+                  </p>
+                  <p className="text-xs text-slate-600">
+                    Kategori:{" "}
+                    <span className="font-medium text-slate-700">
+                      {subProgram.kategori}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
           </DialogDescription>
         </DialogHeader>
 
