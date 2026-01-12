@@ -131,6 +131,7 @@ export default function ProgramMerchant() {
                 className="mt-6"
               >
                 <MerchantTable
+                  parentProgramName={subPrograms[0].parentProgram.name}
                   merchants={merchants}
                   isLoading={programUsersQuery.isLoading}
                   onUploadClick={() => setUploadDialogOpen(true)}
@@ -166,10 +167,12 @@ interface MerchantItem {
   kategori?: string;
 }
 function MerchantTable({
+  parentProgramName,
   merchants,
   isLoading,
   onUploadClick,
 }: {
+  parentProgramName: string;
   merchants: MerchantItem[];
   isLoading: boolean;
   onUploadClick: () => void;
@@ -178,7 +181,10 @@ function MerchantTable({
     <div className="space-y-6">
       {/* Header with Actions */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Daftar Merchant</h2>
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold">Daftar Merchant</h2>
+          <p className="text-slate-600">Dari program "{parentProgramName}"</p>
+        </div>
         <Button
           className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"
           onClick={onUploadClick}

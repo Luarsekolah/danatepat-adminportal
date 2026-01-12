@@ -10,6 +10,7 @@ import {
   useListProgramChildren,
   useListProgramUsers,
 } from "@/services/queries/program";
+import { ProgramUser } from "@/types/program";
 
 export default function ProgramBeneficiary() {
   const navigate = useNavigate();
@@ -126,6 +127,7 @@ export default function ProgramBeneficiary() {
                 className="mt-6"
               >
                 <BeneficiaryTable
+                  parentProgramName={subPrograms[0].parentProgram.name}
                   beneficiaries={beneficiaries}
                   isLoading={programUsersQuery.isLoading}
                   onUploadClick={() => setUploadDialogOpen(true)}
@@ -150,11 +152,13 @@ export default function ProgramBeneficiary() {
 }
 
 function BeneficiaryTable({
+  parentProgramName,
   beneficiaries,
   isLoading,
   onUploadClick,
 }: {
-  beneficiaries: any[];
+  parentProgramName: string;
+  beneficiaries: ProgramUser[];
   isLoading: boolean;
   onUploadClick: () => void;
 }) {
@@ -162,7 +166,10 @@ function BeneficiaryTable({
     <div className="space-y-6">
       {/* Header with Actions */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Penerima Dana</h2>
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold">Penerima Dana</h2>
+          <p className="text-slate-600">Dari program "{parentProgramName}"</p>
+        </div>
         <Button
           className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"
           onClick={onUploadClick}
@@ -196,16 +203,10 @@ function BeneficiaryTable({
                     Nama Lengkap
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    NIK
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Email
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Telepon
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Kategori
+                    Nomor Telepon
                   </th>
                 </tr>
               </thead>
@@ -231,18 +232,10 @@ function BeneficiaryTable({
                       </div>
                     </td>
                     <td className="px-6 py-4 text-slate-600">
-                      {beneficiary.nik}
-                    </td>
-                    <td className="px-6 py-4 text-slate-600">
                       {beneficiary.email}
                     </td>
                     <td className="px-6 py-4 text-slate-600">
                       {beneficiary.phoneNumber}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-600">
-                        {beneficiary.kategori || "—"}
-                      </span>
                     </td>
                   </tr>
                 ))}
