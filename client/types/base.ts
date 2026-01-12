@@ -98,6 +98,7 @@ export interface ProgramData {
   parentProgram?: ProgramData | null;
   expTokenDate?: string;
   maxTrxPerDay?: number;
+  budgetPerPenerima?: number;
 }
 
 /**

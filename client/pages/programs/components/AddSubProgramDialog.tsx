@@ -144,7 +144,7 @@ export function AddSubProgramDialog({
           </div>
 
           {/* Anggaran and Daily Allocation Row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="anggaran" className="text-sm font-bold">
                 Anggaran
@@ -173,7 +173,7 @@ export function AddSubProgramDialog({
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
               >
-                Alokasi Harian
+                Limit Nominal Per Transaksi
               </Label>
               <Controller
                 control={control}
@@ -187,6 +187,7 @@ export function AddSubProgramDialog({
                   />
                 )}
               />
+
               {formState.errors.dailyAllocationAmount && (
                 <p className="text-xs text-red-500">
                   {formState.errors.dailyAllocationAmount.message}
@@ -196,10 +197,38 @@ export function AddSubProgramDialog({
           </div>
 
           {/* Exp Token Date and Max Trx Per Day Row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-1.5">
+              <div>
+                <Label htmlFor="maxTrxPerDay" className="text-sm font-bold">
+                  Maks. Transaksi Merchant Per Hari
+                </Label>
+              </div>
+              <Input
+                id="maxTrxPerDay"
+                type="number"
+                placeholder="0"
+                className="h-9 border-slate-200"
+                {...register("maxTrxPerDay", {
+                  valueAsNumber: true,
+                })}
+              />
+
+              {formState.errors.maxTrxPerDay ? (
+                <p className="text-xs text-red-500">
+                  {formState.errors.maxTrxPerDay.message}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-600">
+                  Maksimal total transaksi yang dapat dilakukan per tiap
+                  merchant dalam sehari
+                </p>
+              )}
+            </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="expTokenDate" className="text-sm font-bold">
-                Tanggal Kadaluarsa Token (Opsional)
+                Tanggal Kadaluarsa Token
               </Label>
               <Controller
                 control={control}
@@ -220,29 +249,6 @@ export function AddSubProgramDialog({
               {formState.errors.expTokenDate && (
                 <p className="text-xs text-red-500">
                   {formState.errors.expTokenDate.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="maxTrxPerDay" className="text-sm font-bold">
-                Max Transaksi Per Hari
-              </Label>
-              <Controller
-                control={control}
-                name="maxTrxPerDay"
-                render={({ field }) => (
-                  <InputPrice
-                    id="maxTrxPerDay"
-                    value={field.value}
-                    onChange={field.onChange}
-                    decimalScale={0}
-                  />
-                )}
-              />
-              {formState.errors.maxTrxPerDay && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.maxTrxPerDay.message}
                 </p>
               )}
             </div>

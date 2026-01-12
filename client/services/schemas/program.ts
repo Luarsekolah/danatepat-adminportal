@@ -24,6 +24,9 @@ export const createProgramPayloadSchema = z
     anggaran: z
       .number({ message: "Anggaran harus berupa angka" })
       .positive({ message: "Anggaran harus lebih dari 0" }),
+    budgetPerPenerima: z
+      .number({ message: "Budget per penerima harus berupa angka" })
+      .positive({ message: "Budget per penerima harus lebih dari 0" }),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",

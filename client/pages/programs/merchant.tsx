@@ -7,9 +7,19 @@ import {
   Upload,
   Utensils,
   Loader2,
+  MoreVertical,
+  Eye,
+  SquarePen,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { UploadMerchantCSVDialog } from "./components/UploadMerchantCSVDialog";
+import { EditMerchantDialog } from "./components/EditMerchantDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import {
   useListProgramChildren,
@@ -24,10 +34,26 @@ const CATEGORY_ICONS: Record<string, string> = {
   default: "📋",
 } as const;
 
+export interface MerchantItem {
+  id: number;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
+  role: "BENEFICIARY" | "MERCHANT";
+  status: string;
+  businessName?: string;
+  nik?: string;
+  kategori?: string;
+}
+
 export default function ProgramMerchant() {
   const navigate = useNavigate();
   const { programId } = useParams<{ programId: string }>();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedMerchant, setSelectedMerchant] = useState<MerchantItem | null>(
+    null,
+  );
 
   const parentProgramId = programId ? parseInt(programId, 10) : 0;
 
@@ -144,6 +170,10 @@ export default function ProgramMerchant() {
                   merchants={merchants}
                   isLoading={programUsersQuery.isLoading}
                   onUploadClick={() => setUploadDialogOpen(true)}
+                  onEditClick={(merchant) => {
+                    setSelectedMerchant(merchant);
+                    setEditDialogOpen(true);
+                  }}
                 />
               </TabsContent>
             ))}
@@ -160,33 +190,34 @@ export default function ProgramMerchant() {
           programUsersQuery.refetch();
         }}
       />
+
+      {/* Edit Merchant Dialog */}
+      <EditMerchantDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        merchant={selectedMerchant}
+        onSuccess={() => {
+          programUsersQuery.refetch();
+        }}
+      />
     </DashboardLayout>
   );
 }
 
-interface MerchantItem {
-  id: number;
-  email: string;
-  fullName: string;
-  phoneNumber: string;
-  role: "BENEFICIARY" | "MERCHANT";
-  status: string;
-  businessName?: string;
-  nik?: string;
-  kategori?: string;
-}
 function MerchantTable({
   parentProgramName,
   subProgram,
   merchants,
   isLoading,
   onUploadClick,
+  onEditClick,
 }: {
   parentProgramName: string;
   subProgram: ProgramData;
   merchants: MerchantItem[];
   isLoading: boolean;
   onUploadClick: () => void;
+  onEditClick: (merchant: MerchantItem) => void;
 }) {
   return (
     <div className="space-y-6">
@@ -242,6 +273,9 @@ function MerchantTable({
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Kategori
                   </th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Aksi
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -276,6 +310,37 @@ function MerchantTable({
                       <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600">
                         {merchant.kategori || "—"}
                       </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+                              <MoreVertical className="w-5 h-5" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem
+                              onClick={() => {
+                                // TODO: Implement detail view
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Eye className="size-4 mr-2" />
+                              Detail
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onEditClick(merchant);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <SquarePen className="size-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </td>
                   </tr>
                 ))}

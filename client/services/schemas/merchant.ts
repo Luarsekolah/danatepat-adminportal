@@ -66,6 +66,7 @@ export const bulkMerchantItemSchema = z.object({
   businessName: z.string().min(1),
   bankName: z.string().min(1),
   bankAccountNumber: z.string().min(1),
+  bankAccountHolder: z.string().min(1),
   kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"]),
   alamat: z.string().optional(),
   latlon: z.string().optional(),

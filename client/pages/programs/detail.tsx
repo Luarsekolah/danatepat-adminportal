@@ -2,13 +2,12 @@ import * as React from "react";
 import { useParams, useNavigate } from "react-router";
 import { DashboardLayout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, Plus, Users, Store, Wallet } from "lucide-react";
+import { Loader2, ChevronLeft, Plus, Users, Store } from "lucide-react";
 import {
   useGetProgram,
   useListProgramChildren,
 } from "@/services/queries/program";
-import { formatCurrency, formatDate } from "@/lib/utils";
-import { toast } from "sonner";
+import { formatCurrency } from "@/lib/utils";
 import { AddSubProgramDialog } from "./components/AddSubProgramDialog";
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -128,13 +127,21 @@ export default function ProgramDetail() {
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Budget Penerima
               </p>
-              <p className="text-sm font-bold text-slate-900 mt-1">—</p>
+              <p className="text-sm font-bold text-slate-900 mt-1">
+                {program.budgetPerPenerima
+                  ? formatCurrency(program.budgetPerPenerima)
+                  : "—"}
+              </p>
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Jumlah Penerima
               </p>
-              <p className="text-sm font-bold text-slate-900 mt-1">—</p>
+              <p className="text-sm font-bold text-slate-900 mt-1">
+                {program.anggaran && program.budgetPerPenerima
+                  ? Math.floor(program.anggaran / program.budgetPerPenerima)
+                  : "-"}
+              </p>
             </div>
           </div>
         </div>
@@ -194,10 +201,13 @@ export default function ProgramDetail() {
                       Kategori
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Alokasi Harian
+                      Anggaran
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Periode
+                      Maks. Sekali Transaksi
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Maks. Transaksi Merchant per Hari
                     </th>
                   </tr>
                 </thead>
@@ -232,24 +242,17 @@ export default function ProgramDetail() {
                         </span>
                       </td>
                       <td className="px-6 py-5 text-sm font-bold text-slate-900">
+                        {subProgram.anggaran
+                          ? formatCurrency(subProgram.anggaran)
+                          : "—"}
+                      </td>
+                      <td className="px-6 py-5 text-sm font-bold text-slate-900">
                         {subProgram.dailyAllocationAmount
                           ? formatCurrency(subProgram.dailyAllocationAmount)
                           : "—"}
                       </td>
-                      <td className="px-6 py-5">
-                        <div className="text-xs text-slate-600">
-                          {!subProgram.startDate && !subProgram.endDate && "—"}
-                          {subProgram.startDate && (
-                            <p className="font-medium">
-                              {formatDate(subProgram.startDate)}
-                            </p>
-                          )}
-                          {subProgram.endDate && (
-                            <p className="text-slate-400">
-                              s/d {formatDate(subProgram.endDate)}
-                            </p>
-                          )}
-                        </div>
+                      <td className="px-6 py-5 text-sm font-bold text-slate-900 text-center">
+                        {subProgram.maxTrxPerDay || "—"}
                       </td>
                     </tr>
                   ))}

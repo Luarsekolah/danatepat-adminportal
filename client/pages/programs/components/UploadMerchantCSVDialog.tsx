@@ -81,7 +81,7 @@ export function UploadMerchantCSVDialog({
           "phone number": "phoneNumber",
           phone: "phoneNumber",
           nik: "nik",
-          "nama bisnis": "businessName",
+          "nama usaha": "businessName",
           "business name": "businessName",
           business: "businessName",
           "nama bank": "bankName",
@@ -90,6 +90,8 @@ export function UploadMerchantCSVDialog({
           "nomor rekening": "bankAccountNumber",
           "account number": "bankAccountNumber",
           rekening: "bankAccountNumber",
+          bankAccountHolder: "bankAccountHolder",
+          "nama pemilik rekening": "bankAccountHolder",
           alamat: "alamat",
           address: "alamat",
           latlon: "latlon",
@@ -113,7 +115,7 @@ export function UploadMerchantCSVDialog({
               kategori: (expectedCategory ??
                 (row as BulkMerchantItem)
                   .kategori) as BulkMerchantItem["kategori"],
-              blockchainWalletAddress: "" as const,
+              // blockchainWalletAddress: "" as const,
             };
 
             const validation =
@@ -178,15 +180,16 @@ export function UploadMerchantCSVDialog({
   };
 
   const handleDownloadTemplate = () => {
-    const template: Omit<BulkMerchantItem, "kategori">[] = [
+    const template: Record<string, string>[] = [
       {
         email: "merchant@example.com",
-        fullName: "Nama Lengkap",
-        phoneNumber: "081234567890",
+        "nama lengkap": "Nama Lengkap",
+        "nomor telepon": "081234567890",
         nik: "3173010101010001",
-        businessName: "Warung Makan Sederhana",
-        bankName: "BCA",
-        bankAccountNumber: "1234567890",
+        "nama usaha": "Warung Makan Sederhana",
+        "nama bank": "BCA",
+        "nomor rekening": "1234567890",
+        "nama pemilik rekening": "Nama",
         alamat: "Jl. Raya No. 1",
         latlon: "-6.200000,106.816666",
       },
@@ -369,13 +372,12 @@ export function UploadMerchantCSVDialog({
                       <th className="px-3 py-2 text-left font-medium">
                         Status
                       </th>
-                      <th className="px-3 py-2 text-left font-medium">Baris</th>
                       <th className="px-3 py-2 text-left font-medium">Email</th>
                       <th className="px-3 py-2 text-left font-medium">
                         Nama Lengkap
                       </th>
                       <th className="px-3 py-2 text-left font-medium">
-                        Nama Bisnis
+                        Nama Usaha
                       </th>
                     </tr>
                   </thead>
@@ -391,9 +393,6 @@ export function UploadMerchantCSVDialog({
                           ) : (
                             <X className="h-4 w-4 text-red-600" />
                           )}
-                        </td>
-                        <td className="px-3 py-2 text-slate-600">
-                          {row._rowNumber}
                         </td>
                         <td className="px-3 py-2">{row.email || "-"}</td>
                         <td className="px-3 py-2">{row.fullName || "-"}</td>

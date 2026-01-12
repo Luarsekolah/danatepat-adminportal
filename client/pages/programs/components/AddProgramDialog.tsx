@@ -53,6 +53,9 @@ export function AddProgramDialog({
     });
 
   const startDate = watch("startDate");
+  const totalBenificiary = Math.floor(
+    watch("anggaran") / watch("budgetPerPenerima"),
+  );
 
   const onSubmit = (data: CreateProgramPayload) => {
     createMutation.mutate(data);
@@ -188,6 +191,41 @@ export function AddProgramDialog({
                 {formState.errors.anggaran.message}
               </p>
             )}
+          </div>
+
+          {/* Budget per penerima */}
+          <div className="space-y-1.5">
+            <Label htmlFor="budgetPerPenerima" className="text-sm font-bold">
+              Budget Per Penerima
+            </Label>
+            <Controller
+              control={control}
+              name="budgetPerPenerima"
+              render={({ field }) => (
+                <InputPrice
+                  id="budgetPerPenerima"
+                  value={field.value}
+                  onChange={field.onChange}
+                  decimalScale={0}
+                />
+              )}
+            />
+            {formState.errors.budgetPerPenerima && (
+              <p className="text-xs text-red-500">
+                {formState.errors.budgetPerPenerima.message}
+              </p>
+            )}
+          </div>
+
+          {/* Disabled Total Benificier */}
+          <div className="space-y-1.5">
+            <Label className="text-sm font-bold">Jumlah Penerima Manfaat</Label>
+            <Input
+              placeholder="-"
+              value={totalBenificiary ?? "-"}
+              className="h-9 border-slate-200"
+              disabled
+            />
           </div>
 
           {/* Form Actions */}
