@@ -85,10 +85,10 @@ export function UploadBeneficiaryCSVDialog({
           "date of birth": "dateOfBirth",
           dateofbirth: "dateOfBirth",
           "ktp photo": "ktpPhotoUrl",
-          "foto ktp": "ktpPhotoUrl",
+          "url foto ktp": "ktpPhotoUrl",
           ktpphoto: "ktpPhotoUrl",
           "selfie photo": "selfiePhotoUrl",
-          "foto selfie": "selfiePhotoUrl",
+          "url foto selfie": "selfiePhotoUrl",
           selfiephoto: "selfiePhotoUrl",
         };
 
@@ -175,18 +175,15 @@ export function UploadBeneficiaryCSVDialog({
   };
 
   const handleDownloadTemplate = () => {
-    const template: Omit<
-      BulkBeneficiaryItem,
-      "passwordHash" | "role" | "kategori"
-    >[] = [
+    const template: Record<string, string>[] = [
       {
         email: "beneficiary@example.com",
-        fullName: "Nama Lengkap",
-        phoneNumber: "6281234567890",
+        "nama lengkap": "Nama Lengkap",
+        "nomor telepon": "6281234567890",
         nik: "3173010101010001",
-        dateOfBirth: "1990-01-01",
-        ktpPhotoUrl: "https://example.com/ktp.jpg",
-        selfiePhotoUrl: "https://example.com/selfie.jpg",
+        "tanggal lahir": "1990-01-01",
+        "url foto ktp": "https://example.com/ktp.jpg",
+        "url foto selfie": "https://example.com/selfie.jpg",
       },
     ];
 
