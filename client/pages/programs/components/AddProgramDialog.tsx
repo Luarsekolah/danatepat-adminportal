@@ -53,9 +53,12 @@ export function AddProgramDialog({
     });
 
   const startDate = watch("startDate");
-  const totalBenificiary = Math.floor(
-    watch("anggaran") / watch("budgetPerPenerima"),
-  );
+  let totalBenificiary = 0;
+  if (watch("budgetPerPenerima") > 0 && watch("anggaran") > 0) {
+    totalBenificiary = Math.floor(
+      watch("anggaran") / watch("budgetPerPenerima"),
+    );
+  }
 
   const onSubmit = (data: CreateProgramPayload) => {
     createMutation.mutate(data);
@@ -222,7 +225,7 @@ export function AddProgramDialog({
             <Label className="text-sm font-bold">Jumlah Penerima Manfaat</Label>
             <Input
               placeholder="-"
-              value={totalBenificiary ?? "-"}
+              value={totalBenificiary ?? 0}
               className="h-9 border-slate-200"
               disabled
             />
