@@ -270,9 +270,6 @@ function MerchantTable({
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Telepon
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Kategori
-                  </th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Aksi
                   </th>
@@ -305,11 +302,6 @@ function MerchantTable({
                     </td>
                     <td className="px-6 py-4 text-slate-600">
                       {merchant.phoneNumber}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600">
-                        {merchant.kategori || "—"}
-                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center">
