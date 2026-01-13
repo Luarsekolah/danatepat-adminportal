@@ -96,7 +96,7 @@ export function AddProgramDialog({
           {/* Description */}
           <div className="space-y-1.5">
             <Label htmlFor="description" className="text-sm font-bold">
-              Deskripsi (Opsional)
+              Deskripsi
             </Label>
             <Textarea
               id="description"

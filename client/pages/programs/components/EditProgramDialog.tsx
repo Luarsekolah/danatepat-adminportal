@@ -138,7 +138,7 @@ export function EditProgramDialog({
           {/* Description */}
           <div className="space-y-1.5">
             <Label htmlFor="description" className="text-sm font-bold">
-              Deskripsi (Opsional)
+              Deskripsi
             </Label>
             <Textarea
               id="description"
@@ -324,10 +324,7 @@ export function EditProgramDialog({
             <Label htmlFor="status" className="text-sm font-bold">
               Status
             </Label>
-            <p className="text-xs text-slate-500">
-              * Dengan mengganti status menjadi Aktif, maka program akan mulai
-              beroperasi
-            </p>
+
             <Select
               value={status}
               onValueChange={(value) =>
@@ -342,9 +339,14 @@ export function EditProgramDialog({
                 <SelectItem value="ACTIVE">Aktif</SelectItem>
               </SelectContent>
             </Select>
-            {formState.errors.status && (
+            {formState.errors.status ? (
               <p className="text-xs text-red-500">
                 {formState.errors.status.message}
+              </p>
+            ) : (
+              <p className="text-xs text-slate-500">
+                Dengan mengganti status menjadi Aktif, maka program akan mulai
+                beroperasi
               </p>
             )}
           </div>
