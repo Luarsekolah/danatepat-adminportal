@@ -52,7 +52,7 @@ export const updateProgramPayloadSchema = z
       .positive({ message: "Budget per penerima harus lebih dari 0" })
       .optional(),
     // dailyAllocationAmount: z.number().positive().optional(),
-    currencyTokenName: z.string().optional(),
+    // currencyTokenName: z.string().optional(),
     status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {

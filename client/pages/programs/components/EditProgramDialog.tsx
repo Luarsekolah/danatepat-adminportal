@@ -69,7 +69,7 @@ export function EditProgramDialog({
         anggaran: (program as any)?.anggaran ?? 0,
         budgetPerPenerima: (program as any)?.budgetPerPenerima ?? 0,
         // dailyAllocationAmount: program?.dailyAllocationAmount ?? 0,
-        currencyTokenName: program?.currencyTokenName ?? "",
+        // currencyTokenName: program?.currencyTokenName ?? "",
         status: (program?.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
       },
     });
@@ -94,7 +94,7 @@ export function EditProgramDialog({
         anggaran: (program as any)?.anggaran ?? 0,
         budgetPerPenerima: (program as any)?.budgetPerPenerima ?? 0,
         // dailyAllocationAmount: program.dailyAllocationAmount,
-        currencyTokenName: program.currencyTokenName,
+        // currencyTokenName: program.currencyTokenName,
         status: (program.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
       });
     }
@@ -273,7 +273,7 @@ export function EditProgramDialog({
           </div>
 
           {/* Token Name and Daily Amount Row */}
-          <div className="grid grid-cols-1 gap-4">
+          {/* <div className="grid grid-cols-1 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="currencyTokenName" className="text-sm font-bold">
                 Nama Token
@@ -291,7 +291,7 @@ export function EditProgramDialog({
               )}
             </div>
 
-            {/* <div className="space-y-1.5">
+            <div className="space-y-1.5">
               <Label
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
@@ -316,8 +316,8 @@ export function EditProgramDialog({
                   {formState.errors.dailyAllocationAmount.message}
                 </p>
               )}
-            </div> */}
-          </div>
+            </div>
+          </div> */}
 
           {/* Status */}
           <div className="space-y-1.5">
