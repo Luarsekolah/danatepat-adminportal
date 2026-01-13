@@ -43,7 +43,15 @@ export const updateProgramPayloadSchema = z
     programManagerId: z.number().optional(),
     startDate: z.date("Tanggal mulai harus diisi"),
     endDate: z.date("Tanggal akhir harus diisi"),
-    dailyAllocationAmount: z.number().positive().optional(),
+    anggaran: z
+      .number({ message: "Anggaran harus berupa angka" })
+      .positive({ message: "Anggaran harus lebih dari 0" })
+      .optional(),
+    budgetPerPenerima: z
+      .number({ message: "Budget per penerima harus berupa angka" })
+      .positive({ message: "Budget per penerima harus lebih dari 0" })
+      .optional(),
+    // dailyAllocationAmount: z.number().positive().optional(),
     currencyTokenName: z.string().optional(),
     status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
   })

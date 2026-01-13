@@ -66,7 +66,9 @@ export function EditProgramDialog({
         description: program?.description ?? "",
         startDate: new Date(program?.startDate) ?? null,
         endDate: new Date(program?.endDate) ?? null,
-        dailyAllocationAmount: program?.dailyAllocationAmount ?? 0,
+        anggaran: (program as any)?.anggaran ?? 0,
+        budgetPerPenerima: (program as any)?.budgetPerPenerima ?? 0,
+        // dailyAllocationAmount: program?.dailyAllocationAmount ?? 0,
         currencyTokenName: program?.currencyTokenName ?? "",
         status: (program?.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
       },
@@ -74,6 +76,12 @@ export function EditProgramDialog({
 
   const startDate = watch("startDate");
   const status = watch("status");
+  let totalBenificiary = 0;
+  if (watch("budgetPerPenerima") > 0 && watch("anggaran") > 0) {
+    totalBenificiary = Math.floor(
+      watch("anggaran") / watch("budgetPerPenerima"),
+    );
+  }
 
   // Update form values when program prop changes
   React.useEffect(() => {
@@ -83,7 +91,9 @@ export function EditProgramDialog({
         description: program.description ?? "",
         startDate: new Date(program.startDate),
         endDate: new Date(program.endDate),
-        dailyAllocationAmount: program.dailyAllocationAmount,
+        anggaran: (program as any)?.anggaran ?? 0,
+        budgetPerPenerima: (program as any)?.budgetPerPenerima ?? 0,
+        // dailyAllocationAmount: program.dailyAllocationAmount,
         currencyTokenName: program.currencyTokenName,
         status: (program.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
       });
@@ -203,11 +213,70 @@ export function EditProgramDialog({
             </div>
           </div>
 
+          {/* Anggaran */}
+          <div className="space-y-1.5">
+            <Label htmlFor="anggaran" className="text-sm font-bold">
+              Anggaran
+            </Label>
+            <Controller
+              control={control}
+              name="anggaran"
+              render={({ field }) => (
+                <InputPrice
+                  id="anggaran"
+                  value={field.value}
+                  onChange={field.onChange}
+                  decimalScale={0}
+                />
+              )}
+            />
+            {formState.errors.anggaran && (
+              <p className="text-xs text-red-500">
+                {formState.errors.anggaran.message}
+              </p>
+            )}
+          </div>
+
+          {/* Budget per penerima */}
+          <div className="space-y-1.5">
+            <Label htmlFor="budgetPerPenerima" className="text-sm font-bold">
+              Budget Per Penerima
+            </Label>
+            <Controller
+              control={control}
+              name="budgetPerPenerima"
+              render={({ field }) => (
+                <InputPrice
+                  id="budgetPerPenerima"
+                  value={field.value}
+                  onChange={field.onChange}
+                  decimalScale={0}
+                />
+              )}
+            />
+            {formState.errors.budgetPerPenerima && (
+              <p className="text-xs text-red-500">
+                {formState.errors.budgetPerPenerima.message}
+              </p>
+            )}
+          </div>
+
+          {/* Disabled Total Benificier */}
+          <div className="space-y-1.5">
+            <Label className="text-sm font-bold">Jumlah Penerima Manfaat</Label>
+            <Input
+              placeholder="-"
+              value={totalBenificiary ?? 0}
+              className="h-9 border-slate-200"
+              disabled
+            />
+          </div>
+
           {/* Token Name and Daily Amount Row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="currencyTokenName" className="text-sm font-bold">
-                Token Name
+                Nama Token
               </Label>
               <Input
                 id="currencyTokenName"
@@ -222,7 +291,7 @@ export function EditProgramDialog({
               )}
             </div>
 
-            <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
               <Label
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
@@ -247,7 +316,7 @@ export function EditProgramDialog({
                   {formState.errors.dailyAllocationAmount.message}
                 </p>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Status */}
