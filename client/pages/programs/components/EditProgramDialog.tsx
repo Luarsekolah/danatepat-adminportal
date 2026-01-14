@@ -31,6 +31,10 @@ import {
 import type { ProgramData } from "@/types/base";
 import { DatePickerInput } from "@/components/ui/calendar";
 import { InputPrice } from "@/components/ui/input-price";
+import { useGetUserDetail } from "@/services/queries/user";
+
+// Temporary donatur due to it's only will be one donatur for now
+const TEMP_DONATUR_ID = 4;
 
 interface EditProgramDialogProps {
   open: boolean;
@@ -45,6 +49,7 @@ export function EditProgramDialog({
   program,
   onSuccess,
 }: EditProgramDialogProps) {
+  const detailTempDonatur = useGetUserDetail(TEMP_DONATUR_ID);
   const initialProgramStatus = program?.status;
   const publishProgramMutation = usePublishProgram(program?.id);
   const updateMutation = useUpdateProgram(program?.id, {
@@ -63,6 +68,7 @@ export function EditProgramDialog({
       resolver: zodResolver(updateProgramPayloadSchema),
       defaultValues: {
         name: program?.name ?? "",
+        donatur: TEMP_DONATUR_ID.toString(),
         description: program?.description ?? "",
         startDate: new Date(program?.startDate) ?? null,
         endDate: new Date(program?.endDate) ?? null,
@@ -88,6 +94,7 @@ export function EditProgramDialog({
     if (program && open) {
       reset({
         name: program.name,
+        donatur: TEMP_DONATUR_ID.toString(),
         description: program.description ?? "",
         startDate: new Date(program.startDate),
         endDate: new Date(program.endDate),
@@ -135,6 +142,38 @@ export function EditProgramDialog({
             )}
           </div>
 
+          {/* Donatur */}
+          <div className="space-y-1.5 col-span-2">
+            <Label htmlFor="donatur" className="text-sm font-bold">
+              Donatur
+            </Label>
+            <Controller
+              control={control}
+              name="donatur"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  defaultValue={TEMP_DONATUR_ID.toString()}
+                >
+                  <SelectTrigger className="h-9 border-slate-200">
+                    <SelectValue placeholder="Pilih donatur" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={TEMP_DONATUR_ID.toString()}>
+                      {detailTempDonatur.data.data.fullName}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {formState.errors.donatur && (
+              <p className="text-xs text-red-500">
+                {formState.errors.donatur.message}
+              </p>
+            )}
+          </div>
+
           {/* Description */}
           <div className="space-y-1.5">
             <Label htmlFor="description" className="text-sm font-bold">
@@ -157,7 +196,7 @@ export function EditProgramDialog({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="startDate" className="text-sm font-bold">
-                Tanggal Mulai
+                Tanggal Mulai Aktif Program
               </Label>
               <Controller
                 control={control}
@@ -183,7 +222,7 @@ export function EditProgramDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="endDate" className="text-sm font-bold">
-                Tanggal Akhir
+                Tanggal Akhir Aktif Program
               </Label>
               <Controller
                 control={control}

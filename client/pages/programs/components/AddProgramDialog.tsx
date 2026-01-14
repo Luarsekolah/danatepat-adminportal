@@ -30,6 +30,9 @@ import {
 import { useGetUserDetail } from "@/services/queries/user";
 import { useDonate } from "@/services/mutations/payment";
 
+// Temporary donatur due to it's only will be one donatur for now
+const TEMP_DONATUR_ID = 4;
+
 interface AddProgramDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -41,15 +44,12 @@ export function AddProgramDialog({
   onOpenChange,
   onSuccess,
 }: AddProgramDialogProps) {
-  // Temporary donatur due to it's only will be one donatur for now
-  const tempDonaturId = 4;
-  const detailTempDonatur = useGetUserDetail(tempDonaturId);
-
+  const detailTempDonatur = useGetUserDetail(TEMP_DONATUR_ID);
   const donateMutation = useDonate();
   const createMutation = useCreateProgram({
     onSuccess: (data) => {
       donateMutation.mutate({
-        userId: tempDonaturId,
+        userId: TEMP_DONATUR_ID,
         programId: data.data.id,
         nominal: data.data.anggaran,
       });
@@ -115,7 +115,7 @@ export function AddProgramDialog({
             )}
           </div>
 
-          {/* Donater */}
+          {/* Donatur */}
           <div className="space-y-1.5 col-span-2">
             <Label htmlFor="donatur" className="text-sm font-bold">
               Donatur
@@ -127,13 +127,13 @@ export function AddProgramDialog({
                 <Select
                   value={field.value}
                   onValueChange={field.onChange}
-                  defaultValue={tempDonaturId.toString()}
+                  defaultValue={TEMP_DONATUR_ID.toString()}
                 >
                   <SelectTrigger className="h-9 border-slate-200">
                     <SelectValue placeholder="Pilih donatur" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={tempDonaturId.toString()}>
+                    <SelectItem value={TEMP_DONATUR_ID.toString()}>
                       {detailTempDonatur.data.data.fullName}
                     </SelectItem>
                   </SelectContent>

@@ -42,6 +42,9 @@ export const createProgramPayloadSchema = z
 export const updateProgramPayloadSchema = z
   .object({
     name: z.string().optional(),
+    donatur: z
+      .string({ message: "Donatur harus dipilih" })
+      .min(1, { message: "Donatur harus dipilih" }),
     description: z.string().optional(),
     programManagerId: z.number().optional(),
     startDate: z.date("Tanggal mulai harus diisi"),
