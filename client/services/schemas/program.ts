@@ -16,6 +16,9 @@ export const createProgramPayloadSchema = z
       .string({ message: "Nama program harus diisi" })
       .min(1, { message: "Nama program harus diisi" })
       .min(3, { message: "Nama program minimal 3 karakter" }),
+    donatur: z
+      .string({ message: "Donatur harus dipilih" })
+      .min(1, { message: "Donatur harus dipilih" }),
     description: z
       .string({ message: "Deskripsi harus diisi" })
       .min(1, { message: "Deskripsi harus diisi" }),

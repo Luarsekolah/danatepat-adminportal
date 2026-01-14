@@ -36,6 +36,11 @@ export const queryKeys = {
     kecamatanList: (idKota: string) =>
       [...queryKeys.merchants.kecamatans(), idKota] as const,
   },
+  users: {
+    all: ["users"] as const,
+    details: () => [...queryKeys.users.all, "detail"] as const,
+    detail: (userId: number) => [...queryKeys.users.details(), userId] as const,
+  },
 } as const;
 
 export const routes = {
@@ -74,5 +79,11 @@ export const routes = {
     kecamatan: (idKota: string) => `/merchant/api/merchant/kecamatan/${idKota}`,
     wilayah: (merchantId: number) =>
       `/merchant/api/merchant/${merchantId}/wilayah`,
+  },
+  payment: {
+    donate: "/payment/api/payments/donate",
+  },
+  user: {
+    detail: (userId: number) => `/users/${userId}`,
   },
 } as const;
