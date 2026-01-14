@@ -254,108 +254,112 @@ export default function Programs() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {programs.map((program) => (
-                    <tr
-                      key={program.id}
-                      className="hover:bg-slate-50/30 transition-colors"
-                    >
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
-                            {CATEGORY_ICONS[
-                              program.kategori?.toUpperCase() || "default"
-                            ] || CATEGORY_ICONS.default}
-                          </div>
-                          <div>
-                            <p className="text-sm font-bold text-slate-900">
-                              {program.name}
-                            </p>
-                            {program.startDate && (
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                                Mulai: {formatDate(program.startDate)}
+                  {programs
+                    .sort((a, b) => b.id - a.id)
+                    .map((program) => (
+                      <tr
+                        key={program.id}
+                        className="hover:bg-slate-50/30 transition-colors"
+                      >
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
+                              {CATEGORY_ICONS[
+                                program.kategori?.toUpperCase() || "default"
+                              ] || CATEGORY_ICONS.default}
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-slate-900">
+                                {program.name}
                               </p>
-                            )}
+                              {program.startDate && (
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                  Mulai: {formatDate(program.startDate)}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <p className="text-sm font-bold text-slate-700">
-                          LAPI ITB
-                        </p>
-                      </td>
-                      <td className="px-6 py-5 text-sm font-bold text-slate-900">
-                        {program.anggaran
-                          ? formatCurrency(program.anggaran)
-                          : "—"}
-                      </td>
-                      <td className="px-6 py-5">
-                        <span
-                          className={cn(
-                            "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                            program.status === "ACTIVE"
-                              ? "text-emerald-500 bg-emerald-50"
-                              : "text-amber-500 bg-amber-50",
-                          )}
-                        >
-                          {program.status === "ACTIVE" ? "Aktif" : "Draft"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center justify-center">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
-                                <MoreVertical className="w-5 h-5" />
-                              </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  navigate(`/dashboard/programs/${program.id}`)
-                                }
-                                className="cursor-pointer"
-                              >
-                                <Wallet className="size-4 mr-2" />
-                                Subprogram
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/programs/merchant/${program.id}`,
-                                  )
-                                }
-                                className="cursor-pointer"
-                              >
-                                <Store className="size-4 mr-2" />
-                                Daftar Merchant
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/programs/beneficiary/${program.id}`,
-                                  )
-                                }
-                                className="cursor-pointer"
-                              >
-                                <Users className="size-4 mr-2" />
-                                Penerima Dana
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedProgram(program);
-                                  setEditDialogOpen(true);
-                                }}
-                                className="cursor-pointer"
-                              >
-                                <SquarePen className="size-4 mr-2" />
-                                Edit
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-6 py-5">
+                          <p className="text-sm font-bold text-slate-700">
+                            LAPI ITB
+                          </p>
+                        </td>
+                        <td className="px-6 py-5 text-sm font-bold text-slate-900">
+                          {program.anggaran
+                            ? formatCurrency(program.anggaran)
+                            : "—"}
+                        </td>
+                        <td className="px-6 py-5">
+                          <span
+                            className={cn(
+                              "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                              program.status === "ACTIVE"
+                                ? "text-emerald-500 bg-emerald-50"
+                                : "text-amber-500 bg-amber-50",
+                            )}
+                          >
+                            {program.status === "ACTIVE" ? "Aktif" : "Draft"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center justify-center">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+                                  <MoreVertical className="w-5 h-5" />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/programs/${program.id}`,
+                                    )
+                                  }
+                                  className="cursor-pointer"
+                                >
+                                  <Wallet className="size-4 mr-2" />
+                                  Subprogram
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/programs/merchant/${program.id}`,
+                                    )
+                                  }
+                                  className="cursor-pointer"
+                                >
+                                  <Store className="size-4 mr-2" />
+                                  Daftar Merchant
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/programs/beneficiary/${program.id}`,
+                                    )
+                                  }
+                                  className="cursor-pointer"
+                                >
+                                  <Users className="size-4 mr-2" />
+                                  Penerima Dana
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedProgram(program);
+                                    setEditDialogOpen(true);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <SquarePen className="size-4 mr-2" />
+                                  Edit
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}
