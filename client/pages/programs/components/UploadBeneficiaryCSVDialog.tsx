@@ -74,7 +74,7 @@ export function UploadBeneficiaryCSVDialog({
         // Transform headers to match expected field names
         const headerMap: Record<string, string> = {
           email: "email",
-          "nama lengkap": "fullName",
+          "nama lengkap sesuai ktp": "fullName",
           "full name": "fullName",
           fullname: "fullName",
           "nomor telepon": "phoneNumber",
@@ -88,7 +88,7 @@ export function UploadBeneficiaryCSVDialog({
           "url foto ktp": "ktpPhotoUrl",
           ktpphoto: "ktpPhotoUrl",
           "selfie photo": "selfiePhotoUrl",
-          "url foto selfie": "selfiePhotoUrl",
+          "url foto": "selfiePhotoUrl",
           selfiephoto: "selfiePhotoUrl",
         };
 
@@ -177,13 +177,13 @@ export function UploadBeneficiaryCSVDialog({
   const handleDownloadTemplate = () => {
     const template: Record<string, string>[] = [
       {
-        email: "beneficiary@example.com",
-        "nama lengkap": "Nama Lengkap",
-        "nomor telepon": "6281234567890",
-        nik: "3173010101010001",
-        "tanggal lahir": "1990-01-01",
-        "url foto ktp": "https://example.com/ktp.jpg",
-        "url foto selfie": "https://example.com/selfie.jpg",
+        Email: "beneficiary@example.com",
+        "Nama Lengkap Sesuai KTP": "Nama Lengkap",
+        "Nomor Telepon": "6281234567890",
+        NIK: "3173010101010001",
+        "Tanggal Lahir": "1990-01-01",
+        "URL Foto KTP": "https://example.com/ktp.jpg",
+        "URL Foto": "https://example.com/profile.jpg",
       },
     ];
 

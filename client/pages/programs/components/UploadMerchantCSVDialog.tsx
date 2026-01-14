@@ -182,16 +182,16 @@ export function UploadMerchantCSVDialog({
   const handleDownloadTemplate = () => {
     const template: Record<string, string>[] = [
       {
-        email: "merchant@example.com",
-        "nama lengkap": "Nama Lengkap",
-        "nomor telepon": "081234567890",
-        nik: "3173010101010001",
-        "nama usaha": "Warung Makan Sederhana",
-        "nama bank": "BCA",
-        "nomor rekening": "1234567890",
-        "nama pemilik rekening": "Nama",
-        alamat: "Jl. Raya No. 1",
-        latlon: "-6.200000,106.816666",
+        Email: "merchant@example.com",
+        "Nama Lengkap": "Nama Lengkap",
+        "Nomor Telepon": "6281234567890",
+        NIK: "3173010101010001",
+        "Nama Usaha": "Warung Makan Sederhana",
+        "Nama Bank": "BCA",
+        "Nomor Rekening": "1234567890",
+        "Nama Remilik Rekening": "Nama",
+        Alamat: "Jl. Raya No. 1",
+        Latlon: "-6.200000,106.816666",
       },
     ];
 
