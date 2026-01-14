@@ -3,11 +3,15 @@ import type {
   BulkBeneficiaryItem,
   BulkCreateBeneficiariesPayload,
   BulkCreateBeneficiariesResponse,
-} from "@/services/schemas/beneficiary";
+  UserDetail,
+  GetUserDetailResponse,
+} from "@/services/schemas/user";
 
 export type {
   UserRole,
   BulkBeneficiaryItem,
   BulkCreateBeneficiariesPayload,
   BulkCreateBeneficiariesResponse,
+  UserDetail,
+  GetUserDetailResponse,
 };

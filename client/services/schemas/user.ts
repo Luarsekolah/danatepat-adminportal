@@ -48,3 +48,25 @@ export type BulkCreateBeneficiariesPayload = z.infer<
 export type BulkCreateBeneficiariesResponse = ApiResponse<
   Record<string, unknown>
 >;
+
+/**
+ * User detail/profile response type
+ */
+export interface UserDetail {
+  id: number;
+  email: string;
+  passwordHash: string;
+  fullName: string;
+  phoneNumber: string;
+  role: string;
+  status: string;
+  nik: string;
+  blockchainWalletAddress: string;
+  dateOfBirth: string | null;
+  ktpPhotoUrl: string | null;
+  selfiePhotoUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type GetUserDetailResponse = ApiResponse<UserDetail>;

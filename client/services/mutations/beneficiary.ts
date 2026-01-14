@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import type {
   BulkCreateBeneficiariesPayload,
   BulkCreateBeneficiariesResponse,
-} from "@/services/schemas/beneficiary";
+} from "@/services/schemas/user";
 
 /**
  * Hook for bulk creating beneficiaries with a program
