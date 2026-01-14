@@ -226,7 +226,7 @@ function BeneficiaryTable({
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
                           <AvatarImage
-                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${beneficiary.fullName}`}
+                            src={`https://api.dicebear.com/9.x/initials/svg?seed=${beneficiary.fullName}`}
                           />
                           <AvatarFallback>
                             {beneficiary.fullName
