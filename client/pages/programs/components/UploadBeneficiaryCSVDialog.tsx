@@ -81,7 +81,8 @@ export function UploadBeneficiaryCSVDialog({
           "phone number": "phoneNumber",
           phone: "phoneNumber",
           nik: "nik",
-          "tanggal lahir": "dateOfBirth",
+          "tanggal lahir (format: yyyy-mm-dd, contoh: 1990-01-30)":
+            "dateOfBirth",
           "date of birth": "dateOfBirth",
           dateofbirth: "dateOfBirth",
           "ktp photo": "ktpPhotoUrl",
@@ -181,7 +182,7 @@ export function UploadBeneficiaryCSVDialog({
         "Nama Lengkap Sesuai KTP": "Nama Lengkap",
         "Nomor Telepon": "6281234567890",
         NIK: "3173010101010001",
-        "Tanggal Lahir": "1990-01-01",
+        "Tanggal Lahir (format: yyyy-mm-dd, contoh: 1990-01-30)": "1990-01-30",
         "URL Foto KTP": "https://example.com/ktp.jpg",
         "URL Foto": "https://example.com/profile.jpg",
       },
