@@ -20,6 +20,15 @@ import {
   createProgramPayloadSchema,
   type CreateProgramPayload,
 } from "@/services/schemas/program";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useGetUserDetail } from "@/services/queries/user";
+import { useDonate } from "@/services/mutations/payment";
 
 interface AddProgramDialogProps {
   open: boolean;
@@ -32,8 +41,18 @@ export function AddProgramDialog({
   onOpenChange,
   onSuccess,
 }: AddProgramDialogProps) {
+  // Temporary donatur due to it's only will be one donatur for now
+  const tempDonaturId = 4;
+  const detailTempDonatur = useGetUserDetail(tempDonaturId);
+
+  const donateMutation = useDonate();
   const createMutation = useCreateProgram({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      donateMutation.mutate({
+        userId: tempDonaturId,
+        programId: data.data.id,
+        nominal: data.data.anggaran,
+      });
       reset();
       onOpenChange(false);
       onSuccess?.();
@@ -96,6 +115,38 @@ export function AddProgramDialog({
             )}
           </div>
 
+          {/* Donater */}
+          <div className="space-y-1.5 col-span-2">
+            <Label htmlFor="donatur" className="text-sm font-bold">
+              Donatur
+            </Label>
+            <Controller
+              control={control}
+              name="donatur"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  defaultValue={tempDonaturId.toString()}
+                >
+                  <SelectTrigger className="h-9 border-slate-200">
+                    <SelectValue placeholder="Pilih donatur" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={tempDonaturId.toString()}>
+                      {detailTempDonatur.data.data.fullName}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {formState.errors.donatur && (
+              <p className="text-xs text-red-500">
+                {formState.errors.donatur.message}
+              </p>
+            )}
+          </div>
+
           {/* Description */}
           <div className="space-y-1.5 col-span-2">
             <Label htmlFor="description" className="text-sm font-bold">
@@ -114,7 +165,7 @@ export function AddProgramDialog({
             )}
           </div>
 
-          {/* Dates Row */}
+          {/* Dates Start */}
           <div className="space-y-1.5 col-span-2 md:col-span-1">
             <Label htmlFor="startDate" className="text-sm font-bold">
               Tanggal Mulai Aktif Program
@@ -141,6 +192,7 @@ export function AddProgramDialog({
             )}
           </div>
 
+          {/* Dates End */}
           <div className="space-y-1.5 col-span-2 md:col-span-1">
             <Label htmlFor="endDate" className="text-sm font-bold">
               Tanggal Akhir Aktif Program
