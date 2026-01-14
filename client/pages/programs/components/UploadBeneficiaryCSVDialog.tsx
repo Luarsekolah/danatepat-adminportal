@@ -15,7 +15,7 @@ import { useBulkCreateBeneficiariesWithProgram } from "@/services/mutations/bene
 import {
   bulkBeneficiaryItemSchema,
   type BulkBeneficiaryItem,
-} from "@/services/schemas/beneficiary";
+} from "@/services/schemas/user";
 import { ProgramData } from "@/types/base";
 
 interface UploadBeneficiaryCSVDialogProps {
