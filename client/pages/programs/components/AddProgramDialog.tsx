@@ -74,9 +74,12 @@ export function AddProgramDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid gap-4 grid-cols-2"
+        >
           {/* Program Name */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 col-span-2">
             <Label htmlFor="name" className="text-sm font-bold">
               Nama Program
             </Label>
@@ -94,7 +97,7 @@ export function AddProgramDialog({
           </div>
 
           {/* Description */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 col-span-2">
             <Label htmlFor="description" className="text-sm font-bold">
               Deskripsi
             </Label>
@@ -112,68 +115,66 @@ export function AddProgramDialog({
           </div>
 
           {/* Dates Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="startDate" className="text-sm font-bold">
-                Tanggal Mulai
-              </Label>
-              <Controller
-                control={control}
-                name="startDate"
-                render={({ field }) => (
-                  <DatePickerInput
-                    value={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                    }}
-                    placeholder="Pilih tanggal"
-                    displayFormat="dd MMMM yyyy"
-                    variant="outline"
-                  />
-                )}
-              />
-              {formState.errors.startDate && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.startDate.message}
-                </p>
+          <div className="space-y-1.5 col-span-2 md:col-span-1">
+            <Label htmlFor="startDate" className="text-sm font-bold">
+              Tanggal Mulai Aktif Program
+            </Label>
+            <Controller
+              control={control}
+              name="startDate"
+              render={({ field }) => (
+                <DatePickerInput
+                  value={field.value}
+                  onChange={(date) => {
+                    field.onChange(date);
+                  }}
+                  placeholder="Pilih tanggal"
+                  displayFormat="dd MMMM yyyy"
+                  variant="outline"
+                />
               )}
-            </div>
+            />
+            {formState.errors.startDate && (
+              <p className="text-xs text-red-500">
+                {formState.errors.startDate.message}
+              </p>
+            )}
+          </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="endDate" className="text-sm font-bold">
-                Tanggal Akhir
-              </Label>
-              <Controller
-                control={control}
-                name="endDate"
-                render={({ field }) => (
-                  <DatePickerInput
-                    value={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                    }}
-                    placeholder="Pilih tanggal"
-                    displayFormat="dd MMMM yyyy"
-                    size="default"
-                    variant="outline"
-                    disabled={(date) => {
-                      if (!startDate) return false;
-                      const start = new Date(startDate);
-                      return date < start;
-                    }}
-                  />
-                )}
-              />
-              {formState.errors.endDate && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.endDate.message}
-                </p>
+          <div className="space-y-1.5 col-span-2 md:col-span-1">
+            <Label htmlFor="endDate" className="text-sm font-bold">
+              Tanggal Akhir Aktif Program
+            </Label>
+            <Controller
+              control={control}
+              name="endDate"
+              render={({ field }) => (
+                <DatePickerInput
+                  value={field.value}
+                  onChange={(date) => {
+                    field.onChange(date);
+                  }}
+                  placeholder="Pilih tanggal"
+                  displayFormat="dd MMMM yyyy"
+                  size="default"
+                  variant="outline"
+                  disabled={(date) => {
+                    if (!startDate) return false;
+                    const start = new Date(startDate);
+                    return date < start;
+                  }}
+                />
               )}
-            </div>
+            />
+            {formState.errors.endDate && (
+              <p className="text-xs text-red-500">
+                {formState.errors.endDate.message}
+              </p>
+            )}
           </div>
 
           {/* Anggaran */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 col-span-2 md:col-span-1">
             <Label htmlFor="anggaran" className="text-sm font-bold">
               Anggaran
             </Label>
@@ -197,7 +198,7 @@ export function AddProgramDialog({
           </div>
 
           {/* Budget per penerima */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 col-span-2 md:col-span-1">
             <Label htmlFor="budgetPerPenerima" className="text-sm font-bold">
               Budget Per Penerima
             </Label>
@@ -221,7 +222,7 @@ export function AddProgramDialog({
           </div>
 
           {/* Disabled Total Benificier */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 col-span-2">
             <Label className="text-sm font-bold">Jumlah Penerima Manfaat</Label>
             <Input
               placeholder="-"
@@ -232,7 +233,7 @@ export function AddProgramDialog({
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-2 pt-4 col-span-2">
             <Button
               type="button"
               variant="outline"
