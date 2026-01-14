@@ -254,7 +254,7 @@ export default function Programs() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {programs.reverse().map((program) => (
+                  {programs.map((program) => (
                     <tr
                       key={program.id}
                       className="hover:bg-slate-50/30 transition-colors"
@@ -280,7 +280,7 @@ export default function Programs() {
                       </td>
                       <td className="px-6 py-5">
                         <p className="text-sm font-bold text-slate-700">
-                          Yayasan Peduli Jakarta
+                          LAPI ITB
                         </p>
                       </td>
                       <td className="px-6 py-5 text-sm font-bold text-slate-900">
