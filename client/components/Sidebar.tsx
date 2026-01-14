@@ -50,18 +50,11 @@ export function Sidebar() {
     <>
       <aside className="w-64 h-screen bg-white border-r border-slate-200 flex flex-col fixed left-0 top-0 z-30">
         {/* Brand Logo */}
-        <div className="p-6 border-b border-slate-50">
-          <div className="flex items-center gap-3">
-            <img
-              src="/presidana-logo.svg"
-              alt="Logo Presidana"
-              className="size-9"
-            />
-            <span className="text-xl font-bold text-slate-800 tracking-tight">
-              Presidana
-            </span>
-          </div>
-        </div>
+        <img
+          src="/presidana-logo-text.svg"
+          alt="Logo Presidana"
+          className="h-16 self-start ml-4"
+        />
 
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto py-6 px-4">
