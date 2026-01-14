@@ -84,8 +84,12 @@ export default function Login() {
         <div className="w-full max-w-[440px]">
           {/* Brand Logo */}
           <div className="flex flex-col items-center mb-10">
-            <div className="w-14 h-14 bg-[#1E6CF6] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-500/30 mb-4 transition-transform hover:scale-105 duration-300">
-              <Layers className="w-8 h-8" />
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-white shadow-sm shadow-blue-500/30 mb-4 transition-transform hover:scale-105 duration-300">
+              <img
+                src="/presidana-logo.svg"
+                alt="Logo Presidana"
+                className="size-8"
+              />
             </div>
             <span className="text-2xl font-black text-slate-800 tracking-tighter">
               Presidana

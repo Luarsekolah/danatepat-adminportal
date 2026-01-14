@@ -52,10 +52,12 @@ export function Sidebar() {
         {/* Brand Logo */}
         <div className="p-6 border-b border-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#1E6CF6] rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-              <Layers className="w-5 h-5" />
-            </div>
-            <span className="text-xl font-extrabold text-slate-800 tracking-tight">
+            <img
+              src="/presidana-logo.svg"
+              alt="Logo Presidana"
+              className="size-9"
+            />
+            <span className="text-xl font-bold text-slate-800 tracking-tight">
               Presidana
             </span>
           </div>
