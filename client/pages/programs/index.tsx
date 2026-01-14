@@ -254,7 +254,7 @@ export default function Programs() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {programs.map((program) => (
+                  {programs.reverse().map((program) => (
                     <tr
                       key={program.id}
                       className="hover:bg-slate-50/30 transition-colors"
