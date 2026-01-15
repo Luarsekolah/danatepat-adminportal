@@ -189,7 +189,7 @@ export function UploadMerchantCSVDialog({
         "Nama Usaha": "Warung Makan Sederhana",
         "Nama Bank": "BCA",
         "Nomor Rekening": "1234567890",
-        "Nama Remilik Rekening": "Nama",
+        "Nama Pemilik Rekening": "Nama",
         Alamat: "Jl. Raya No. 1",
         Latlon: "-6.200000,106.816666",
       },
