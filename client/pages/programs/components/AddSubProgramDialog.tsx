@@ -27,11 +27,13 @@ import {
   type CreateSubProgramPayload,
 } from "@/services/schemas/program";
 import { InputPrice } from "@/components/ui/input-price";
+import { formatCurrency } from "@/lib/utils";
 
 interface AddSubProgramDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   programId: string;
+  remainingBudget: number;
   onSuccess?: () => void;
 }
 
@@ -39,6 +41,7 @@ export function AddSubProgramDialog({
   open,
   onOpenChange,
   programId,
+  remainingBudget,
   onSuccess,
 }: AddSubProgramDialogProps) {
   const createMutation = useCreateSubPrograms(Number(programId), {
@@ -49,21 +52,54 @@ export function AddSubProgramDialog({
     },
   });
 
-  const { register, handleSubmit, formState, reset, control, setValue } =
-    useForm<CreateSubProgramPayload>({
-      resolver: zodResolver(createSubProgramPayloadSchema),
-      defaultValues: {
-        name: "",
-        description: "",
-        expTokenDate: null,
-        anggaran: 0,
-        dailyAllocationAmount: 0,
-        maxTrxPerDay: undefined,
-        kategori: "PANGAN",
-      },
-    });
+  const {
+    register,
+    handleSubmit,
+    formState,
+    reset,
+    control,
+    watch,
+    setError,
+    clearErrors,
+  } = useForm<CreateSubProgramPayload>({
+    resolver: zodResolver(createSubProgramPayloadSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      expTokenDate: null,
+      anggaran: 0,
+      dailyAllocationAmount: 0,
+      maxTrxPerDay: undefined,
+      kategori: "PANGAN",
+    },
+  });
+
+  const inputAnggaran = watch("anggaran");
+  React.useEffect(() => {
+    if (inputAnggaran > remainingBudget) {
+      setError("anggaran", {
+        type: "manual",
+        message: `Anggaran tidak dapat melebihi ${formatCurrency(
+          remainingBudget,
+        )}`,
+      });
+    } else {
+      clearErrors("anggaran");
+    }
+  }, [inputAnggaran, remainingBudget, setError, clearErrors]);
 
   const onSubmit = (data: CreateSubProgramPayload) => {
+    // Validate budget limit before submission
+    if (data.anggaran > remainingBudget) {
+      setError("anggaran", {
+        type: "manual",
+        message: `Anggaran tidak dapat melebihi ${formatCurrency(
+          remainingBudget,
+        )}`,
+      });
+      return;
+    }
+
     // Send as array since API expects multiple sub programs
     createMutation.mutate([data]);
   };
@@ -161,9 +197,14 @@ export function AddSubProgramDialog({
                   />
                 )}
               />
-              {formState.errors.anggaran && (
+              {formState.errors.anggaran ? (
                 <p className="text-xs text-red-500">
                   {formState.errors.anggaran.message}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-600">
+                  Sisa anggaran yang dapat digunakan:{" "}
+                  {formatCurrency(remainingBudget)}
                 </p>
               )}
             </div>

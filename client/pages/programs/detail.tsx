@@ -32,6 +32,13 @@ export default function ProgramDetail() {
   const programData = useGetProgram(Number(programId));
   const subProgramsQuery = useListProgramChildren(Number(programId));
 
+  const currentAllBudget = subProgramsQuery.data?.data?.reduce(
+    (acc, curr) => acc + curr.anggaran,
+    0,
+  );
+  const remainingBudget =
+    programData.data?.data?.budgetPerPenerima - currentAllBudget;
+
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const program = programData.data?.data;
@@ -279,6 +286,7 @@ export default function ProgramDetail() {
         {/* Dialog */}
         <AddSubProgramDialog
           programId={programId || ""}
+          remainingBudget={remainingBudget}
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           onSuccess={handleDialogSuccess}
