@@ -7,7 +7,7 @@ import {
   useGetProgram,
   useListProgramChildren,
 } from "@/services/queries/program";
-import { formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { AddSubProgramDialog } from "./components/AddSubProgramDialog";
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -237,7 +237,16 @@ export default function ProgramDetail() {
                         </div>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600">
+                        <span
+                          className={cn(
+                            "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                            subProgram.kategori === "PANGAN"
+                              ? "text-amber-600 bg-amber-50"
+                              : subProgram.kategori === "PENDIDIKAN"
+                                ? "text-blue-600 bg-blue-50"
+                                : "text-emerald-600 bg-emerald-50",
+                          )}
+                        >
                           {subProgram.kategori || "—"}
                         </span>
                       </td>
