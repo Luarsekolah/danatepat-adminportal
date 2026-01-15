@@ -134,7 +134,7 @@ export function AddProgramDialog({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={TEMP_DONATUR_ID.toString()}>
-                      {detailTempDonatur.data.data.fullName}
+                      {detailTempDonatur?.data?.data?.fullName || "LAPI ITB"}
                     </SelectItem>
                   </SelectContent>
                 </Select>
