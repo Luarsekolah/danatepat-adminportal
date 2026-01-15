@@ -79,27 +79,32 @@ export const listProgramQuerySchema = z
  * Create Sub Program request payload schema
  * For creating children programs under a parent program
  */
-export const createSubProgramPayloadSchema = z.object({
-  name: z
-    .string({ message: "Nama sub program harus diisi" })
-    .min(1, { message: "Nama sub program harus diisi" }),
-  description: z
-    .string({ message: "Deskripsi harus diisi" })
-    .min(1, { message: "Deskripsi harus diisi" }),
-  expTokenDate: z.date().optional(),
-  anggaran: z
-    .number({ message: "Anggaran harus berupa angka" })
-    .positive({ message: "Anggaran harus lebih dari 0" }),
-  dailyAllocationAmount: z
-    .number({ message: "Alokasi harian harus berupa angka" })
-    .positive({ message: "Alokasi harian harus lebih dari 0" }),
-  maxTrxPerDay: z
-    .number({ message: "Maksimal transaksi per hari harus berupa angka" })
-    .positive({ message: "Maksimal transaksi per hari harus lebih dari 0" }),
-  kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
-    message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
-  }),
-});
+export const createSubProgramPayloadSchema = z
+  .object({
+    name: z
+      .string({ message: "Nama sub program harus diisi" })
+      .min(1, { message: "Nama sub program harus diisi" }),
+    description: z
+      .string({ message: "Deskripsi harus diisi" })
+      .min(1, { message: "Deskripsi harus diisi" }),
+    expTokenDate: z.date("Tanggal kadaluarsa token harus diisi"),
+    anggaran: z
+      .number({ message: "Anggaran harus berupa angka" })
+      .positive({ message: "Anggaran harus lebih dari 0" }),
+    dailyAllocationAmount: z
+      .number({ message: "Alokasi harian harus berupa angka" })
+      .positive({ message: "Alokasi harian harus lebih dari 0" }),
+    maxTrxPerDay: z
+      .number({ message: "Maksimal transaksi per hari harus berupa angka" })
+      .positive({ message: "Maksimal transaksi per hari harus lebih dari 0" }),
+    kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
+      message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
+    }),
+  })
+  .refine((data) => data.dailyAllocationAmount <= data.anggaran, {
+    message: "Limit nominal per transaksi tidak dapat melebihi anggaran",
+    path: ["dailyAllocationAmount"],
+  });
 
 /**
  * Array of sub programs for bulk creation
