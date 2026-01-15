@@ -128,7 +128,7 @@ export default function Programs() {
     <DashboardLayout>
       <div className="space-y-8">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
               Daftar Program Bantuan
@@ -141,7 +141,7 @@ export default function Programs() {
             className="bg-[#1E6CF6] hover:bg-blue-700 text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-blue-500/20"
             onClick={() => setDialogOpen(true)}
           >
-            <Plus className="w-5 h-5 mr-2" />
+            <Plus className="size-6" />
             Tambah Program
           </Button>
         </div>
@@ -185,7 +185,7 @@ export default function Programs() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           {stats.map((stat, idx) => (
             <div
               key={idx}

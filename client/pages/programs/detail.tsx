@@ -85,7 +85,7 @@ export default function ProgramDetail() {
         </div>
 
         {/* Page Title */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
               Sub Program
@@ -99,14 +99,14 @@ export default function ProgramDetail() {
             onClick={() => setIsDialogOpen(true)}
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 rounded-xl"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="size-8" />
             Tambah Sub Program
           </Button>
         </div>
 
         {/* Program Info Card */}
         <div className="bg-blue-50 border border-blue-200 rounded-3xl p-6">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center flex-col gap-4 md:flex-row">
             <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
               {CATEGORY_ICONS[program.kategori?.toUpperCase() || "default"] ||
                 CATEGORY_ICONS.default}
@@ -122,7 +122,7 @@ export default function ProgramDetail() {
           </div>
 
           {/* Program Stats */}
-          <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-blue-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-blue-200">
             <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Nama Program
@@ -164,7 +164,7 @@ export default function ProgramDetail() {
 
         {/* Sub Programs Section */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+          <div className="p-6 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between">
             <h3 className="text-lg font-extrabold text-slate-900">
               Daftar Sub Program
             </h3>
