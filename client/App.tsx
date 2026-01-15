@@ -17,6 +17,7 @@ import Audit from "./pages/Audit";
 import { ProtectedRoute } from "./components/layout/protected-route";
 import { PublicRoute } from "./components/layout/public-route";
 import ProgramMerchant from "./pages/programs/merchant";
+import Blockchain from "./pages/blockchain";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +38,7 @@ const App = () => (
         <Routes>
           <Route path="dashboard" element={<ProtectedRoute />}>
             <Route index element={<Index />} />
+            <Route path="blockchain" element={<Blockchain />} />
             <Route path="programs" element={<Programs />} />
             <Route path="programs/:programId" element={<ProgramDetail />} />
             <Route

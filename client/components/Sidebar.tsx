@@ -7,9 +7,9 @@ import {
   Search,
   Users,
   Settings,
-  Layers,
   ChevronRight,
   LogOut,
+  Bitcoin,
 } from "lucide-react";
 import * as React from "react";
 import { Button } from "./ui/button";
@@ -20,6 +20,7 @@ const menuItems = [
     label: "MENU UTAMA",
     items: [
       { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+      { name: "Blockchain", icon: Bitcoin, path: "/dashboard/blockchain" },
       {
         name: "Program Management",
         icon: Briefcase,
