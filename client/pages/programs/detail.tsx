@@ -286,7 +286,7 @@ export default function ProgramDetail() {
         {/* Dialog */}
         <AddSubProgramDialog
           programId={programId || ""}
-          remainingBudget={remainingBudget}
+          remainingBudget={remainingBudget < 0 ? 0 : remainingBudget}
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           onSuccess={handleDialogSuccess}
