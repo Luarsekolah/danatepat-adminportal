@@ -31,7 +31,7 @@ import { useGetUserDetail } from "@/services/queries/user";
 import { useDonate } from "@/services/mutations/payment";
 
 // Temporary donatur due to it's only will be one donatur for now
-const TEMP_DONATUR_ID = 4;
+const TEMP_DONATUR_ID = 2;
 
 interface AddProgramDialogProps {
   open: boolean;
@@ -68,6 +68,7 @@ export function AddProgramDialog({
         startDate: null,
         endDate: null,
         anggaran: 0,
+        donatur: TEMP_DONATUR_ID.toString(),
       },
     });
 
@@ -80,7 +81,15 @@ export function AddProgramDialog({
   }
 
   const onSubmit = (data: CreateProgramPayload) => {
-    createMutation.mutate(data);
+    const newData = {
+      name: data.name,
+      description: data.description,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      anggaran: data.anggaran,
+      budgetPerPenerima: data.budgetPerPenerima,
+    };
+    createMutation.mutate(newData);
   };
 
   return (

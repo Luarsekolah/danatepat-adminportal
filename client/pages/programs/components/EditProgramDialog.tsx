@@ -34,7 +34,7 @@ import { InputPrice } from "@/components/ui/input-price";
 import { useGetUserDetail } from "@/services/queries/user";
 
 // Temporary donatur due to it's only will be one donatur for now
-const TEMP_DONATUR_ID = 4;
+const TEMP_DONATUR_ID = 2;
 
 interface EditProgramDialogProps {
   open: boolean;

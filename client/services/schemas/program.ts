@@ -16,9 +16,7 @@ export const createProgramPayloadSchema = z
       .string({ message: "Nama program harus diisi" })
       .min(1, { message: "Nama program harus diisi" })
       .min(3, { message: "Nama program minimal 3 karakter" }),
-    donatur: z
-      .string({ message: "Donatur harus dipilih" })
-      .min(1, { message: "Donatur harus dipilih" }),
+    donatur: z.string().optional(),
     description: z
       .string({ message: "Deskripsi harus diisi" })
       .min(1, { message: "Deskripsi harus diisi" }),
@@ -42,9 +40,7 @@ export const createProgramPayloadSchema = z
 export const updateProgramPayloadSchema = z
   .object({
     name: z.string().optional(),
-    donatur: z
-      .string({ message: "Donatur harus dipilih" })
-      .min(1, { message: "Donatur harus dipilih" }),
+    donatur: z.string().optional(),
     description: z.string().optional(),
     programManagerId: z.number().optional(),
     startDate: z.date("Tanggal mulai harus diisi"),
