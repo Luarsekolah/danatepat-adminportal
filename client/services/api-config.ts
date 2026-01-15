@@ -41,6 +41,12 @@ export const queryKeys = {
     details: () => [...queryKeys.users.all, "detail"] as const,
     detail: (userId: number) => [...queryKeys.users.details(), userId] as const,
   },
+  payments: {
+    all: ["payments"] as const,
+    histories: () => [...queryKeys.payments.all, "history"] as const,
+    history: (filters?: { startDate?: string; endDate?: string }) =>
+      [...queryKeys.payments.histories(), filters] as const,
+  },
 } as const;
 
 export const routes = {
@@ -82,6 +88,7 @@ export const routes = {
   },
   payment: {
     donate: "/payment/api/payments/donate",
+    historyAll: "/payment/api/payments/history/all",
   },
   user: {
     detail: (userId: number) => `/users/${userId}`,

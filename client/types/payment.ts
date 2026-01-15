@@ -1,3 +1,17 @@
-import type { DonatePayload, DonateResponse } from "@/services/schemas/payment";
+import type {
+  DonatePayload,
+  DonateResponse,
+  PaymentHistoryQuery,
+  GetPaymentHistoryResponse,
+  PaymentHistoryData,
+  PaymentHistoryItem,
+} from "@/services/schemas/payment";
 
-export type { DonatePayload, DonateResponse };
+export type {
+  DonatePayload,
+  DonateResponse,
+  PaymentHistoryQuery,
+  GetPaymentHistoryResponse,
+  PaymentHistoryData,
+  PaymentHistoryItem,
+};
