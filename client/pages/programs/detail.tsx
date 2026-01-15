@@ -17,6 +17,15 @@ const CATEGORY_ICONS: Record<string, string> = {
   default: "📋",
 };
 
+const getCategoryColor = (kategori: string) => {
+  const categoryMap: Record<string, string> = {
+    PANGAN: "text-emerald-500 bg-emerald-50 border-emerald-100",
+    PENDIDIKAN: "text-purple-500 bg-purple-50 border-purple-100",
+    KESEHATAN: "text-rose-500 bg-rose-50 border-rose-100",
+  };
+  return categoryMap[kategori] || "text-slate-500 bg-slate-50 border-slate-100";
+};
+
 export default function ProgramDetail() {
   const { programId } = useParams<{ programId: string }>();
   const navigate = useNavigate();
@@ -240,11 +249,7 @@ export default function ProgramDetail() {
                         <span
                           className={cn(
                             "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                            subProgram.kategori === "PANGAN"
-                              ? "text-amber-600 bg-amber-50"
-                              : subProgram.kategori === "PENDIDIKAN"
-                                ? "text-blue-600 bg-blue-50"
-                                : "text-emerald-600 bg-emerald-50",
+                            getCategoryColor(subProgram.kategori),
                           )}
                         >
                           {subProgram.kategori || "—"}
