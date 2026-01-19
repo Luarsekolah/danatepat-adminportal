@@ -5,6 +5,7 @@ import { useGetPaymentHistory } from "@/services/queries/payment";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { DatePickerInput } from "@/components/ui/calendar";
 import type { PaymentHistoryItem } from "@/services/schemas/payment";
+import { parseAsIsoDate, useQueryState } from "nuqs";
 
 const STATUS_STYLES: Record<string, string> = {
   PENDING: "text-amber-500 bg-amber-50",
@@ -18,6 +19,22 @@ const STATUS_LABELS: Record<string, string> = {
   SUCCESS: "Berhasil",
   FAILED: "Gagal",
   COMPLETED: "Selesai",
+};
+
+const TRANSACTION_STYLES: Record<
+  PaymentHistoryItem["transaction"]["transactionType"],
+  string
+> = {
+  PAYMENT: "text-indigo-500 bg-indigo-50",
+  DAILY_DISTRIBUTION: "text-orange-500 bg-orange-50",
+};
+
+const TRANSACTION_LABELS: Record<
+  PaymentHistoryItem["transaction"]["transactionType"],
+  string
+> = {
+  PAYMENT: "Transaksi Merchant",
+  DAILY_DISTRIBUTION: "Distribusi ke Penerima",
 };
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -44,22 +61,28 @@ const getCategoryColor = (kategori: string) => {
   return categoryMap[kategori] || "text-slate-500 bg-slate-50 border-slate-100";
 };
 
+const formatDateToString = (date: Date | undefined): string | undefined => {
+  if (!date) return undefined;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export default function Blockchain() {
   const today = getTodayDate();
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date(today));
-  const [endDate, setEndDate] = useState<Date | undefined>(new Date(today));
-
-  const formatDateToString = (date: Date | undefined): string | undefined => {
-    if (!date) return undefined;
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  const [queryStartDate, setQueryStartDate] = useQueryState(
+    "startDate",
+    parseAsIsoDate.withDefault(new Date()),
+  );
+  const [queryEndDate, setQueryEndDate] = useQueryState(
+    "endDate",
+    parseAsIsoDate.withDefault(new Date()),
+  );
 
   const paymentHistoryQuery = useGetPaymentHistory({
-    startDate: formatDateToString(startDate),
-    endDate: formatDateToString(endDate),
+    startDate: formatDateToString(queryStartDate),
+    endDate: formatDateToString(queryEndDate),
   });
   const paymentHistory = paymentHistoryQuery.data?.data?.content ?? [];
   const totalElements = paymentHistoryQuery.data?.data?.totalElements ?? 0;
@@ -85,8 +108,8 @@ export default function Blockchain() {
                 Tanggal Mulai
               </label>
               <DatePickerInput
-                value={startDate}
-                onChange={setStartDate}
+                value={queryStartDate}
+                onChange={setQueryStartDate}
                 placeholder="Pilih tanggal mulai"
                 displayFormat="dd MMMM yyyy"
               />
@@ -96,8 +119,8 @@ export default function Blockchain() {
                 Tanggal Selesai
               </label>
               <DatePickerInput
-                value={endDate}
-                onChange={setEndDate}
+                value={queryEndDate}
+                onChange={setQueryEndDate}
                 placeholder="Pilih tanggal selesai"
                 displayFormat="dd MMMM yyyy"
               />
@@ -126,10 +149,13 @@ export default function Blockchain() {
                 <thead>
                   <tr className="bg-slate-50/50">
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Merchant
+                      Data
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Program
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Jenis
                     </th>
                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Nominal
@@ -151,13 +177,31 @@ export default function Blockchain() {
                       key={item.transaction.id}
                       className="hover:bg-slate-50/30 transition-colors"
                     >
-                      <td className="px-6 py-5">
-                        <p className="text-sm font-bold text-slate-900">
-                          {item.merchant.merchantName}
-                        </p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                          ID: {item.merchant.merchantId}
-                        </p>
+                      <td className="px-6 py-5 flex items-center gap-3">
+                        <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
+                          {item.merchant && !item.user ? "🏪" : null}
+                          {!item.merchant && item.user ? "👤" : null}
+                        </div>
+                        {item.merchant && !item.user ? (
+                          <div>
+                            <p className="text-sm font-bold text-slate-900">
+                              {item.merchant?.merchantName || "-"}
+                            </p>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                              Merchant
+                            </p>
+                          </div>
+                        ) : null}
+                        {!item.merchant && item.user ? (
+                          <div>
+                            <p className="text-sm font-bold text-slate-900">
+                              {item.user.userName || "-"}
+                            </p>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                              Penerima Dana
+                            </p>
+                          </div>
+                        ) : null}
                       </td>
 
                       <td className="px-6 py-5">
@@ -180,6 +224,20 @@ export default function Blockchain() {
                         </div>
                       </td>
 
+                      <td className="px-6 py-5 text-sm font-bold text-slate-900">
+                        <span
+                          className={cn(
+                            "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                            TRANSACTION_STYLES[
+                              item.transaction.transactionType
+                            ] || "text-slate-500 bg-slate-50",
+                          )}
+                        >
+                          {TRANSACTION_LABELS[
+                            item.transaction.transactionType
+                          ] || item.transaction.transactionType}
+                        </span>
+                      </td>
                       <td className="px-6 py-5 text-sm font-bold text-slate-900">
                         {formatCurrency(item.transaction.amount)}
                       </td>
