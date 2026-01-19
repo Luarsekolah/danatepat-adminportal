@@ -18,6 +18,7 @@ import { ProtectedRoute } from "./components/layout/protected-route";
 import { PublicRoute } from "./components/layout/public-route";
 import ProgramMerchant from "./pages/programs/merchant";
 import Blockchain from "./pages/blockchain";
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,33 +35,35 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner richColors />
-      <BrowserRouter>
-        <Routes>
-          <Route path="dashboard" element={<ProtectedRoute />}>
-            <Route index element={<Index />} />
-            <Route path="blockchain" element={<Blockchain />} />
-            <Route path="programs" element={<Programs />} />
-            <Route path="programs/:programId" element={<ProgramDetail />} />
-            <Route
-              path="programs/merchant/:programId"
-              element={<ProgramMerchant />}
-            />
-            <Route
-              path="programs/beneficiary/:programId"
-              element={<ProgramBeneficiary />}
-            />
-            <Route path="merchants" element={<Merchants />} />
-            <Route path="audit" element={<Audit />} />
-            <Route path="users" element={<Users />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-          <Route path="/" element={<PublicRoute />}>
-            <Route index element={<Login />} />
-          </Route>
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <NuqsAdapter>
+        <BrowserRouter>
+          <Routes>
+            <Route path="dashboard" element={<ProtectedRoute />}>
+              <Route index element={<Index />} />
+              <Route path="blockchain" element={<Blockchain />} />
+              <Route path="programs" element={<Programs />} />
+              <Route path="programs/:programId" element={<ProgramDetail />} />
+              <Route
+                path="programs/merchant/:programId"
+                element={<ProgramMerchant />}
+              />
+              <Route
+                path="programs/beneficiary/:programId"
+                element={<ProgramBeneficiary />}
+              />
+              <Route path="merchants" element={<Merchants />} />
+              <Route path="audit" element={<Audit />} />
+              <Route path="users" element={<Users />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+            <Route path="/" element={<PublicRoute />}>
+              <Route index element={<Login />} />
+            </Route>
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </NuqsAdapter>
     </TooltipProvider>
   </QueryClientProvider>
 );
