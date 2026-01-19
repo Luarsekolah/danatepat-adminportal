@@ -214,7 +214,7 @@ export function AddSubProgramDialog({
                 htmlFor="dailyAllocationAmount"
                 className="text-sm font-bold"
               >
-                Limit Nominal Per Transaksi
+                Maks. Nominal Per Transaksi
               </Label>
               <Controller
                 control={control}
@@ -229,9 +229,13 @@ export function AddSubProgramDialog({
                 )}
               />
 
-              {formState.errors.dailyAllocationAmount && (
+              {formState.errors.dailyAllocationAmount ? (
                 <p className="text-xs text-red-500">
                   {formState.errors.dailyAllocationAmount.message}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-600">
+                  Batas maksimum nominal per transaksi yang dapat dilakukan
                 </p>
               )}
             </div>
@@ -261,7 +265,7 @@ export function AddSubProgramDialog({
                 </p>
               ) : (
                 <p className="text-xs text-slate-600">
-                  Maksimal total transaksi yang dapat dilakukan per tiap
+                  Maksimum total transaksi yang dapat dilakukan per tiap
                   merchant dalam sehari
                 </p>
               )}
