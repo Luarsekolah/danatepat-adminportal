@@ -47,7 +47,7 @@ export interface PaymentTransaction {
   amount: number;
   status: string;
   blockchainTxHash: string;
-  transactionType: string;
+  transactionType: "DAILY_DISTRIBUTION" | "PAYMENT" | "SETTLEMENT";
   createdAt: string;
 }
 
@@ -71,7 +71,11 @@ export interface PaymentProgram {
  * Payment history item
  */
 export interface PaymentHistoryItem {
-  merchant: PaymentMerchant;
+  user: null | {
+    userId: number;
+    userName: string;
+  };
+  merchant: PaymentMerchant | null;
   program: PaymentProgram;
   transaction: PaymentTransaction;
 }
