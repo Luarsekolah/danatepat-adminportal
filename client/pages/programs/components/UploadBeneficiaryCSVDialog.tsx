@@ -11,17 +11,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Upload, Download, X, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { useBulkCreateBeneficiariesWithProgram } from "@/services/mutations/beneficiary";
+import { useBulkCreateBeneficiariesMultiProgram } from "@/services/mutations/beneficiary";
 import {
   bulkBeneficiaryItemSchema,
   type BulkBeneficiaryItem,
+  type BulkBeneficiaryMultiProgram,
 } from "@/services/schemas/user";
 import { ProgramData } from "@/types/base";
+import { cn } from "@/lib/utils";
+
+const getCategoryColor = (kategori: string) => {
+  const categoryMap: Record<string, string> = {
+    PANGAN: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    PENDIDIKAN: "text-purple-600 bg-purple-50 border-purple-100",
+    KESEHATAN: "text-rose-600 bg-rose-50 border-rose-100",
+  };
+  return categoryMap[kategori] || "text-slate-600 bg-slate-50 border-slate-100";
+};
 
 interface UploadBeneficiaryCSVDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  subProgram?: ProgramData;
+  allSubPrograms?: ProgramData[];
   onSuccess?: () => void;
 }
 
@@ -29,12 +40,13 @@ interface ParsedRowWithValidation extends BulkBeneficiaryItem {
   _rowNumber: number;
   _isValid: boolean;
   _errors?: string[];
+  _selectedSubPrograms: number[];
 }
 
 export function UploadBeneficiaryCSVDialog({
   open,
   onOpenChange,
-  subProgram,
+  allSubPrograms = [],
   onSuccess,
 }: UploadBeneficiaryCSVDialogProps) {
   const [file, setFile] = useState<File | null>(null);
@@ -42,10 +54,7 @@ export function UploadBeneficiaryCSVDialog({
   const [parseErrors, setParseErrors] = useState<Papa.ParseError[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const programId = subProgram?.id || 0;
-  const expectedCategory = subProgram?.kategori;
-
-  const bulkCreateMutation = useBulkCreateBeneficiariesWithProgram(programId, {
+  const bulkCreateMutation = useBulkCreateBeneficiariesMultiProgram({
     onSuccess: () => {
       onSuccess?.();
       handleClose();
@@ -103,10 +112,39 @@ export function UploadBeneficiaryCSVDialog({
         // Validate and process parsed data
         const processedData: ParsedRowWithValidation[] = results.data.map(
           (row, index) => {
+            // Extract sub-program selections from "Ya"/"Tidak" columns
+            const selectedSubPrograms: number[] = [];
+            const subProgramErrors: string[] = [];
+            allSubPrograms.forEach((subProgram) => {
+              const columnValue = (row as Record<string, string>)[
+                subProgram.name
+              ]
+                ?.toLowerCase()
+                .trim();
+              if (
+                columnValue &&
+                columnValue !== "ya" &&
+                columnValue !== "tidak"
+              ) {
+                subProgramErrors.push(
+                  `${subProgram.name}: nilai harus "Ya" atau "Tidak", diterima "${columnValue}"`,
+                );
+              }
+              if (columnValue === "ya") {
+                selectedSubPrograms.push(subProgram.id);
+              }
+            });
+
+            // Use first sub-program's kategori for validation
+            const firstSelectedSubProgram = allSubPrograms.find(
+              (sp) => sp.id === selectedSubPrograms[0],
+            );
+            const kategori = firstSelectedSubProgram?.kategori;
+
             // Auto-apply default passwordHash and role for beneficiaries
             const rowWithDefaults: BulkBeneficiaryItem = {
               ...(row as BulkBeneficiaryItem),
-              kategori: (expectedCategory ??
+              kategori: (kategori ??
                 (row as BulkBeneficiaryItem)
                   .kategori) as BulkBeneficiaryItem["kategori"],
               passwordHash: "password12345" as const,
@@ -117,23 +155,39 @@ export function UploadBeneficiaryCSVDialog({
             const validation =
               bulkBeneficiaryItemSchema.safeParse(rowWithDefaults);
 
-            if (validation.success) {
+            if (
+              validation.success &&
+              selectedSubPrograms.length > 0 &&
+              subProgramErrors.length === 0
+            ) {
               return {
                 ...validation.data,
-                _rowNumber: index + 2, // +2 because of header and 0-based index
+                _rowNumber: index + 2,
                 _isValid: true,
                 _errors: undefined,
+                _selectedSubPrograms: selectedSubPrograms,
               };
             }
 
-            const errors = validation.error.issues.map(
-              (err) => `${err.path.join(".")}: ${err.message}`,
-            );
+            const errors =
+              validation.error?.issues.map(
+                (err) => `${err.path.join(".")}: ${err.message}`,
+              ) ?? [];
+
+            if (selectedSubPrograms.length === 0) {
+              errors.push(
+                "Minimal harus memilih 1 sub-program (gunakan 'Ya' pada kolom sub-program)",
+              );
+            }
+
+            errors.push(...subProgramErrors);
+
             return {
               ...rowWithDefaults,
               _rowNumber: index + 2,
               _isValid: false,
               _errors: errors,
+              _selectedSubPrograms: selectedSubPrograms,
             };
           },
         );
@@ -172,7 +226,15 @@ export function UploadBeneficiaryCSVDialog({
       return;
     }
 
-    bulkCreateMutation.mutate({ users: validData });
+    // Create mapping of program ID to kategori
+    const subProgramsMapping = Object.fromEntries(
+      allSubPrograms.map((sp) => [sp.id, sp.kategori]),
+    );
+
+    bulkCreateMutation.mutate({
+      users: validData as BulkBeneficiaryMultiProgram["users"],
+      _subProgramsMapping: subProgramsMapping,
+    });
   };
 
   const handleDownloadTemplate = () => {
@@ -185,6 +247,7 @@ export function UploadBeneficiaryCSVDialog({
         "Tanggal Lahir (format: yyyy-mm-dd, contoh: 1990-01-30)": "1990-01-30",
         "URL Foto KTP": "https://example.com/ktp.jpg",
         "URL Foto": "https://example.com/profile.jpg",
+        ...Object.fromEntries(allSubPrograms.map((sp) => [sp.name, "Ya"])),
       },
     ];
 
@@ -212,24 +275,34 @@ export function UploadBeneficiaryCSVDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col">
         <DialogHeader>
           <DialogTitle>Unggah CSV Penerima Dana</DialogTitle>
           <DialogDescription>
-            <div className="space-y-2">
+            <div>
               <p>
-                Upload file CSV untuk mendaftarkan penerima dana (beneficiary)
-                secara massal ke sub-program ini. Password akan otomatis
-                dihasilkan.
+                Unggah file CSV untuk mendaftarkan penerima dana secara massal
+                ke sub-program yang tersedia.
               </p>
-              {subProgram && (
-                <div className="pt-1 space-y-1 border-t border-slate-300 text-sm">
+              <p>Password dari penerima dana akan otomatis dihasilkan.</p>
+              {allSubPrograms.length > 0 && (
+                <div className="pt-2 mt-2 space-y-2 border-t border-slate-300 text-sm">
                   <p className="font-medium text-slate-600">
-                    Untuk Sub-Program{" "}
-                    <span className="font-semibold">{subProgram.name}</span> di
-                    kategori{" "}
-                    <span className="font-semibold">{subProgram.kategori}</span>
+                    Sub-program yang tersedia:
                   </p>
+                  <div className="flex flex-wrap gap-2">
+                    {allSubPrograms.map((sp) => (
+                      <span
+                        key={sp.id}
+                        className={cn(
+                          "px-2 py-1 rounded text-xs font-medium",
+                          getCategoryColor(sp.kategori),
+                        )}
+                      >
+                        {sp.name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -244,7 +317,8 @@ export function UploadBeneficiaryCSVDialog({
                 Belum punya template?
               </h4>
               <p className="text-xs text-blue-700 mt-1">
-                Download template CSV untuk memudahkan input data
+                Download template CSV untuk memudahkan input data. Gunakan "Ya"
+                atau "Tidak" pada kolom sub-program.
               </p>
             </div>
             <Button
@@ -359,8 +433,8 @@ export function UploadBeneficiaryCSVDialog({
                   Preview Data (10 baris pertama)
                 </h4>
               </div>
-              <div className="overflow-x-auto max-h-80">
-                <table className="w-full text-xs">
+              <section className="overflow-x-auto max-h-80 pb-2">
+                <table className="min-w-max text-xs">
                   <thead className="bg-slate-100 sticky top-0">
                     <tr>
                       <th className="px-3 py-2 text-left font-medium">
@@ -374,6 +448,9 @@ export function UploadBeneficiaryCSVDialog({
                       <th className="px-3 py-2 text-left font-medium">NIK</th>
                       <th className="px-3 py-2 text-left font-medium">
                         Telepon
+                      </th>
+                      <th className="px-3 py-2 text-left font-medium">
+                        Sub-Program
                       </th>
                     </tr>
                   </thead>
@@ -397,11 +474,35 @@ export function UploadBeneficiaryCSVDialog({
                         <td className="px-3 py-2">{row.fullName || "-"}</td>
                         <td className="px-3 py-2">{row.nik || "-"}</td>
                         <td className="px-3 py-2">{row.phoneNumber || "-"}</td>
+                        <td className="px-3 py-2">
+                          <div className="flex flex-wrap gap-1">
+                            {row._selectedSubPrograms.length > 0 ? (
+                              row._selectedSubPrograms.map((spId) => {
+                                const sp = allSubPrograms.find(
+                                  (s) => s.id === spId,
+                                );
+                                return (
+                                  <span
+                                    key={spId}
+                                    className={cn(
+                                      "px-1.5 py-0.5 rounded text-xs",
+                                      getCategoryColor(sp?.kategori),
+                                    )}
+                                  >
+                                    {sp?.name}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="text-red-600">-</span>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </section>
 
               {/* Invalid Rows Details */}
               {invalidCount > 0 && (

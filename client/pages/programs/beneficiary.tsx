@@ -33,14 +33,6 @@ export default function ProgramBeneficiary() {
   const defaultSubProgram = subPrograms[0]?.id?.toString() ?? "";
   const currentActiveId = activeSubProgramId ?? (subPrograms[0]?.id || 0);
 
-  // Get current sub-program category
-  const currentSubProgram = subPrograms.find((sp) => sp.id === currentActiveId);
-  const currentCategory = currentSubProgram?.kategori as
-    | "PANGAN"
-    | "KESEHATAN"
-    | "PENDIDIKAN"
-    | undefined;
-
   // Fetch beneficiaries for the current active sub-program
   const programUsersQuery = useListProgramUsers(currentActiveId, {
     enabled: currentActiveId > 0,
@@ -48,28 +40,27 @@ export default function ProgramBeneficiary() {
 
   const beneficiaries = programUsersQuery.data?.data?.beneficiaries ?? [];
 
+  const handleUploadSuccess = () => {
+    // Refetch all beneficiaries across all sub-programs
+    programUsersQuery.refetch();
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header with Back Button */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate(`/dashboard/programs/${programId}`)}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <span className="text-sm font-medium text-slate-600">Kembali</span>
-          </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(`/dashboard/programs/${parentProgramId}`)}
-            className="gap-2"
+          <Link
+            to={`/dashboard/programs/${programId}`}
+            className="p-2 flex items-center gap-2 text-sm text-slate-600 hover:text-slate-500 transition-colors"
           >
-            Lihat Detail Program
+            <ChevronLeft className="size-5" />
+            Kembali ke Program
+          </Link>
+
+          <Button onClick={() => setUploadDialogOpen(true)}>
+            <Upload className="size-4" />
+            Unggah CSV
           </Button>
         </div>
 
@@ -132,7 +123,6 @@ export default function ProgramBeneficiary() {
                   beneficiaries={beneficiaries}
                   subProgram={subProgram}
                   isLoading={programUsersQuery.isLoading}
-                  onUploadClick={() => setUploadDialogOpen(true)}
                 />
               </TabsContent>
             ))}
@@ -144,10 +134,8 @@ export default function ProgramBeneficiary() {
       <UploadBeneficiaryCSVDialog
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
-        subProgram={currentSubProgram}
-        onSuccess={() => {
-          programUsersQuery.refetch();
-        }}
+        allSubPrograms={subPrograms}
+        onSuccess={handleUploadSuccess}
       />
     </DashboardLayout>
   );
@@ -158,13 +146,11 @@ function BeneficiaryTable({
   beneficiaries,
   subProgram,
   isLoading,
-  onUploadClick,
 }: {
   parentProgramName: string;
   beneficiaries: ProgramUser[];
   subProgram: ProgramData;
   isLoading: boolean;
-  onUploadClick: () => void;
 }) {
   return (
     <div className="space-y-6">
@@ -179,13 +165,6 @@ function BeneficiaryTable({
             <span className="font-semibold"> {parentProgramName} </span>
           </p>
         </div>
-        <Button
-          className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"
-          onClick={onUploadClick}
-        >
-          <Upload className="h-4 w-4" />
-          Unggah CSV
-        </Button>
       </div>
 
       {/* Loading State */}
