@@ -37,11 +37,32 @@ export const bulkCreateBeneficiariesPayloadSchema = z.object({
   }),
 });
 
+/**
+ * Schema for bulk beneficiary creation across multiple sub-programs
+ * Each user can be assigned to multiple sub-programs via "Ya"/"Tidak" columns
+ */
+export const bulkCreateBeneficiariesMultiProgramSchema = z.object({
+  users: z
+    .array(
+      bulkBeneficiaryItemSchema.extend({
+        _selectedSubPrograms: z.array(z.number()).min(1, {
+          message: "Minimal harus memilih 1 sub-program",
+        }),
+      }),
+    )
+    .min(1, {
+      message: "Minimal harus ada 1 penerima dana untuk dibuat",
+    }),
+});
+
 // Type exports
 export type UserRole = z.infer<typeof userRoleEnum>;
 export type BulkBeneficiaryItem = z.infer<typeof bulkBeneficiaryItemSchema>;
 export type BulkCreateBeneficiariesPayload = z.infer<
   typeof bulkCreateBeneficiariesPayloadSchema
+>;
+export type BulkBeneficiaryMultiProgram = z.infer<
+  typeof bulkCreateBeneficiariesMultiProgramSchema
 >;
 
 // Response type exports
