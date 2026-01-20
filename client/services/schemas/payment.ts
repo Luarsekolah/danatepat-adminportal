@@ -10,6 +10,9 @@ export const paymentHistoryQuerySchema = z
     endDate: z.string().optional(),
     page: z.number().int().min(0).optional(),
     size: z.number().int().min(1).optional(),
+    transactionType: z
+      .enum(["DAILY_DISTRIBUTION", "PAYMENT", "SETTLEMENT"])
+      .optional(),
   })
   .strict();
 
