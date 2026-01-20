@@ -90,24 +90,13 @@ export default function ProgramMerchant() {
       <div className="space-y-6">
         {/* Header with Back Button */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate(`/dashboard/programs/${programId}`)}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <span className="text-sm font-medium text-slate-600">Kembali</span>
-          </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(`/dashboard/programs/${parentProgramId}`)}
-            className="gap-2"
+          <Link
+            to={`/dashboard/programs/${programId}`}
+            className="p-2 flex items-center gap-2 text-sm text-slate-600 hover:text-slate-500 transition-colors"
           >
-            Lihat Detail Program
-          </Button>
+            <ChevronLeft className="size-5" />
+            Kembali ke Program
+          </Link>
         </div>
 
         {/* Loading State */}
