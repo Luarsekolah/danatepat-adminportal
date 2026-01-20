@@ -13,7 +13,8 @@ import type {
  * @example
  * const historyQuery = useGetPaymentHistory({
  *   startDate: '2026-01-13',
- *   endDate: '2026-01-14'
+ *   endDate: '2026-01-14',
+ *   page: 0
  * });
  * const transactions = historyQuery.data?.data.content ?? [];
  */

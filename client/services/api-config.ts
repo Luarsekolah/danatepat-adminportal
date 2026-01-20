@@ -44,8 +44,13 @@ export const queryKeys = {
   payments: {
     all: ["payments"] as const,
     histories: () => [...queryKeys.payments.all, "history"] as const,
-    history: (filters?: { startDate?: string; endDate?: string }) =>
-      [...queryKeys.payments.histories(), filters] as const,
+    history: (filters?: {
+      startDate?: string;
+      endDate?: string;
+      transactionType?: "DAILY_DISTRIBUTION" | "PAYMENT" | "SETTLEMENT";
+      page?: number;
+      size?: number;
+    }) => [...queryKeys.payments.histories(), filters] as const,
   },
 } as const;
 
