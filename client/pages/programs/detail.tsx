@@ -19,11 +19,11 @@ const CATEGORY_ICONS: Record<string, string> = {
 
 const getCategoryColor = (kategori: string) => {
   const categoryMap: Record<string, string> = {
-    PANGAN: "text-emerald-500 bg-emerald-50 border-emerald-100",
-    PENDIDIKAN: "text-purple-500 bg-purple-50 border-purple-100",
-    KESEHATAN: "text-rose-500 bg-rose-50 border-rose-100",
+    PANGAN: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    PENDIDIKAN: "text-purple-600 bg-purple-50 border-purple-100",
+    KESEHATAN: "text-rose-600 bg-rose-50 border-rose-100",
   };
-  return categoryMap[kategori] || "text-slate-500 bg-slate-50 border-slate-100";
+  return categoryMap[kategori] || "text-slate-600 bg-slate-50 border-slate-100";
 };
 
 export default function ProgramDetail() {
