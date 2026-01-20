@@ -211,7 +211,7 @@ function MerchantTable({
   return (
     <div className="space-y-6">
       {/* Header with Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold">Daftar Merchant</h2>
           <p className="text-sm text-slate-600">
@@ -330,7 +330,7 @@ function MerchantTable({
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <p className="text-sm text-slate-600">
               Menampilkan {merchants.length} merchant
             </p>
