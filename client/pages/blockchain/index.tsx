@@ -51,7 +51,7 @@ const TRANSACTION_LABELS: Record<
 > = {
   PAYMENT: "Transaksi Merchant",
   DAILY_DISTRIBUTION: "Distribusi ke Penerima",
-  SETTLEMENT: "Penyelesaian",
+  SETTLEMENT: "Settlement",
 };
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -318,27 +318,20 @@ export default function Blockchain() {
                   className="rounded-md px-4 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-slate-900 text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2"
                 >
                   <Banknote className="w-4 h-4" />
-                  <span>Penyelesaian</span>
+                  <span>Settlement</span>
                 </TabsTrigger>
               </TabsList>
             </div>
 
             <TabsContent value="payment" className="mt-0">
               <div className="p-6 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-extrabold text-slate-900">
-                      Transaksi ke Merchant
-                    </h3>
-                    <p className="text-sm text-slate-500 mt-1">
-                      Menampilkan {paymentTransactions.length} dari{" "}
-                      {totalElements} transaksi
-                    </p>
-                  </div>
-                  <Button variant="outline" className="gap-2">
-                    <span>Export</span>
-                  </Button>
-                </div>
+                <h3 className="text-lg font-extrabold text-slate-900">
+                  Transaksi ke Merchant
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Menampilkan {paymentTransactions.length} dari {totalElements}{" "}
+                  transaksi
+                </p>
               </div>
               <div className="overflow-x-auto">
                 {paymentQuery.isLoading ? (
@@ -395,7 +388,7 @@ export default function Blockchain() {
                                   {item.user?.userName || "-"}
                                 </p>
                                 <p className="text-xs text-slate-400">
-                                  {item.user?.userId}
+                                  ID: {item.user?.userId}
                                 </p>
                               </div>
                             </td>
@@ -488,20 +481,13 @@ export default function Blockchain() {
 
             <TabsContent value="distribution" className="mt-0">
               <div className="p-6 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-extrabold text-slate-900">
-                      Transaksi Distribusi ke Penerima
-                    </h3>
-                    <p className="text-sm text-slate-500 mt-1">
-                      Menampilkan {distributionTransactions.length} dari{" "}
-                      {totalElements} transaksi
-                    </p>
-                  </div>
-                  <Button variant="outline" className="gap-2">
-                    <span>Export</span>
-                  </Button>
-                </div>
+                <h3 className="text-lg font-extrabold text-slate-900">
+                  Transaksi Distribusi ke Penerima
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Menampilkan {distributionTransactions.length} dari{" "}
+                  {totalElements} transaksi
+                </p>
               </div>
               <div className="overflow-x-auto">
                 {distributionQuery.isLoading ? (
@@ -559,7 +545,7 @@ export default function Blockchain() {
                                     {item.user?.userName || "-"}
                                   </p>
                                   <p className="text-xs text-slate-400">
-                                    {item.user?.userId}
+                                    ID: {item.user?.userId}
                                   </p>
                                 </div>
                               </td>
@@ -657,20 +643,13 @@ export default function Blockchain() {
 
             <TabsContent value="settlement" className="mt-0">
               <div className="p-6 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-extrabold text-slate-900">
-                      Transaksi Penyelesaian ke Program
-                    </h3>
-                    <p className="text-sm text-slate-500 mt-1">
-                      Menampilkan {settlementTransactions.length} dari{" "}
-                      {totalElements} transaksi
-                    </p>
-                  </div>
-                  <Button variant="outline" className="gap-2">
-                    <span>Export</span>
-                  </Button>
-                </div>
+                <h3 className="text-lg font-extrabold text-slate-900">
+                  Transaksi Settlement ke Program
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Menampilkan {settlementTransactions.length} dari{" "}
+                  {totalElements} transaksi
+                </p>
               </div>
               <div className="overflow-x-auto">
                 {settlementQuery.isLoading ? (
@@ -679,9 +658,7 @@ export default function Blockchain() {
                   </div>
                 ) : settlementTransactions.length === 0 ? (
                   <div className="flex items-center justify-center py-20 text-slate-400">
-                    <p className="text-sm font-medium">
-                      Tidak ada penyelesaian
-                    </p>
+                    <p className="text-sm font-medium">Tidak ada Settlement</p>
                   </div>
                 ) : (
                   <>
@@ -692,7 +669,7 @@ export default function Blockchain() {
                             Merchant
                           </th>
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Hash Penyelesaian
+                            Hash Settlement
                           </th>
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             Tanggal
@@ -724,11 +701,7 @@ export default function Blockchain() {
                                     {item.merchant?.merchantName || "-"}
                                   </p>
                                   <p className="text-xs text-slate-400">
-                                    MCH-
-                                    {item.merchant?.merchantId
-                                      ?.toString()
-                                      .slice(0, 5)
-                                      .toUpperCase() || "00000"}
+                                    ID: {item.merchant?.merchantId}
                                   </p>
                                 </div>
                               </td>
