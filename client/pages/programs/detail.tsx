@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { DashboardLayout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Loader2, ChevronLeft, Plus, Users, Store } from "lucide-react";
@@ -75,13 +75,13 @@ export default function ProgramDetail() {
       <div className="space-y-8">
         {/* Header with Back Button */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate("/dashboard/programs")}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all"
+          <Link
+            to="/dashboard/programs"
+            className="p-2 flex items-center gap-2 text-sm text-slate-600 hover:text-slate-500 transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <span className="text-sm font-medium text-slate-600">Kembali</span>
+            <ChevronLeft className="size-5" />
+            Kembali
+          </Link>
         </div>
 
         {/* Page Title */}
