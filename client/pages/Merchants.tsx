@@ -320,9 +320,6 @@ export default function Merchants() {
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
-                            🏪
-                          </div>
                           <div>
                             <p className="text-sm font-bold text-slate-900">
                               {merchant.businessName}
