@@ -14,6 +14,7 @@ import {
 import { Link, useNavigate, useParams } from "react-router";
 import { UploadMerchantCSVDialog } from "./components/UploadMerchantCSVDialog";
 import { EditMerchantDialog } from "./components/EditMerchantDialog";
+import { ViewMerchantDialog } from "./components/ViewMerchantDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +52,7 @@ export default function ProgramMerchant() {
   const { programId } = useParams<{ programId: string }>();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [selectedMerchant, setSelectedMerchant] = useState<MerchantItem | null>(
     null,
   );
@@ -163,6 +165,10 @@ export default function ProgramMerchant() {
                     setSelectedMerchant(merchant);
                     setEditDialogOpen(true);
                   }}
+                  onDetailClick={(merchant) => {
+                    setSelectedMerchant(merchant);
+                    setViewDialogOpen(true);
+                  }}
                 />
               </TabsContent>
             ))}
@@ -189,6 +195,13 @@ export default function ProgramMerchant() {
           programUsersQuery.refetch();
         }}
       />
+
+      {/* View Merchant Dialog */}
+      <ViewMerchantDialog
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+        merchant={selectedMerchant}
+      />
     </DashboardLayout>
   );
 }
@@ -200,6 +213,7 @@ function MerchantTable({
   isLoading,
   onUploadClick,
   onEditClick,
+  onDetailClick,
 }: {
   parentProgramName: string;
   subProgram: ProgramData;
@@ -207,6 +221,7 @@ function MerchantTable({
   isLoading: boolean;
   onUploadClick: () => void;
   onEditClick: (merchant: MerchantItem) => void;
+  onDetailClick: (merchant: MerchantItem) => void;
 }) {
   return (
     <div className="space-y-6">
@@ -303,7 +318,7 @@ function MerchantTable({
                           <DropdownMenuContent align="end" className="w-48">
                             <DropdownMenuItem
                               onClick={() => {
-                                // TODO: Implement detail view
+                                onDetailClick(merchant);
                               }}
                               className="cursor-pointer"
                             >

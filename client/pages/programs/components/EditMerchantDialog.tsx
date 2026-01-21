@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -60,7 +61,6 @@ export function EditMerchantDialog({
         bankAccountNumber: "",
         bankAccountHolder: "",
         kategori: "",
-        status: "",
         alamat: "",
         latlon: "",
         qrisData: "",
@@ -77,7 +77,6 @@ export function EditMerchantDialog({
         bankAccountNumber: profile.bankAccountNumber ?? "",
         bankAccountHolder: profile.bankAccountHolder ?? "",
         kategori: profile.kategori ?? "",
-        status: profile.status ?? "",
         alamat: profile.alamat ?? "",
         latlon: profile.latlon ?? "",
         qrisData: profile.qrisData ?? "",
@@ -204,34 +203,17 @@ export function EditMerchantDialog({
                 </p>
               )}
             </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="status" className="text-sm font-bold">
-                Status
-              </Label>
-              <Input
-                id="status"
-                placeholder="Status"
-                className="h-9 border-slate-200"
-                {...register("status")}
-              />
-              {formState.errors.status && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.status.message}
-                </p>
-              )}
-            </div>
           </div>
 
           {/* Alamat */}
           <div className="space-y-1.5">
             <Label htmlFor="alamat" className="text-sm font-bold">
-              Alamat (Opsional)
+              Alamat
             </Label>
-            <Input
+            <Textarea
               id="alamat"
               placeholder="Masukkan alamat"
-              className="h-9 border-slate-200"
+              className="min-h-[80px] resize-none border-slate-200 text-sm"
               {...register("alamat")}
             />
             {formState.errors.alamat && (
