@@ -49,7 +49,7 @@ export default function ProgramBeneficiary() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header with Back Button */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <Link
             to={`/dashboard/programs/${programId}`}
             className="p-2 flex items-center gap-2 text-sm text-slate-600 hover:text-slate-500 transition-colors"
@@ -98,7 +98,7 @@ export default function ProgramBeneficiary() {
             }
             className="w-full"
           >
-            <TabsList className="bg-transparent border-b border-slate-200 rounded-none p-0 h-auto w-full justify-start">
+            <TabsList className="bg-transparent border-b border-slate-200 rounded-none p-0 pb-2 h-auto w-full justify-start overflow-x-auto">
               {subPrograms.map((subProgram, index) => (
                 <TabsTrigger
                   key={subProgram.id}
@@ -232,7 +232,7 @@ function BeneficiaryTable({
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <p className="text-sm text-slate-600">
               Menampilkan {beneficiaries.length} penerima dana
             </p>
