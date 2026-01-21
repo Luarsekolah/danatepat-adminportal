@@ -419,7 +419,7 @@ export default function Blockchain() {
                                 {item.merchant?.merchantName || "-"}
                               </p>
                               <p className="text-xs text-slate-400">
-                                {item.merchant?.merchantId}
+                                ID: {item.merchant?.merchantId || "-"}
                               </p>
                             </td>
                             <td className="px-6 py-5 text-sm font-bold text-slate-900">
