@@ -10,7 +10,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useGetPaymentHistory } from "@/services/queries/payment";
-import { formatCurrency, formatDate, cn } from "@/lib/utils";
+import {
+  formatDate,
+  cn,
+  formatCurrencyToken,
+  formatDateTime,
+} from "@/lib/utils";
 import { DatePickerInput } from "@/components/ui/calendar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -135,7 +140,7 @@ export default function Blockchain() {
     parseAsIsoDate.withDefault(new Date()),
   );
   const [activeTab, setActiveTab] = useQueryState("tab", {
-    defaultValue: "payment",
+    defaultValue: "distribution",
   });
   const [currentPage, setCurrentPage] = useQueryState(
     "page",
@@ -300,18 +305,18 @@ export default function Blockchain() {
             <div className="px-6 pt-3 pb-3 overflow-x-auto">
               <TabsList className="max-w-content justify-start rounded-lg bg-slate-50 p-1 h-auto gap-1">
                 <TabsTrigger
-                  value="payment"
-                  className="rounded-md px-4 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-slate-900 text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Transaksi Merchant</span>
-                </TabsTrigger>
-                <TabsTrigger
                   value="distribution"
                   className="rounded-md px-4 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-slate-900 text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2"
                 >
                   <ArrowRightLeft className="w-4 h-4" />
                   <span>Distribusi ke Penerima</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="payment"
+                  className="rounded-md px-4 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-slate-900 text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Transaksi Merchant</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="settlement"
@@ -365,7 +370,7 @@ export default function Blockchain() {
                             Merchant
                           </th>
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Nominal
+                            Token
                           </th>
                         </tr>
                       </thead>
@@ -386,9 +391,6 @@ export default function Blockchain() {
                               <div>
                                 <p className="text-sm font-bold text-slate-900">
                                   {item.user?.userName || "-"}
-                                </p>
-                                <p className="text-xs text-slate-400">
-                                  ID: {item.user?.userId}
                                 </p>
                               </div>
                             </td>
@@ -412,18 +414,15 @@ export default function Blockchain() {
                               </p>
                             </td>
                             <td className="px-6 py-5 text-sm text-slate-600">
-                              {formatDate(item.transaction.createdAt)}
+                              {formatDateTime(item.transaction.createdAt)}
                             </td>
                             <td className="px-6 py-5">
                               <p className="text-sm font-bold text-slate-900">
                                 {item.merchant?.merchantName || "-"}
                               </p>
-                              <p className="text-xs text-slate-400">
-                                ID: {item.merchant?.merchantId || "-"}
-                              </p>
                             </td>
                             <td className="px-6 py-5 text-sm font-bold text-slate-900">
-                              {formatCurrency(item.transaction.amount)}
+                              {formatCurrencyToken(item.transaction.amount)}
                             </td>
                           </tr>
                         ))}
@@ -521,7 +520,7 @@ export default function Blockchain() {
                             Status
                           </th>
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Nominal
+                            Token
                           </th>
                         </tr>
                       </thead>
@@ -543,9 +542,6 @@ export default function Blockchain() {
                                 <div>
                                   <p className="text-sm font-bold text-slate-900">
                                     {item.user?.userName || "-"}
-                                  </p>
-                                  <p className="text-xs text-slate-400">
-                                    ID: {item.user?.userId}
                                   </p>
                                 </div>
                               </td>
@@ -569,7 +565,7 @@ export default function Blockchain() {
                                 </p>
                               </td>
                               <td className="px-6 py-5 text-sm text-slate-600">
-                                {formatDate(item.transaction.createdAt)}
+                                {formatDateTime(item.transaction.createdAt)}
                               </td>
                               <td className="px-6 py-5">
                                 <span
@@ -584,7 +580,7 @@ export default function Blockchain() {
                                 </span>
                               </td>
                               <td className="px-6 py-5 text-sm font-bold text-slate-900">
-                                {formatCurrency(item.transaction.amount)}
+                                {formatCurrencyToken(item.transaction.amount)}
                               </td>
                             </tr>
                           ),
@@ -678,7 +674,7 @@ export default function Blockchain() {
                             Program
                           </th>
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Nominal
+                            Token
                           </th>
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             Status
@@ -699,9 +695,6 @@ export default function Blockchain() {
                                 <div>
                                   <p className="text-sm font-bold text-slate-900">
                                     {item.merchant?.merchantName || "-"}
-                                  </p>
-                                  <p className="text-xs text-slate-400">
-                                    ID: {item.merchant?.merchantId}
                                   </p>
                                 </div>
                               </td>
@@ -728,7 +721,7 @@ export default function Blockchain() {
                                 </p>
                               </td>
                               <td className="px-6 py-5 text-sm font-bold text-slate-900">
-                                {formatCurrency(item.transaction.amount)}
+                                {formatCurrencyToken(item.transaction.amount)}
                               </td>
                               <td className="px-6 py-5">
                                 <span
