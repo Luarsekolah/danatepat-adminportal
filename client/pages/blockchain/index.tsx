@@ -8,6 +8,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Eye,
 } from "lucide-react";
 import { useGetPaymentHistory } from "@/services/queries/payment";
 import {
@@ -26,6 +27,7 @@ import type {
   PaymentHistoryQuery,
 } from "@/services/schemas/payment";
 import { parseAsIsoDate, parseAsInteger, useQueryState } from "nuqs";
+import { ViewTransactionDialog } from "./components/ViewTransactionDialog";
 
 const STATUS_STYLES: Record<string, string> = {
   PENDING: "text-amber-500 bg-amber-50",
@@ -130,7 +132,6 @@ const formatDateToString = (date: Date | undefined): string | undefined => {
 };
 
 export default function Blockchain() {
-  const today = getTodayDate();
   const [queryStartDate, setQueryStartDate] = useQueryState(
     "startDate",
     parseAsIsoDate.withDefault(new Date()),
@@ -146,6 +147,9 @@ export default function Blockchain() {
     "page",
     parseAsInteger.withDefault(0),
   );
+  const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<PaymentHistoryItem | null>(null);
 
   const getFilters = (tab: string, page: number): PaymentHistoryQuery => {
     const baseFilters: PaymentHistoryQuery = {
@@ -372,6 +376,9 @@ export default function Blockchain() {
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             Token
                           </th>
+                          <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            Aksi
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -423,6 +430,20 @@ export default function Blockchain() {
                             </td>
                             <td className="px-6 py-5 text-sm font-bold text-slate-900">
                               {formatCurrencyToken(item.transaction.amount)}
+                            </td>
+                            <td className="px-6 py-5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="gap-2"
+                                onClick={() => {
+                                  setSelectedTransaction(item);
+                                  setTransactionDialogOpen(true);
+                                }}
+                              >
+                                <Eye className="w-4 h-4" />
+                                Detail
+                              </Button>
                             </td>
                           </tr>
                         ))}
@@ -522,6 +543,9 @@ export default function Blockchain() {
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             Token
                           </th>
+                          <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            Aksi
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -581,6 +605,20 @@ export default function Blockchain() {
                               </td>
                               <td className="px-6 py-5 text-sm font-bold text-slate-900">
                                 {formatCurrencyToken(item.transaction.amount)}
+                              </td>
+                              <td className="px-6 py-5">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="gap-2"
+                                  onClick={() => {
+                                    setSelectedTransaction(item);
+                                    setTransactionDialogOpen(true);
+                                  }}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  Detail
+                                </Button>
                               </td>
                             </tr>
                           ),
@@ -679,6 +717,9 @@ export default function Blockchain() {
                           <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             Status
                           </th>
+                          <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            Aksi
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -734,6 +775,20 @@ export default function Blockchain() {
                                   {STATUS_LABELS[item.transaction.status] ||
                                     item.transaction.status}
                                 </span>
+                              </td>
+                              <td className="px-6 py-5">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="gap-2"
+                                  onClick={() => {
+                                    setSelectedTransaction(item);
+                                    setTransactionDialogOpen(true);
+                                  }}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  Detail
+                                </Button>
                               </td>
                             </tr>
                           ),
@@ -792,6 +847,13 @@ export default function Blockchain() {
           </Tabs>
         </div>
       </div>
+
+      {/* View Transaction Detail Dialog */}
+      <ViewTransactionDialog
+        open={transactionDialogOpen}
+        onOpenChange={setTransactionDialogOpen}
+        transaction={selectedTransaction}
+      />
     </DashboardLayout>
   );
 }
