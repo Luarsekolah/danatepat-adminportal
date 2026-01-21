@@ -14,7 +14,7 @@ export function formatCurrency(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 
-  return `Rp${formatted}`;
+  return `Pr${formatted}`;
 }
 
 /**
