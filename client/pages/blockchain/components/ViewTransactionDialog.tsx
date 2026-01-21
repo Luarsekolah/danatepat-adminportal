@@ -186,6 +186,13 @@ export function ViewTransactionDialog({
                   {detail?.to ? <HashCopyButton hash={detail?.to} /> : "-"}
                 </div>
               </div>
+
+              <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Gas Fee
+                </p>
+                <div className="mt-1">{detail?.gasUsed || "-"}</div>
+              </div>
             </div>
 
             {/* Program Information */}
