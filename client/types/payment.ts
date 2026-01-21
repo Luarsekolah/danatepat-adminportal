@@ -5,6 +5,8 @@ import type {
   GetPaymentHistoryResponse,
   PaymentHistoryData,
   PaymentHistoryItem,
+  TransactionDetail,
+  GetTransactionDetailResponse,
 } from "@/services/schemas/payment";
 
 export type {
@@ -14,4 +16,6 @@ export type {
   GetPaymentHistoryResponse,
   PaymentHistoryData,
   PaymentHistoryItem,
+  TransactionDetail,
+  GetTransactionDetailResponse,
 };

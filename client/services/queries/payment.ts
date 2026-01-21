@@ -3,6 +3,7 @@ import { mainApi } from "../api";
 import { routes, queryKeys } from "../api-config";
 import type {
   GetPaymentHistoryResponse,
+  GetTransactionDetailResponse,
   PaymentHistoryQuery,
 } from "@/services/schemas/payment";
 
@@ -33,6 +34,32 @@ export function useGetPaymentHistory(
       });
       return res.data;
     },
+    ...options,
+  });
+}
+
+/**
+ * Hook for fetching transaction detail by hash
+ * Returns blockchain transaction details
+ *
+ * @example
+ * const txQuery = useGetTransactionDetail('0x094dc6707647be0c9bf044c9d23972e49d4671b51d55cd169483462e1e5cee79');
+ * const transaction = txQuery.data?.data;
+ */
+export function useGetTransactionDetail(
+  txHash: string,
+  options?: Omit<
+    UseQueryOptions<GetTransactionDetailResponse, Error>,
+    "queryKey" | "queryFn"
+  >,
+) {
+  return useQuery<GetTransactionDetailResponse, Error>({
+    queryKey: queryKeys.payments.transaction(txHash),
+    queryFn: async () => {
+      const res = await mainApi.get(routes.payment.transaction(txHash));
+      return res.data;
+    },
+    enabled: Boolean(txHash),
     ...options,
   });
 }

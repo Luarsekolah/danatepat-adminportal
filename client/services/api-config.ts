@@ -51,6 +51,9 @@ export const queryKeys = {
       page?: number;
       size?: number;
     }) => [...queryKeys.payments.histories(), filters] as const,
+    transactions: () => [...queryKeys.payments.all, "transaction"] as const,
+    transaction: (txHash: string) =>
+      [...queryKeys.payments.transactions(), txHash] as const,
   },
 } as const;
 
@@ -94,6 +97,8 @@ export const routes = {
   payment: {
     donate: "/payment/api/payments/donate",
     historyAll: "/payment/api/payments/history/all",
+    transaction: (txHash: string) =>
+      `/payment/api/payments/transactions/${txHash}`,
   },
   user: {
     detail: (userId: number) => `/users/${userId}`,

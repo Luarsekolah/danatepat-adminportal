@@ -101,3 +101,20 @@ export interface PaymentHistoryData {
 }
 
 export type GetPaymentHistoryResponse = ApiResponse<PaymentHistoryData>;
+
+/**
+ * Transaction detail response data
+ */
+export interface TransactionDetail {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  gasUsed: string;
+  gasPrice: string;
+  blockNumber: string;
+  timeStamp: string;
+  status: string;
+}
+
+export type GetTransactionDetailResponse = ApiResponse<TransactionDetail>;
