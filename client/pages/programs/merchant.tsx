@@ -7,20 +7,12 @@ import {
   Upload,
   Utensils,
   Loader2,
-  MoreVertical,
   Eye,
-  SquarePen,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { UploadMerchantCSVDialog } from "./components/UploadMerchantCSVDialog";
 import { EditMerchantDialog } from "./components/EditMerchantDialog";
 import { ViewMerchantDialog } from "./components/ViewMerchantDialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import {
   useListProgramChildren,
@@ -161,10 +153,6 @@ export default function ProgramMerchant() {
                   merchants={merchants}
                   isLoading={programUsersQuery.isLoading}
                   onUploadClick={() => setUploadDialogOpen(true)}
-                  onEditClick={(merchant) => {
-                    setSelectedMerchant(merchant);
-                    setEditDialogOpen(true);
-                  }}
                   onDetailClick={(merchant) => {
                     setSelectedMerchant(merchant);
                     setViewDialogOpen(true);
@@ -212,7 +200,6 @@ function MerchantTable({
   merchants,
   isLoading,
   onUploadClick,
-  onEditClick,
   onDetailClick,
 }: {
   parentProgramName: string;
@@ -220,7 +207,6 @@ function MerchantTable({
   merchants: MerchantItem[];
   isLoading: boolean;
   onUploadClick: () => void;
-  onEditClick: (merchant: MerchantItem) => void;
   onDetailClick: (merchant: MerchantItem) => void;
 }) {
   return (
@@ -309,33 +295,13 @@ function MerchantTable({
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
-                              <MoreVertical className="w-5 h-5" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                onDetailClick(merchant);
-                              }}
-                              className="cursor-pointer"
-                            >
-                              <Eye className="size-4 mr-2" />
-                              Detail
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                onEditClick(merchant);
-                              }}
-                              className="cursor-pointer"
-                            >
-                              <SquarePen className="size-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <button
+                          onClick={() => onDetailClick(merchant)}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all"
+                        >
+                          <Eye className="size-4" />
+                          Detail
+                        </button>
                       </div>
                     </td>
                   </tr>
