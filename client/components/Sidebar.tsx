@@ -20,7 +20,6 @@ const menuItems = [
     label: "MENU UTAMA",
     items: [
       { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-      { name: "Blockchain", icon: Bitcoin, path: "/dashboard/blockchain" },
       {
         name: "Program Management",
         icon: Briefcase,
@@ -30,6 +29,11 @@ const menuItems = [
         name: "Merchant Management",
         icon: Store,
         path: "/dashboard/merchants",
+      },
+      {
+        name: "Transaksi Blockchain",
+        icon: Bitcoin,
+        path: "/dashboard/blockchain",
       },
       { name: "Audit Explorer", icon: Search, path: "/dashboard/audit" },
       { name: "User & Role Management", icon: Users, path: "/dashboard/users" },
