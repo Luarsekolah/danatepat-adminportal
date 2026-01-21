@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useGetMerchantProfile } from "@/services/queries/merchant";
 import type { MerchantItem } from "../merchant";
+import QRCode from "react-qr-code";
 
 interface ViewMerchantDialogProps {
   open: boolean;
@@ -142,13 +143,12 @@ export function ViewMerchantDialog({
               <div className="border-t border-slate-200 pt-4 space-y-4">
                 <h3 className="font-semibold text-slate-900">Data QRIS</h3>
 
-                <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    QRIS
-                  </p>
-                  <p className="text-sm font-medium text-slate-900 mt-1 break-all text-xs">
-                    {profile.qrisData}
-                  </p>
+                <div className="flex items-center justify-center">
+                  {profile.qrisData ? (
+                    <QRCode value={profile.qrisData} />
+                  ) : (
+                    <p>Tidak ada data QRIS yang tersedia untuk merchant ini</p>
+                  )}
                 </div>
               </div>
             )}
