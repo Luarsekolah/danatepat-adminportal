@@ -141,7 +141,7 @@ export default function ProgramDetail() {
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Budget Penerima
+                Budget Per Penerima
               </p>
               <p className="text-sm font-bold text-slate-900 mt-1">
                 {program.budgetPerPenerima
