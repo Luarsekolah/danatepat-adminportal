@@ -34,6 +34,8 @@ interface AddSubProgramDialogProps {
   onOpenChange: (open: boolean) => void;
   programId: string;
   remainingBudget: number;
+  programStartDate: string;
+  programEndDate: string;
   onSuccess?: () => void;
 }
 
@@ -42,6 +44,8 @@ export function AddSubProgramDialog({
   onOpenChange,
   programId,
   remainingBudget,
+  programStartDate,
+  programEndDate,
   onSuccess,
 }: AddSubProgramDialogProps) {
   const createMutation = useCreateSubPrograms(Number(programId), {
@@ -288,6 +292,13 @@ export function AddSubProgramDialog({
                     displayFormat="dd MMMM yyyy"
                     size="default"
                     variant="outline"
+                    disabled={(date) => {
+                      // Only allow between `programStartDate` and `programEndDate`
+                      if (!programStartDate || !programEndDate) return false;
+                      const start = new Date(programStartDate);
+                      const end = new Date(programEndDate);
+                      return date < start || date > end;
+                    }}
                   />
                 )}
               />

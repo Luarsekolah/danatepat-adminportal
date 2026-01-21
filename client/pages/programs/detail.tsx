@@ -287,6 +287,8 @@ export default function ProgramDetail() {
         <AddSubProgramDialog
           programId={programId || ""}
           remainingBudget={remainingBudget < 0 ? 0 : remainingBudget}
+          programStartDate={program.startDate}
+          programEndDate={program.endDate}
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           onSuccess={handleDialogSuccess}
