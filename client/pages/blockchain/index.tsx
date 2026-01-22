@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  Search,
 } from "lucide-react";
 import { useGetPaymentHistory } from "@/services/queries/payment";
 import {
@@ -20,6 +21,7 @@ import {
 import { DatePickerInput } from "@/components/ui/calendar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useCopyToClipboard } from "react-use";
 import { useState } from "react";
 import type {
@@ -147,15 +149,21 @@ export default function Blockchain() {
     "page",
     parseAsInteger.withDefault(0),
   );
+  const [blockchainTxHashFilter, setBlockchainTxHashFilter] = useQueryState(
+    "txHash",
+    { defaultValue: "" },
+  );
   const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<PaymentHistoryItem | null>(null);
+  const [searchInput, setSearchInput] = useState("");
 
   const getFilters = (tab: string, page: number): PaymentHistoryQuery => {
     const baseFilters: PaymentHistoryQuery = {
       startDate: formatDateToString(queryStartDate),
       endDate: formatDateToString(queryEndDate),
       page,
+      ...(blockchainTxHashFilter && { blockchainTxHash: blockchainTxHashFilter }),
     };
 
     if (tab === "payment") {
@@ -202,6 +210,21 @@ export default function Blockchain() {
   const handleTabChange = (newTab: string) => {
     setActiveTab(newTab);
     setCurrentPage(0);
+  };
+
+  // Apply search filter only
+  const handleApplySearch = () => {
+    setBlockchainTxHashFilter(searchInput);
+    setCurrentPage(0);
+  };
+
+  // Handle search input on Enter key
+  const handleSearchKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Enter") {
+      handleApplySearch();
+    }
   };
 
   // Pagination helpers
@@ -275,28 +298,54 @@ export default function Blockchain() {
 
         {/* Filters */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-bold text-slate-700 mb-2">
-                Tanggal Mulai
-              </label>
-              <DatePickerInput
-                value={queryStartDate}
-                onChange={setQueryStartDate}
-                placeholder="Pilih tanggal mulai"
-                displayFormat="dd MMMM yyyy"
-              />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-bold text-slate-700 mb-2">
+                  Hash Transaksi
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Cari hash transaksi blockchain..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={handleSearchKeyDown}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={handleApplySearch}
+                    className="gap-2 bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Search className="h-4 w-4" />
+                    Cari
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-bold text-slate-700 mb-2">
-                Tanggal Selesai
-              </label>
-              <DatePickerInput
-                value={queryEndDate}
-                onChange={setQueryEndDate}
-                placeholder="Pilih tanggal selesai"
-                displayFormat="dd MMMM yyyy"
-              />
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-bold text-slate-700 mb-2">
+                  Tanggal Mulai
+                </label>
+                <DatePickerInput
+                  value={queryStartDate}
+                  onChange={setQueryStartDate}
+                  placeholder="Pilih tanggal mulai"
+                  displayFormat="dd MMMM yyyy"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-bold text-slate-700 mb-2">
+                  Tanggal Selesai
+                </label>
+                <DatePickerInput
+                  value={queryEndDate}
+                  onChange={setQueryEndDate}
+                  placeholder="Pilih tanggal selesai"
+                  displayFormat="dd MMMM yyyy"
+                />
+              </div>
             </div>
           </div>
         </div>

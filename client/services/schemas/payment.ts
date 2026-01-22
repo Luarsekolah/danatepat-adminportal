@@ -13,6 +13,7 @@ export const paymentHistoryQuerySchema = z
     transactionType: z
       .enum(["DAILY_DISTRIBUTION", "PAYMENT", "SETTLEMENT"])
       .optional(),
+    blockchainTxHash: z.string().optional(),
   })
   .strict();
 

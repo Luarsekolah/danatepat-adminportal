@@ -1,6 +1,7 @@
 import env from "@/env";
 import type { ListProgramsQuery } from "@/types/program";
 import type { ListMerchantQuery } from "@/services/schemas/merchant";
+import { PaymentHistoryQuery } from "./schemas/payment";
 
 export const apiBaseUrl = env.VITE_API_BASE_URL;
 
@@ -44,13 +45,7 @@ export const queryKeys = {
   payments: {
     all: ["payments"] as const,
     histories: () => [...queryKeys.payments.all, "history"] as const,
-    history: (filters?: {
-      startDate?: string;
-      endDate?: string;
-      transactionType?: "DAILY_DISTRIBUTION" | "PAYMENT" | "SETTLEMENT";
-      page?: number;
-      size?: number;
-    }) => [...queryKeys.payments.histories(), filters] as const,
+    history: (filters?: PaymentHistoryQuery) => [...queryKeys.payments.histories(), filters] as const,
     transactions: () => [...queryKeys.payments.all, "transaction"] as const,
     transaction: (txHash: string) =>
       [...queryKeys.payments.transactions(), txHash] as const,
