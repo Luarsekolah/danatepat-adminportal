@@ -248,6 +248,7 @@ export function AddProgramDialog({
                   value={field.value}
                   onChange={field.onChange}
                   decimalScale={0}
+                  prefix="Pr"
                 />
               )}
             />
@@ -272,6 +273,7 @@ export function AddProgramDialog({
                   value={field.value}
                   onChange={field.onChange}
                   decimalScale={0}
+                  prefix="Pr"
                 />
               )}
             />
