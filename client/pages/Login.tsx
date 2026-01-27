@@ -141,7 +141,7 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@danatepat.id"
+                  placeholder="admin@presidana.id"
                   {...register("email")}
                   className={`pl-12 h-14 font-medium rounded-2xl transition-all ${
                     errors.email
