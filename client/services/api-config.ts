@@ -20,6 +20,7 @@ export const queryKeys = {
     beneficiaries: () => [...queryKeys.programs.all, "beneficiaries"] as const,
     beneficiariesList: (programId: number) =>
       [...queryKeys.programs.beneficiaries(), programId] as const,
+    categories: () => [...queryKeys.programs.all, "categories"] as const,
   },
   merchants: {
     all: ["merchants"] as const,
@@ -73,6 +74,7 @@ export const routes = {
       `/program/api/programs/${parentId}/children`,
     listUsers: (programId: number) =>
       `/program/api/programs/${programId}/users`,
+    categories: "/program/api/programs/categories",
   },
   merchant: {
     profiles: "/merchant/api/merchant/profiles",

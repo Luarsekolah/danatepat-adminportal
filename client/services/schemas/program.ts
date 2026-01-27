@@ -93,9 +93,9 @@ export const createSubProgramPayloadSchema = z
     maxTrxPerDay: z
       .number({ message: "Maksimal transaksi per hari harus berupa angka" })
       .positive({ message: "Maksimal transaksi per hari harus lebih dari 0" }),
-    kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
-      message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
-    }),
+    kategori: z
+      .string({ message: "Kategori harus dipilih" })
+      .nonempty({ message: "Kategori harus dipilih" }),
   })
   .refine((data) => data.dailyAllocationAmount <= data.anggaran, {
     message: "Limit nominal per transaksi tidak dapat melebihi anggaran",
@@ -148,3 +148,16 @@ export interface ProgramUsersData {
 }
 
 export type ListProgramUsersResponse = ApiResponse<ProgramUsersData>;
+
+/**
+ * Program category types
+ */
+export interface ProgramCategory {
+  id: number;
+  categoryName: string;
+  parentId: number | null;
+  status: "ACTIVE" | "INACTIVE";
+  children: ProgramCategory[];
+}
+
+export type ListProgramCategoriesResponse = ApiResponse<ProgramCategory[]>;
