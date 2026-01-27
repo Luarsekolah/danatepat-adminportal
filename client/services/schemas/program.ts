@@ -93,9 +93,9 @@ export const createSubProgramPayloadSchema = z
     maxTrxPerDay: z
       .number({ message: "Maksimal transaksi per hari harus berupa angka" })
       .positive({ message: "Maksimal transaksi per hari harus lebih dari 0" }),
-    kategori: z
-      .string({ message: "Kategori harus dipilih" })
-      .nonempty({ message: "Kategori harus dipilih" }),
+    categoryId: z
+      .number({ message: "Kategori harus dipilih" })
+      .positive({ message: "Kategori harus dipilih" }),
   })
   .refine((data) => data.dailyAllocationAmount <= data.anggaran, {
     message: "Limit nominal per transaksi tidak dapat melebihi anggaran",
