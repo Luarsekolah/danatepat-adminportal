@@ -188,7 +188,7 @@ export function AddProgramDialog({
           </div>
 
           {/* Escrow Account Bank */}
-          <div className="space-y-1.5 col-span-2 md:col-span-1">
+          <div className="space-y-1.5 col-span-2">
             <Label htmlFor="escrowAccountBank" className="text-sm font-bold">
               Bank Rekening Escrow
             </Label>
@@ -206,13 +206,13 @@ export function AddProgramDialog({
           </div>
 
           {/* Escrow Account Owner */}
-          <div className="space-y-1.5 col-span-2 md:col-span-1">
+          <div className="space-y-1.5 col-span-2">
             <Label htmlFor="escrowAccountOwner" className="text-sm font-bold">
               Pemilik Rekening Escrow
             </Label>
             <Input
               id="escrowAccountOwner"
-              placeholder="Masukkan nama pemilik"
+              placeholder="Masukkan nama pemilik rekening"
               className="h-9 border-slate-200"
               {...register("escrowAccountOwner")}
             />
