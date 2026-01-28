@@ -34,6 +34,7 @@ interface AddSubProgramDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   programId: string;
+  parentCategoryId: number;
   remainingBudget: number;
   programStartDate: string;
   programEndDate: string;
@@ -44,6 +45,7 @@ export function AddSubProgramDialog({
   open,
   onOpenChange,
   programId,
+  parentCategoryId,
   remainingBudget,
   programStartDate,
   programEndDate,
@@ -54,19 +56,13 @@ export function AddSubProgramDialog({
     enabled: open,
   });
 
-  // Local state for selected parent category
-  const [selectedParentId, setSelectedParentId] = React.useState<
-    number | null
-  >(null);
-
   const categories = categoriesQuery.data?.data ?? [];
-  const selectedParent = categories.find((cat) => cat.id === selectedParentId);
-  const subCategories = selectedParent?.children ?? [];
+  const parentCategory = categories.find((cat) => cat.id === parentCategoryId);
+  const subCategories = parentCategory?.children ?? [];
 
   const createMutation = useCreateSubPrograms(Number(programId), {
     onSuccess: () => {
       reset();
-      setSelectedParentId(null);
       onOpenChange(false);
       onSuccess?.();
     },
@@ -91,7 +87,7 @@ export function AddSubProgramDialog({
       anggaran: 0,
       dailyAllocationAmount: 0,
       maxTrxPerDay: undefined,
-      categoryId: 0,
+      categoryId: null,
     },
   });
 
@@ -172,73 +168,42 @@ export function AddSubProgramDialog({
             )}
           </div>
 
-          {/* Kategori - Parent and Sub Category Row */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="parentKategori" className="text-sm font-bold">
-                Kategori Utama
-              </Label>
-              <Select value={selectedParentId?.toString() ?? ""} onValueChange={(value) => {
-                const id = value ? Number(value) : null;
-                setSelectedParentId(id);
-                // Reset sub-category when parent changes
-                setValue("categoryId", 0);
-              }}>
-                <SelectTrigger className="h-9 border-slate-200">
-                  <SelectValue placeholder="Pilih kategori utama" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoriesQuery.isLoading ? (
-                    <div className="px-2 py-1.5 text-sm text-slate-500">Memuat kategori...</div>
-                  ) : categories.length === 0 ? (
-                    <div className="px-2 py-1.5 text-sm text-slate-500">Tidak ada kategori</div>
-                  ) : (
-                    categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id.toString()}>
-                        {cat.categoryName}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="kategori" className="text-sm font-bold">
-                Sub Kategori
-              </Label>
-              <Controller
-                control={control}
-                name="categoryId"
-                render={({ field }) => (
-                  <Select
-                    value={field.value ? field.value.toString() : ""}
-                    onValueChange={(value) => field.onChange(Number(value))}
-                    disabled={!selectedParentId || subCategories.length === 0}
-                  >
-                    <SelectTrigger className="h-9 border-slate-200">
-                      <SelectValue placeholder={selectedParentId ? "Pilih sub kategori" : "Pilih kategori utama terlebih dahulu"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {subCategories.length === 0 ? (
-                        <div className="px-2 py-1.5 text-sm text-slate-500">Tidak ada sub kategori</div>
-                      ) : (
-                        subCategories.map((subCat) => (
-                          <SelectItem key={subCat.id} value={subCat.id.toString()}>
-                            {subCat.categoryName}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {formState.errors.categoryId && (
-                <p className="text-xs text-red-500">
-                  {formState.errors.categoryId.message}
-                </p>
+          {/* Kategori - Sub Category Only */}
+          <div className="space-y-1.5">
+            <Label htmlFor="kategori" className="text-sm font-bold">
+              Sub Kategori
+            </Label>
+            <Controller
+              control={control}
+              name="categoryId"
+              render={({ field }) => (
+                <Select
+                  value={field.value ? field.value.toString() : ""}
+                  onValueChange={(value) => field.onChange(Number(value))}
+                  disabled={subCategories.length === 0}
+                >
+                  <SelectTrigger className="h-9 border-slate-200">
+                    <SelectValue placeholder={subCategories.length === 0 ? "Tidak ada sub kategori" : "Pilih sub kategori"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subCategories.length === 0 ? (
+                      <div className="px-2 py-1.5 text-sm text-slate-500">Tidak ada sub kategori</div>
+                    ) : (
+                      subCategories.map((subCat) => (
+                        <SelectItem key={subCat.id} value={subCat.id.toString()}>
+                          {subCat.categoryName}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
               )}
-            </div>
+            />
+            {formState.errors.categoryId && (
+              <p className="text-xs text-red-500">
+                {formState.errors.categoryId.message}
+              </p>
+            )}
           </div>
 
           {/* Anggaran and Daily Allocation Row */}

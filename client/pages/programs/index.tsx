@@ -13,7 +13,6 @@ import {
   Loader2,
   MoreVertical,
   Wallet,
-  Store,
   SquarePen,
 } from "lucide-react";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
@@ -38,15 +37,9 @@ import {
 import { AddProgramDialog } from "@/pages/programs/components/AddProgramDialog";
 import { EditProgramDialog } from "@/pages/programs/components/EditProgramDialog";
 import { ViewProgramDialog } from "@/pages/programs/components/ViewProgramDialog";
+import { SetDonorDialog } from "@/pages/programs/components/SetDonorDialog";
 import { toast } from "sonner";
 import type { ProgramData } from "@/types/base";
-
-const CATEGORY_ICONS: Record<string, string> = {
-  PANGAN: "🍴",
-  PENDIDIKAN: "🎓",
-  KESEHATAN: "🏥",
-  default: "📋",
-};
 
 export default function Programs() {
   const navigate = useNavigate();
@@ -56,6 +49,7 @@ export default function Programs() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [setDonorDialogOpen, setSetDonorDialogOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<ProgramData | null>(
     null,
   );
@@ -263,11 +257,6 @@ export default function Programs() {
                       >
                         <td className="px-6 py-5">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
-                              {CATEGORY_ICONS[
-                                program.kategori?.toUpperCase() || "default"
-                              ] || CATEGORY_ICONS.default}
-                            </div>
                             <div>
                               <p className="text-sm font-bold text-slate-900">
                                 {program.name}
@@ -282,7 +271,7 @@ export default function Programs() {
                         </td>
                         <td className="px-6 py-5">
                           <p className="text-sm font-bold text-slate-700">
-                            LAPI ITB
+                            {program.donors?.[0]?.fullName || "—"}
                           </p>
                         </td>
                         <td className="px-6 py-5 text-sm font-bold text-slate-900">
@@ -320,29 +309,7 @@ export default function Programs() {
                                   className="cursor-pointer"
                                 >
                                   <Wallet className="size-4 mr-2" />
-                                  Subprogram
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    navigate(
-                                      `/dashboard/programs/merchant/${program.id}`,
-                                    )
-                                  }
-                                  className="cursor-pointer"
-                                >
-                                  <Store className="size-4 mr-2" />
-                                  Daftar Merchant
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    navigate(
-                                      `/dashboard/programs/beneficiary/${program.id}`,
-                                    )
-                                  }
-                                  className="cursor-pointer"
-                                >
-                                  <Users className="size-4 mr-2" />
-                                  Penerima Dana
+                                  Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => {
@@ -354,6 +321,18 @@ export default function Programs() {
                                   <SquarePen className="size-4 mr-2" />
                                   Edit
                                 </DropdownMenuItem>
+                                {program.donors.length === 0 && (
+                                  <DropdownMenuItem
+                                    onClick={() => {
+                                      setSelectedProgram(program);
+                                      setSetDonorDialogOpen(true);
+                                    }}
+                                    className="cursor-pointer"
+                                  >
+                                    <Coins className="size-4 mr-2" />
+                                    Set Donatur
+                                  </DropdownMenuItem>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>
@@ -400,6 +379,17 @@ export default function Programs() {
         open={viewDialogOpen}
         onOpenChange={setViewDialogOpen}
         program={selectedProgram}
+      />
+
+      {/* Set Donor Dialog */}
+      <SetDonorDialog
+        open={setDonorDialogOpen}
+        onOpenChange={setSetDonorDialogOpen}
+        program={selectedProgram}
+        onSuccess={() => {
+          // Optionally refetch programs
+          programsQuery.refetch?.();
+        }}
       />
     </DashboardLayout>
   );

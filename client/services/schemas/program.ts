@@ -16,7 +16,6 @@ export const createProgramPayloadSchema = z
       .string({ message: "Nama program harus diisi" })
       .min(1, { message: "Nama program harus diisi" })
       .min(3, { message: "Nama program minimal 3 karakter" }),
-    donatur: z.string().optional(),
     description: z
       .string({ message: "Deskripsi harus diisi" })
       .min(1, { message: "Deskripsi harus diisi" }),
@@ -28,6 +27,20 @@ export const createProgramPayloadSchema = z
     budgetPerPenerima: z
       .number({ message: "Budget per penerima harus berupa angka" })
       .positive({ message: "Budget per penerima harus lebih dari 0" }),
+    categoryId: z
+      .number({
+        message: "Kategori harus dipilih",
+      })
+      .positive(),
+    escrowAccountNumber: z
+      .string({ message: "Nomor rekening Escrow harus diisi" })
+      .min(1, { message: "Nomor rekening Escrow harus diisi" }),
+    escrowAccountBank: z
+      .string({ message: "Bank rekening Escrow harus diisi" })
+      .min(1, { message: "Bank rekening Escrow harus diisi" }),
+    escrowAccountOwner: z
+      .string({ message: "Pemilik rekening Escrow harus diisi" })
+      .min(1, { message: "Pemilik rekening Escrow harus diisi" }),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",

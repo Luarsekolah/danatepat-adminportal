@@ -10,12 +10,11 @@ import { toast } from "sonner";
 import type { DonatePayload, DonateResponse } from "@/services/schemas/payment";
 
 /**
- * Hook for making a donation to a program
- * Allows users to donate nominal amount to a program
+ * Hook for set donor to a program
  *
  * @example
- * const { mutate, isPending } = useDonate();
- * mutate({ userId: 4, programId: 8, nominal: 100000000 });
+ * const donateMutation = useDonate();
+ * donateMutation.mutate({ userId: 4, programId: 8, nominal: 100000000 });
  */
 export function useDonate(
   options?: Omit<

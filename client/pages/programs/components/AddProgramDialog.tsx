@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -27,11 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGetUserDetail } from "@/services/queries/user";
-import { useDonate } from "@/services/mutations/payment";
-
-// Temporary donatur due to it's only will be one donatur for now
-const TEMP_DONATUR_ID = 2;
+import { useListProgramCategories } from "@/services/queries/program";
 
 interface AddProgramDialogProps {
   open: boolean;
@@ -44,15 +39,12 @@ export function AddProgramDialog({
   onOpenChange,
   onSuccess,
 }: AddProgramDialogProps) {
-  const detailTempDonatur = useGetUserDetail(TEMP_DONATUR_ID);
-  const donateMutation = useDonate();
+  const categoriesQuery = useListProgramCategories({
+    enabled: open,
+  });
+
   const createMutation = useCreateProgram({
-    onSuccess: (data) => {
-      donateMutation.mutate({
-        userId: TEMP_DONATUR_ID,
-        programId: data.data.id,
-        nominal: data.data.anggaran,
-      });
+    onSuccess: () => {
       reset();
       onOpenChange(false);
       onSuccess?.();
@@ -68,7 +60,11 @@ export function AddProgramDialog({
         startDate: null,
         endDate: null,
         anggaran: 0,
-        donatur: TEMP_DONATUR_ID.toString(),
+        budgetPerPenerima: 0,
+        categoryId: null,
+        escrowAccountNumber: "",
+        escrowAccountBank: "",
+        escrowAccountOwner: "",
       },
     });
 
@@ -81,15 +77,7 @@ export function AddProgramDialog({
   }
 
   const onSubmit = (data: CreateProgramPayload) => {
-    const newData = {
-      name: data.name,
-      description: data.description,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      anggaran: data.anggaran,
-      budgetPerPenerima: data.budgetPerPenerima,
-    };
-    createMutation.mutate(newData);
+    createMutation.mutate(data);
   };
 
   return (
@@ -124,38 +112,6 @@ export function AddProgramDialog({
             )}
           </div>
 
-          {/* Donatur */}
-          <div className="space-y-1.5 col-span-2">
-            <Label htmlFor="donatur" className="text-sm font-bold">
-              Donatur
-            </Label>
-            <Controller
-              control={control}
-              name="donatur"
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  defaultValue={TEMP_DONATUR_ID.toString()}
-                >
-                  <SelectTrigger className="h-9 border-slate-200">
-                    <SelectValue placeholder="Pilih donatur" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={TEMP_DONATUR_ID.toString()}>
-                      {detailTempDonatur?.data?.data?.fullName || "LAPI ITB"}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {formState.errors.donatur && (
-              <p className="text-xs text-red-500">
-                {formState.errors.donatur.message}
-              </p>
-            )}
-          </div>
-
           {/* Description */}
           <div className="space-y-1.5 col-span-2">
             <Label htmlFor="description" className="text-sm font-bold">
@@ -170,6 +126,99 @@ export function AddProgramDialog({
             {formState.errors.description && (
               <p className="text-xs text-red-500">
                 {formState.errors.description.message}
+              </p>
+            )}
+          </div>
+
+          {/* Kategori */}
+          <div className="space-y-1.5 col-span-2">
+            <Label htmlFor="categoryId" className="text-sm font-bold">
+              Kategori
+            </Label>
+            <Controller
+              control={control}
+              name="categoryId"
+              render={({ field }) => (
+                <Select
+                  value={field.value ? field.value.toString() : ""}
+                  onValueChange={(value) => field.onChange(Number(value))}
+                >
+                  <SelectTrigger className="h-9 border-slate-200">
+                    <SelectValue placeholder="Pilih kategori program" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categoriesQuery.isLoading ? (
+                      <div className="px-2 py-1.5 text-sm text-slate-500">Memuat kategori...</div>
+                    ) : categoriesQuery.data?.data && categoriesQuery.data.data.length === 0 ? (
+                      <div className="px-2 py-1.5 text-sm text-slate-500">Tidak ada kategori</div>
+                    ) : (
+                      categoriesQuery.data?.data?.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id.toString()}>
+                          {cat.categoryName}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {formState.errors.categoryId && (
+              <p className="text-xs text-red-500">
+                {formState.errors.categoryId.message}
+              </p>
+            )}
+          </div>
+
+          {/* Escrow Account Number */}
+          <div className="space-y-1.5 col-span-2">
+            <Label htmlFor="escrowAccountNumber" className="text-sm font-bold">
+              Nomor Rekening Escrow
+            </Label>
+            <Input
+              id="escrowAccountNumber"
+              placeholder="Masukkan nomor rekening escrow"
+              className="h-9 border-slate-200"
+              {...register("escrowAccountNumber")}
+            />
+            {formState.errors.escrowAccountNumber && (
+              <p className="text-xs text-red-500">
+                {formState.errors.escrowAccountNumber.message}
+              </p>
+            )}
+          </div>
+
+          {/* Escrow Account Bank */}
+          <div className="space-y-1.5 col-span-2 md:col-span-1">
+            <Label htmlFor="escrowAccountBank" className="text-sm font-bold">
+              Bank Rekening Escrow
+            </Label>
+            <Input
+              id="escrowAccountBank"
+              placeholder="Masukkan nama bank"
+              className="h-9 border-slate-200"
+              {...register("escrowAccountBank")}
+            />
+            {formState.errors.escrowAccountBank && (
+              <p className="text-xs text-red-500">
+                {formState.errors.escrowAccountBank.message}
+              </p>
+            )}
+          </div>
+
+          {/* Escrow Account Owner */}
+          <div className="space-y-1.5 col-span-2 md:col-span-1">
+            <Label htmlFor="escrowAccountOwner" className="text-sm font-bold">
+              Pemilik Rekening Escrow
+            </Label>
+            <Input
+              id="escrowAccountOwner"
+              placeholder="Masukkan nama pemilik"
+              className="h-9 border-slate-200"
+              {...register("escrowAccountOwner")}
+            />
+            {formState.errors.escrowAccountOwner && (
+              <p className="text-xs text-red-500">
+                {formState.errors.escrowAccountOwner.message}
               </p>
             )}
           </div>
