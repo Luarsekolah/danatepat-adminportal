@@ -2,6 +2,7 @@ import env from "@/env";
 import type { ListProgramsQuery } from "@/types/program";
 import type { ListMerchantQuery } from "@/services/schemas/merchant";
 import { PaymentHistoryQuery } from "./schemas/payment";
+import type { ListUsersQuery } from "./schemas/user";
 
 export const apiBaseUrl = env.VITE_API_BASE_URL;
 
@@ -40,6 +41,8 @@ export const queryKeys = {
   },
   users: {
     all: ["users"] as const,
+    lists: () => [...queryKeys.users.all, "list"] as const,
+    list: (filters?: ListUsersQuery) => [...queryKeys.users.lists(), filters] as const,
     details: () => [...queryKeys.users.all, "detail"] as const,
     detail: (userId: number) => [...queryKeys.users.details(), userId] as const,
   },
@@ -98,6 +101,7 @@ export const routes = {
       `/payment/api/payments/transactions/${txHash}`,
   },
   user: {
+    list: "/users",
     detail: (userId: number) => `/users/${userId}`,
   },
 } as const;

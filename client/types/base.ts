@@ -94,11 +94,17 @@ export interface ProgramData {
   dailyAllocationAmount?: number;
   currencyTokenName: string;
   status: "DRAFT" | "ACTIVE" | "INACTIVE";
-  kategori?: string | null;
+  categoryId?: number | null;
   parentProgram?: ProgramData | null;
   expTokenDate?: string;
   maxTrxPerDay?: number;
   budgetPerPenerima?: number;
+  donors: Array<{
+    userId: number | null;
+    email: string | null;
+    fullName: string;
+    phoneNumber: string;
+  }>;
 }
 
 /**
