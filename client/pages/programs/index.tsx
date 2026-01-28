@@ -321,18 +321,6 @@ export default function Programs() {
                                   <SquarePen className="size-4 mr-2" />
                                   Edit
                                 </DropdownMenuItem>
-                                {program.donors.length === 0 && (
-                                  <DropdownMenuItem
-                                    onClick={() => {
-                                      setSelectedProgram(program);
-                                      setSetDonorDialogOpen(true);
-                                    }}
-                                    className="cursor-pointer"
-                                  >
-                                    <Coins className="size-4 mr-2" />
-                                    Set Donatur
-                                  </DropdownMenuItem>
-                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>

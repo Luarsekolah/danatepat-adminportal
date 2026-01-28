@@ -41,6 +41,11 @@ export const createProgramPayloadSchema = z
     escrowAccountOwner: z
       .string({ message: "Pemilik rekening Escrow harus diisi" })
       .min(1, { message: "Pemilik rekening Escrow harus diisi" }),
+    userId: z
+      .number({
+        message: "Donatur harus dipilih",
+      })
+      .positive({ message: "Donatur harus dipilih" }),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",

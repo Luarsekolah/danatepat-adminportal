@@ -27,6 +27,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useListProgramCategories } from "@/services/queries/program";
+import { useDonate } from "@/services/mutations/payment";
+import { useListUsers } from "@/services/queries/user";
 
 interface AddProgramDialogProps {
   open: boolean;
@@ -43,11 +45,40 @@ export function AddProgramDialog({
     enabled: open,
   });
 
-  const createMutation = useCreateProgram({
+  const usersQuery = useListUsers(
+    {
+      role: "DONOR",
+    },
+    {
+      enabled: open,
+    },
+  );
+
+  const donateMutation = useDonate({
     onSuccess: () => {
       reset();
       onOpenChange(false);
       onSuccess?.();
+    },
+  });
+
+  const createMutation = useCreateProgram({
+    onSuccess: (data) => {
+      const createdProgramId = data.data?.id;
+      const selectedUserId = watch("userId");
+
+      // If user selected a donor, set it for the newly created program
+      if (createdProgramId && selectedUserId) {
+        donateMutation.mutate({
+          userId: selectedUserId,
+          programId: createdProgramId,
+          nominal: watch("anggaran"),
+        });
+      } else {
+        reset();
+        onOpenChange(false);
+        onSuccess?.();
+      }
     },
   });
 
@@ -65,6 +96,7 @@ export function AddProgramDialog({
         escrowAccountNumber: "",
         escrowAccountBank: "",
         escrowAccountOwner: "",
+        userId: 0,
       },
     });
 
@@ -165,6 +197,51 @@ export function AddProgramDialog({
             {formState.errors.categoryId && (
               <p className="text-xs text-red-500">
                 {formState.errors.categoryId.message}
+              </p>
+            )}
+          </div>
+
+          {/* Select Donor */}
+          <div className="space-y-1.5 col-span-2">
+            <Label htmlFor="userId" className="text-sm font-bold">
+              Donatur
+            </Label>
+            <Controller
+              control={control}
+              name="userId"
+              render={({ field }) => (
+                <Select
+                  value={field.value ? field.value.toString() : ""}
+                  onValueChange={(value) =>
+                    field.onChange(value ? Number(value) : 0)
+                  }
+                >
+                  <SelectTrigger className="h-9 border-slate-200">
+                    <SelectValue placeholder="Pilih donatur" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {usersQuery.isLoading ? (
+                      <div className="px-2 py-1.5 text-sm text-slate-500">
+                        Memuat pengguna...
+                      </div>
+                    ) : usersQuery.data?.data && usersQuery.data.data.length === 0 ? (
+                      <div className="px-2 py-1.5 text-sm text-slate-500">
+                        Tidak ada donatur
+                      </div>
+                    ) : (
+                      usersQuery.data?.data?.map((user) => (
+                        <SelectItem key={user.id} value={user.id.toString()}>
+                          {user.fullName} <span className="text-xs text-muted-foreground">({user.email})</span>
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {formState.errors.userId && (
+              <p className="text-xs text-red-500">
+                {formState.errors.userId.message}
               </p>
             )}
           </div>
@@ -350,19 +427,23 @@ export function AddProgramDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={createMutation.isPending}
+              disabled={createMutation.isPending || donateMutation.isPending}
             >
               Batal
             </Button>
             <Button
               type="submit"
               className="bg-[#1E6CF6] hover:bg-blue-700"
-              disabled={createMutation.isPending}
+              disabled={createMutation.isPending || donateMutation.isPending}
             >
-              {createMutation.isPending && (
+              {(createMutation.isPending || donateMutation.isPending) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {createMutation.isPending ? "Menyimpan..." : "Simpan Program"}
+              {createMutation.isPending
+                ? "Menyimpan Program..."
+                : donateMutation.isPending
+                  ? "Menyimpan Donatur..."
+                  : "Simpan Program"}
             </Button>
           </div>
         </form>
