@@ -15,6 +15,8 @@ import type {
   ProgramUser,
   ProgramUsersData,
   ListProgramUsersResponse,
+  ProgramCategory,
+  ListProgramCategoriesResponse,
 } from "@/services/schemas/program";
 
 export type {
@@ -34,4 +36,6 @@ export type {
   ProgramUser,
   ProgramUsersData,
   ListProgramUsersResponse,
+  ProgramCategory,
+  ListProgramCategoriesResponse,
 };

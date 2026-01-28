@@ -1,7 +1,38 @@
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { mainApi } from "../api";
 import { routes, queryKeys } from "../api-config";
-import type { GetUserDetailResponse } from "@/services/schemas/user";
+import type {
+  GetUserDetailResponse,
+  ListUsersResponse,
+  ListUsersQuery,
+} from "@/services/schemas/user";
+
+/**
+ * Hook for fetching all users list
+ * Returns array of all users in the system
+ *
+ * @example
+ * const usersQuery = useListUsers({ role: 'BENEFICIARY' });
+ * const users = usersQuery.data?.data ?? [];
+ */
+export function useListUsers(
+  filters?: ListUsersQuery,
+  options?: Omit<
+    UseQueryOptions<ListUsersResponse, Error>,
+    "queryKey" | "queryFn"
+  >,
+) {
+  return useQuery<ListUsersResponse, Error>({
+    queryKey: queryKeys.users.list(filters),
+    queryFn: async () => {
+      const res = await mainApi.get(routes.user.list, {
+        params: filters,
+      });
+      return res.data;
+    },
+    ...options,
+  });
+}
 
 /**
  * Hook for fetching user detail/profile by ID

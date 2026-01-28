@@ -4,7 +4,16 @@ import type { ApiResponse } from "@/types/base";
 /**
  * User role enum
  */
-export const userRoleEnum = z.enum(["BENEFICIARY", "MERCHANT", "ADMIN"]);
+export const userRoleEnum = z.enum(["BENEFICIARY", "MERCHANT", "ADMIN", "DONOR"]);
+
+/**
+ * Query parameters for listing users
+ */
+export const listUsersQuerySchema = z
+  .object({
+    role: userRoleEnum.optional(),
+  })
+  .strict();
 
 /**
  * Bulk beneficiary item schema for CSV upload
@@ -17,7 +26,7 @@ export const bulkBeneficiaryItemSchema = z.object({
   phoneNumber: z.string().min(1),
   nik: z.string().min(1).length(16, { message: "NIK harus 16 karakter" }),
   blockchainWalletAddress: z.string().optional(),
-  kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"]),
+  categoryId: z.number().int().min(1),
   alamat: z.string().optional(),
   latlon: z.string().optional(),
   dateOfBirth: z.string().optional(),
@@ -57,6 +66,7 @@ export const bulkCreateBeneficiariesMultiProgramSchema = z.object({
 
 // Type exports
 export type UserRole = z.infer<typeof userRoleEnum>;
+export type ListUsersQuery = z.infer<typeof listUsersQuerySchema>;
 export type BulkBeneficiaryItem = z.infer<typeof bulkBeneficiaryItemSchema>;
 export type BulkCreateBeneficiariesPayload = z.infer<
   typeof bulkCreateBeneficiariesPayloadSchema
@@ -91,3 +101,25 @@ export interface UserDetail {
 }
 
 export type GetUserDetailResponse = ApiResponse<UserDetail>;
+
+/**
+ * User list item interface
+ * Used for displaying users in list/table view
+ */
+export interface UserListItem {
+  id: number;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
+  role: string;
+  status: string;
+  blockchainWalletAddress: string | null;
+  dateOfBirth: string | null;
+  ktpPhotoUrl: string | null;
+  selfiePhotoUrl: string | null;
+  isBlockchainWalletApproved: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ListUsersResponse = ApiResponse<UserListItem[]>;

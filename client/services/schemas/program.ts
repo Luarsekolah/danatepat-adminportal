@@ -16,7 +16,6 @@ export const createProgramPayloadSchema = z
       .string({ message: "Nama program harus diisi" })
       .min(1, { message: "Nama program harus diisi" })
       .min(3, { message: "Nama program minimal 3 karakter" }),
-    donatur: z.string().optional(),
     description: z
       .string({ message: "Deskripsi harus diisi" })
       .min(1, { message: "Deskripsi harus diisi" }),
@@ -28,6 +27,20 @@ export const createProgramPayloadSchema = z
     budgetPerPenerima: z
       .number({ message: "Budget per penerima harus berupa angka" })
       .positive({ message: "Budget per penerima harus lebih dari 0" }),
+    categoryId: z
+      .number({
+        message: "Kategori harus dipilih",
+      })
+      .positive(),
+    escrowAccountNumber: z
+      .string({ message: "Nomor rekening Escrow harus diisi" })
+      .min(1, { message: "Nomor rekening Escrow harus diisi" }),
+    escrowAccountBank: z
+      .string({ message: "Bank rekening Escrow harus diisi" })
+      .min(1, { message: "Bank rekening Escrow harus diisi" }),
+    escrowAccountOwner: z
+      .string({ message: "Pemilik rekening Escrow harus diisi" })
+      .min(1, { message: "Pemilik rekening Escrow harus diisi" }),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: "Tanggal akhir harus lebih besar atau sama dengan tanggal mulai",
@@ -93,9 +106,9 @@ export const createSubProgramPayloadSchema = z
     maxTrxPerDay: z
       .number({ message: "Maksimal transaksi per hari harus berupa angka" })
       .positive({ message: "Maksimal transaksi per hari harus lebih dari 0" }),
-    kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"], {
-      message: "Kategori harus salah satu dari: PANGAN, KESEHATAN, PENDIDIKAN",
-    }),
+    categoryId: z
+      .number({ message: "Kategori harus dipilih" })
+      .positive({ message: "Kategori harus dipilih" }),
   })
   .refine((data) => data.dailyAllocationAmount <= data.anggaran, {
     message: "Limit nominal per transaksi tidak dapat melebihi anggaran",
@@ -148,3 +161,16 @@ export interface ProgramUsersData {
 }
 
 export type ListProgramUsersResponse = ApiResponse<ProgramUsersData>;
+
+/**
+ * Program category types
+ */
+export interface ProgramCategory {
+  id: number;
+  categoryName: string;
+  parentId: number | null;
+  status: "ACTIVE" | "INACTIVE";
+  children: ProgramCategory[];
+}
+
+export type ListProgramCategoriesResponse = ApiResponse<ProgramCategory[]>;

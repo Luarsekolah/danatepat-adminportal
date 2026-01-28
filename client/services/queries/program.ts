@@ -8,6 +8,7 @@ import type {
   ProgramDashboardResponse,
   ListProgramChildrenResponse,
   ListProgramUsersResponse,
+  ListProgramCategoriesResponse,
 } from "@/types/program";
 
 /**
@@ -127,6 +128,30 @@ export function useListProgramUsers(
     queryKey: queryKeys.programs.beneficiariesList(programId),
     queryFn: async () => {
       const res = await mainApi.get(routes.program.listUsers(programId));
+      return res.data;
+    },
+    ...options,
+  });
+}
+
+/**
+ * Hook for fetching all program categories
+ * Returns hierarchical category tree with nested children
+ *
+ * @example
+ * const categoriesQuery = useListProgramCategories();
+ * const categories = categoriesQuery.data?.data ?? [];
+ */
+export function useListProgramCategories(
+  options?: Omit<
+    UseQueryOptions<ListProgramCategoriesResponse, Error>,
+    "queryKey" | "queryFn"
+  >,
+) {
+  return useQuery<ListProgramCategoriesResponse, Error>({
+    queryKey: queryKeys.programs.categories(),
+    queryFn: async () => {
+      const res = await mainApi.get(routes.program.categories);
       return res.data;
     },
     ...options,

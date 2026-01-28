@@ -23,21 +23,28 @@ export const paymentHistoryQuerySchema = z
  */
 export const donatePayloadSchema = z.object({
   userId: z
-    .number({ message: "User ID harus diisi" })
+    .number({ message: "Donatur harus dipilih" })
     .int()
-    .positive({ message: "User ID harus berupa angka positif" }),
+    .positive({ message: "Donatur harus dipilih" }),
   programId: z
     .number({ message: "Program ID harus diisi" })
     .int()
-    .positive({ message: "Program ID harus berupa angka positif" }),
+    .positive({ message: "Program ID harus diisi" }),
   nominal: z
     .number({ message: "Nominal harus diisi" })
     .positive({ message: "Nominal harus lebih dari 0" }),
+});
+export const donateFormSchema = z.object({
+  userId: z
+    .number({ message: "Donatur harus dipilih" })
+    .int()
+    .positive({ message: "Donatur harus dipilih" }),
 });
 
 // Type exports
 export type PaymentHistoryQuery = z.infer<typeof paymentHistoryQuerySchema>;
 export type DonatePayload = z.infer<typeof donatePayloadSchema>;
+export type DonateForm = z.infer<typeof donateFormSchema>;
 
 // Response type exports
 export type DonateResponse = ApiResponse<Record<string, unknown>>;
