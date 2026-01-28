@@ -125,7 +125,7 @@ export function ViewTransactionDialog({
 
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Token (PRANA)
+                  Token (Pratala)
                 </p>
                 <p className="text-sm font-medium text-slate-900 mt-1">
                   {formatCurrencyToken(transaction.transaction.amount)}

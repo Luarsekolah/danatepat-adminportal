@@ -54,7 +54,7 @@ export default function Login() {
             </div>
           </div>
           <h1 className="text-4xl font-extrabold mb-6 tracking-tight leading-tight">
-            Dashboard Presidana
+            Dashboard PTSBQB
           </h1>
           <p className="text-lg text-white/80 mb-12 leading-relaxed font-medium">
             Platform administrasi berbasis blockchain untuk transparansi dan
@@ -87,18 +87,18 @@ export default function Login() {
             <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-white shadow-sm shadow-blue-500/30 mb-4 transition-transform hover:scale-105 duration-300">
               <img
                 src="/presidana-logo.svg"
-                alt="Logo Presidana"
+                alt="Logo PTSBQB"
                 className="size-8"
               />
             </div>
             <span className="text-2xl font-black text-slate-800 tracking-tighter">
-              Presidana
+              PTSBQB
             </span>
           </div>
 
           <div className="space-y-3 mb-10 text-center">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              Masuk ke Dashboard Presidana
+              Masuk ke Dashboard PTSBQB
             </h2>
             <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[320px] mx-auto">
               Kelola program bantuan sosial dengan transparansi blockchain
@@ -141,7 +141,7 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@presidana.id"
+                  placeholder="admin@ptsbqb.id"
                   {...register("email")}
                   className={`pl-12 h-14 font-medium rounded-2xl transition-all ${
                     errors.email

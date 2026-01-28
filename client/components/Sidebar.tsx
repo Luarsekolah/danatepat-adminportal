@@ -55,11 +55,19 @@ export function Sidebar() {
     <>
       <aside className="w-64 h-screen bg-white border-r border-slate-200 flex flex-col fixed left-0 top-0 z-30">
         {/* Brand Logo */}
-        <img
-          src="/presidana-logo-text.svg"
-          alt="Logo Presidana"
-          className="h-16 self-start ml-4"
-        />
+        <div className="flex items-center gap-1 mt-4">
+          <img
+            src="/presidana-logo.svg"
+            alt="Logo PTSBQB"
+            className="h-12 self-start ml-4"
+          />
+          <div>
+            <h1 className="text-xl font-bold text-primary tracking-widest">
+              PTSBQB
+            </h1>
+            <p className="text-xs tracking-wide uppercase text-muted-foreground">Solusi Presisi Terverifikasi</p>
+          </div>
+        </div>
 
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto py-6 px-4">
