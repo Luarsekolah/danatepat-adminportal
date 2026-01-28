@@ -31,7 +31,10 @@ import {
 import type { ProgramData } from "@/types/base";
 import { DatePickerInput } from "@/components/ui/calendar";
 import { InputPrice } from "@/components/ui/input-price";
-import { useGetProgram } from "@/services/queries/program";
+import {
+  useGetProgram,
+  useListProgramChildren,
+} from "@/services/queries/program";
 
 interface EditProgramDialogProps {
   open: boolean;
@@ -49,9 +52,14 @@ export function EditProgramDialog({
   const initialProgramStatus = program?.status;
 
   // Fetch program data using useGetProgram
-  const programQuery = useGetProgram(program?.id ?? 0, {
+  const programQuery = useGetProgram(program?.id, {
     enabled: Boolean(program?.id) && open,
   });
+
+  const subProgramsQuery = useListProgramChildren(program?.id, {
+    enabled: Boolean(program?.id) && open,
+  });
+  const isSubProgramsEmpty = subProgramsQuery.data?.data?.length === 0;
 
   const publishProgramMutation = usePublishProgram(program?.id);
   const updateMutation = useUpdateProgram(program?.id, {
@@ -391,9 +399,11 @@ export function EditProgramDialog({
 
             <Select
               value={status}
-              onValueChange={(value) =>
-                setValue("status", value as "DRAFT" | "ACTIVE")
-              }
+              onValueChange={(value) => {
+                if (isSubProgramsEmpty) return;
+                setValue("status", value as "DRAFT" | "ACTIVE");
+              }}
+              disabled={isSubProgramsEmpty}
             >
               <SelectTrigger className="h-9 border-slate-200">
                 <SelectValue />
@@ -409,8 +419,9 @@ export function EditProgramDialog({
               </p>
             ) : (
               <p className="text-xs text-slate-500">
-                Dengan mengganti status menjadi Aktif, maka program akan mulai
-                beroperasi
+                {isSubProgramsEmpty
+                  ? "Tidak bisa mengubah status, karena program ini belum memiliki sub-program"
+                  : "Dengan mengganti status menjadi Aktif, maka program akan mulai beroperasi"}
               </p>
             )}
           </div>
