@@ -31,7 +31,7 @@ import {
 import type { ProgramData } from "@/types/base";
 import { DatePickerInput } from "@/components/ui/calendar";
 import { InputPrice } from "@/components/ui/input-price";
-import { useGetUserDetail } from "@/services/queries/user";
+import { useGetProgram } from "@/services/queries/program";
 
 interface EditProgramDialogProps {
   open: boolean;
@@ -47,6 +47,12 @@ export function EditProgramDialog({
   onSuccess,
 }: EditProgramDialogProps) {
   const initialProgramStatus = program?.status;
+
+  // Fetch program data using useGetProgram
+  const programQuery = useGetProgram(program?.id ?? 0, {
+    enabled: Boolean(program?.id) && open,
+  });
+
   const publishProgramMutation = usePublishProgram(program?.id);
   const updateMutation = useUpdateProgram(program?.id, {
     onSuccess: (data) => {
@@ -63,15 +69,16 @@ export function EditProgramDialog({
     useForm<UpdateProgramPayload>({
       resolver: zodResolver(updateProgramPayloadSchema),
       defaultValues: {
-        name: program?.name ?? "",
-        description: program?.description ?? "",
-        startDate: new Date(program?.startDate) ?? null,
-        endDate: new Date(program?.endDate) ?? null,
-        anggaran: (program as any)?.anggaran ?? 0,
-        budgetPerPenerima: (program as any)?.budgetPerPenerima ?? 0,
-        // dailyAllocationAmount: program?.dailyAllocationAmount ?? 0,
-        // currencyTokenName: program?.currencyTokenName ?? "",
-        status: (program?.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
+        name: "",
+        description: "",
+        startDate: null,
+        endDate: null,
+        anggaran: 0,
+        budgetPerPenerima: 0,
+        escrowAccountNumber: "",
+        escrowAccountBank: "",
+        escrowAccountOwner: "",
+        status: "DRAFT",
       },
     });
 
@@ -84,22 +91,24 @@ export function EditProgramDialog({
     );
   }
 
-  // Update form values when program prop changes
+  // Update form values when program data is fetched
   React.useEffect(() => {
-    if (program && open) {
+    if (programQuery.data?.data && open) {
+      const programData = programQuery.data.data;
       reset({
-        name: program.name,
-        description: program.description ?? "",
-        startDate: new Date(program.startDate),
-        endDate: new Date(program.endDate),
-        anggaran: (program as any)?.anggaran ?? 0,
-        budgetPerPenerima: (program as any)?.budgetPerPenerima ?? 0,
-        // dailyAllocationAmount: program.dailyAllocationAmount,
-        // currencyTokenName: program.currencyTokenName,
-        status: (program.status as "DRAFT" | "ACTIVE") ?? "DRAFT",
+        name: programData.name,
+        description: programData.description ?? "",
+        startDate: new Date(programData.startDate),
+        endDate: new Date(programData.endDate),
+        anggaran: programData?.anggaran ?? 0,
+        budgetPerPenerima: programData?.budgetPerPenerima ?? 0,
+        escrowAccountNumber: programData?.escrowAccountNumber ?? "",
+        escrowAccountBank: programData?.escrowAccountBank ?? "",
+        escrowAccountOwner: programData?.escrowAccountOwner ?? "",
+        status: programData.status ?? "DRAFT",
       });
     }
-  }, [program, open, reset]);
+  }, [programQuery.data, open, reset]);
 
   const onSubmit = (data: UpdateProgramPayload) => {
     updateMutation.mutate(data);
@@ -212,6 +221,60 @@ export function EditProgramDialog({
                 </p>
               )}
             </div>
+          </div>
+
+          {/* Escrow Account Number */}
+          <div className="space-y-1.5">
+            <Label htmlFor="escrowAccountNumber" className="text-sm font-bold">
+              Nomor Rekening Escrow
+            </Label>
+            <Input
+              id="escrowAccountNumber"
+              placeholder="Masukkan nomor rekening escrow"
+              className="h-9 border-slate-200"
+              {...register("escrowAccountNumber")}
+            />
+            {formState.errors.escrowAccountNumber && (
+              <p className="text-xs text-red-500">
+                {formState.errors.escrowAccountNumber.message}
+              </p>
+            )}
+          </div>
+
+          {/* Escrow Account Bank */}
+          <div className="space-y-1.5">
+            <Label htmlFor="escrowAccountBank" className="text-sm font-bold">
+              Bank Rekening Escrow
+            </Label>
+            <Input
+              id="escrowAccountBank"
+              placeholder="Masukkan nama bank"
+              className="h-9 border-slate-200"
+              {...register("escrowAccountBank")}
+            />
+            {formState.errors.escrowAccountBank && (
+              <p className="text-xs text-red-500">
+                {formState.errors.escrowAccountBank.message}
+              </p>
+            )}
+          </div>
+
+          {/* Escrow Account Owner */}
+          <div className="space-y-1.5">
+            <Label htmlFor="escrowAccountOwner" className="text-sm font-bold">
+              Pemilik Rekening Escrow
+            </Label>
+            <Input
+              id="escrowAccountOwner"
+              placeholder="Masukkan nama pemilik rekening"
+              className="h-9 border-slate-200"
+              {...register("escrowAccountOwner")}
+            />
+            {formState.errors.escrowAccountOwner && (
+              <p className="text-xs text-red-500">
+                {formState.errors.escrowAccountOwner.message}
+              </p>
+            )}
           </div>
 
           {/* Anggaran */}
