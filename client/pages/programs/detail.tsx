@@ -232,7 +232,7 @@ export default function ProgramDetail() {
                             "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
                           )}
                         >
-                          {subProgram.categoryId || "—"}
+                          {subProgram.categoryName || "—"}
                         </span>
                       </td>
                       <td className="px-6 py-5 text-sm font-bold text-slate-900">

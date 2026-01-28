@@ -94,7 +94,8 @@ export interface ProgramData {
   dailyAllocationAmount?: number;
   currencyTokenName: string;
   status: "DRAFT" | "ACTIVE" | "INACTIVE";
-  categoryId?: number | null;
+  categoryId: number | null;
+  categoryName: string | null;
   parentProgram?: ProgramData | null;
   expTokenDate?: string;
   maxTrxPerDay?: number;
