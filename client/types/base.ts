@@ -107,6 +107,29 @@ export interface ProgramData {
   }>;
 }
 
+export interface ProgramDetailData {
+  id: number;
+  name: string;
+  description?: string;
+  programManagerId: number;
+  startDate: string;
+  endDate: string;
+  anggaran?: number;
+  dailyAllocationAmount?: number;
+  currencyTokenName: string;
+  status: "DRAFT" | "ACTIVE" | "INACTIVE";
+  categoryId?: number | null;
+  parentProgram?: ProgramData | null;
+  expTokenDate?: string;
+  maxTrxPerDay?: number;
+  budgetPerPenerima?: number;
+  escrowAccountNumber: string | null;
+  escrowAccountBank: string | null;
+  escrowAccountOwner: string | null;
+  escrowAccountLastValue: number | null;
+  escrowAccountLastDate: string | null;
+}
+
 /**
  * Program Statistics Dashboard
  * Program-related statistics

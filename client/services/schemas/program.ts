@@ -1,9 +1,9 @@
 import { z } from "zod";
 import type {
   ApiResponse,
-  ApiPaginatedResponse,
   ProgramData,
   ProgramDashboard,
+  ProgramDetailData,
 } from "@/types/base";
 
 /**
@@ -66,6 +66,9 @@ export const updateProgramPayloadSchema = z
       .number({ message: "Budget per penerima harus berupa angka" })
       .positive({ message: "Budget per penerima harus lebih dari 0" })
       .optional(),
+    escrowAccountNumber: z.string().optional(),
+    escrowAccountBank: z.string().optional(),
+    escrowAccountOwner: z.string().optional(),
     // dailyAllocationAmount: z.number().positive().optional(),
     // currencyTokenName: z.string().optional(),
     status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
@@ -137,7 +140,7 @@ export type CreateProgramResponse = ApiResponse<ProgramData>;
 export type UpdateProgramResponse = ApiResponse<ProgramData>;
 export type CreateSubProgramsResponse = ApiResponse<ProgramData[]>;
 export type ListProgramResponse = ApiResponse<ProgramData[]>;
-export type GetProgramResponse = ApiResponse<ProgramData>;
+export type GetProgramResponse = ApiResponse<ProgramDetailData>;
 export type ProgramDashboardResponse = ApiResponse<ProgramDashboard>;
 export type ListProgramChildrenResponse = ApiResponse<ProgramData[]>;
 
