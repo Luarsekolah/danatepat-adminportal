@@ -26,7 +26,7 @@ export const bulkBeneficiaryItemSchema = z.object({
   phoneNumber: z.string().min(1),
   nik: z.string().min(1).length(16, { message: "NIK harus 16 karakter" }),
   blockchainWalletAddress: z.string().optional(),
-  kategori: z.enum(["PANGAN", "KESEHATAN", "PENDIDIKAN"]),
+  categoryId: z.number().int().min(1),
   alamat: z.string().optional(),
   latlon: z.string().optional(),
   dateOfBirth: z.string().optional(),

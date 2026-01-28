@@ -43,7 +43,7 @@ export function UploadMerchantCSVDialog({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const programId = subProgram?.id || 0;
-  const expectedCategory = subProgram?.kategori;
+  const expectedCategoryId = subProgram?.categoryId;
 
   const bulkRegisterMutation = useBulkRegisterMerchantWithProgram(programId, {
     onSuccess: () => {
@@ -109,13 +109,23 @@ export function UploadMerchantCSVDialog({
         // Validate and process parsed data
         const processedData: ParsedRowWithValidation[] = results.data.map(
           (row, index) => {
-            // Auto-apply kategori from expectedCategory so the user doesn't need to provide it
+            // Auto-apply categoryId from expectedCategoryId so the user doesn't need to provide it
+            const rowData = row as unknown as Record<string, unknown>;
+            const categoryIdValue = expectedCategoryId ?? (rowData.categoryId ? Number(rowData.categoryId) : undefined);
+            
             const rowWithCategory: BulkMerchantItem = {
-              ...(row as BulkMerchantItem),
-              kategori: (expectedCategory ??
-                (row as BulkMerchantItem)
-                  .kategori) as BulkMerchantItem["kategori"],
-              // blockchainWalletAddress: "" as const,
+              email: String(rowData.email),
+              fullName: String(rowData.fullName),
+              phoneNumber: String(rowData.phoneNumber),
+              nik: String(rowData.nik),
+              businessName: String(rowData.businessName),
+              bankName: String(rowData.bankName),
+              bankAccountNumber: String(rowData.bankAccountNumber),
+              bankAccountHolder: String(rowData.bankAccountHolder),
+              categoryId: categoryIdValue as number,
+              blockchainWalletAddress: rowData.blockchainWalletAddress ? String(rowData.blockchainWalletAddress) : undefined,
+              alamat: rowData.alamat ? String(rowData.alamat) : undefined,
+              latlon: rowData.latlon ? String(rowData.latlon) : undefined,
             };
 
             const validation =
@@ -232,9 +242,7 @@ export function UploadMerchantCSVDialog({
                 <div className="pt-1 space-y-1 border-t border-slate-300 text-sm">
                   <p className="font-medium text-slate-600">
                     Untuk Sub-Program{" "}
-                    <span className="font-semibold">{subProgram.name}</span> di
-                    kategori{" "}
-                    <span className="font-semibold">{subProgram.kategori}</span>
+                    <span className="font-semibold">{subProgram.name}</span>
                   </p>
                 </div>
               )}

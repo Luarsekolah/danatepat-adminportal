@@ -20,13 +20,13 @@ import {
 import { ProgramData } from "@/types/base";
 import { cn } from "@/lib/utils";
 
-const getCategoryColor = (kategori: string) => {
-  const categoryMap: Record<string, string> = {
-    PANGAN: "text-emerald-600 bg-emerald-50 border-emerald-100",
-    PENDIDIKAN: "text-purple-600 bg-purple-50 border-purple-100",
-    KESEHATAN: "text-rose-600 bg-rose-50 border-rose-100",
+const getCategoryColor = (categoryId: number) => {
+  const categoryMap: Record<number, string> = {
+    1: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    2: "text-purple-600 bg-purple-50 border-purple-100",
+    3: "text-rose-600 bg-rose-50 border-rose-100",
   };
-  return categoryMap[kategori] || "text-slate-600 bg-slate-50 border-slate-100";
+  return categoryMap[categoryId] || "text-slate-600 bg-slate-50 border-slate-100";
 };
 
 interface UploadBeneficiaryCSVDialogProps {
@@ -135,21 +135,30 @@ export function UploadBeneficiaryCSVDialog({
               }
             });
 
-            // Use first sub-program's kategori for validation
+            // Use first sub-program's categoryId for validation
             const firstSelectedSubProgram = allSubPrograms.find(
               (sp) => sp.id === selectedSubPrograms[0],
             );
-            const kategori = firstSelectedSubProgram?.kategori;
+            const categoryId = firstSelectedSubProgram?.categoryId;
 
             // Auto-apply default passwordHash and role for beneficiaries
+            const rowData = row as unknown as Record<string, unknown>;
+            const categoryIdValue = categoryId ?? (rowData.categoryId ? Number(rowData.categoryId) : undefined);
+            
             const rowWithDefaults: BulkBeneficiaryItem = {
-              ...(row as BulkBeneficiaryItem),
-              kategori: (kategori ??
-                (row as BulkBeneficiaryItem)
-                  .kategori) as BulkBeneficiaryItem["kategori"],
+              email: String(rowData.email),
+              fullName: String(rowData.fullName),
+              phoneNumber: String(rowData.phoneNumber),
+              nik: String(rowData.nik),
+              categoryId: categoryIdValue as number,
+              blockchainWalletAddress: rowData.blockchainWalletAddress ? String(rowData.blockchainWalletAddress) : undefined,
+              alamat: rowData.alamat ? String(rowData.alamat) : undefined,
+              latlon: rowData.latlon ? String(rowData.latlon) : undefined,
+              dateOfBirth: rowData.dateOfBirth ? String(rowData.dateOfBirth) : undefined,
               passwordHash: "password12345" as const,
               role: "BENEFICIARY" as const,
-              blockchainWalletAddress: "" as const,
+              ktpPhotoUrl: rowData.ktpPhotoUrl ? String(rowData.ktpPhotoUrl) : undefined,
+              selfiePhotoUrl: rowData.selfiePhotoUrl ? String(rowData.selfiePhotoUrl) : undefined,
             };
 
             const validation =
@@ -226,21 +235,15 @@ export function UploadBeneficiaryCSVDialog({
       return;
     }
 
-    // Create mapping of program ID to kategori
-    const subProgramsMapping = Object.fromEntries(
-      allSubPrograms.map((sp) => [sp.id, sp.kategori]),
-    );
-
     bulkCreateMutation.mutate({
       users: validData as BulkBeneficiaryMultiProgram["users"],
-      _subProgramsMapping: subProgramsMapping,
     });
   };
 
   const handleDownloadTemplate = () => {
     const template: Record<string, string>[] = [
       {
-        Email: "beneficiary@example.com",
+        Email: "beneficiary@gmail.com",
         "Nama Lengkap Sesuai KTP": "Nama Lengkap",
         "Nomor Telepon": "6281234567890",
         NIK: "3173010101010001",
@@ -296,7 +299,6 @@ export function UploadBeneficiaryCSVDialog({
                         key={sp.id}
                         className={cn(
                           "px-2 py-1 rounded text-xs font-medium",
-                          getCategoryColor(sp.kategori),
                         )}
                       >
                         {sp.name}
@@ -486,7 +488,7 @@ export function UploadBeneficiaryCSVDialog({
                                     key={spId}
                                     className={cn(
                                       "px-1.5 py-0.5 rounded text-xs",
-                                      getCategoryColor(sp?.kategori),
+                                      getCategoryColor(sp?.categoryId || 0),
                                     )}
                                   >
                                     {sp?.name}

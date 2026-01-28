@@ -5,11 +5,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Upload,
-  Utensils,
   Loader2,
   Eye,
 } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { UploadMerchantCSVDialog } from "./components/UploadMerchantCSVDialog";
 import { EditMerchantDialog } from "./components/EditMerchantDialog";
 import { ViewMerchantDialog } from "./components/ViewMerchantDialog";
@@ -19,13 +18,6 @@ import {
   useListProgramUsers,
 } from "@/services/queries/program";
 import { ProgramData } from "@/types/base";
-
-const CATEGORY_ICONS: Record<string, string> = {
-  PANGAN: "🍴",
-  PENDIDIKAN: "🎓",
-  KESEHATAN: "🏥",
-  default: "📋",
-} as const;
 
 export interface MerchantItem {
   id: number;
@@ -40,7 +32,6 @@ export interface MerchantItem {
 }
 
 export default function ProgramMerchant() {
-  const navigate = useNavigate();
   const { programId } = useParams<{ programId: string }>();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -269,22 +260,15 @@ function MerchantTable({
                 {merchants.map((merchant) => (
                   <tr key={merchant.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                          {CATEGORY_ICONS[
-                            subProgram.kategori?.toUpperCase() || "default"
-                          ] || CATEGORY_ICONS.default}
-                        </div>
-                        <div>
-                          <p className="font-medium text-slate-900">
-                            {merchant.businessName || merchant.fullName}
+                      <div>
+                        <p className="font-medium text-slate-900">
+                          {merchant.businessName || merchant.fullName}
+                        </p>
+                        {merchant.nik && (
+                          <p className="text-xs text-slate-500">
+                            NIK: {merchant.nik}
                           </p>
-                          {merchant.nik && (
-                            <p className="text-xs text-slate-500">
-                              NIK: {merchant.nik}
-                            </p>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-slate-600">

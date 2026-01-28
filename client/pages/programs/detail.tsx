@@ -107,10 +107,6 @@ export default function ProgramDetail() {
         {/* Program Info Card */}
         <div className="bg-blue-50 border border-blue-200 rounded-3xl p-6">
           <div className="flex items-center flex-col gap-4 md:flex-row">
-            <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-              {CATEGORY_ICONS[program.kategori?.toUpperCase() || "default"] ||
-                CATEGORY_ICONS.default}
-            </div>
             <div className="flex-1">
               <h3 className="text-lg font-bold text-slate-900">
                 {program.name}
@@ -234,32 +230,24 @@ export default function ProgramDetail() {
                       className="hover:bg-slate-50/30 transition-colors"
                     >
                       <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-sm border border-slate-100">
-                            {CATEGORY_ICONS[
-                              subProgram.kategori?.toUpperCase() || "default"
-                            ] || CATEGORY_ICONS.default}
-                          </div>
-                          <div>
-                            <p className="text-sm font-bold text-slate-900">
-                              {subProgram.name}
+                        <div>
+                          <p className="text-sm font-bold text-slate-900">
+                            {subProgram.name}
+                          </p>
+                          {subProgram.description && (
+                            <p className="text-xs text-slate-500 mt-0.5">
+                              {subProgram.description}
                             </p>
-                            {subProgram.description && (
-                              <p className="text-xs text-slate-500 mt-0.5">
-                                {subProgram.description}
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-5">
                         <span
                           className={cn(
                             "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                            getCategoryColor(subProgram.kategori),
                           )}
                         >
-                          {subProgram.kategori || "—"}
+                          {subProgram.categoryId || "—"}
                         </span>
                       </td>
                       <td className="px-6 py-5 text-sm font-bold text-slate-900">
@@ -286,9 +274,10 @@ export default function ProgramDetail() {
         {/* Dialog */}
         <AddSubProgramDialog
           programId={programId || ""}
+          parentCategoryId={program?.categoryId || 0}
           remainingBudget={remainingBudget < 0 ? 0 : remainingBudget}
-          programStartDate={program.startDate}
-          programEndDate={program.endDate}
+          programStartDate={program?.startDate || ""}
+          programEndDate={program?.endDate || ""}
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           onSuccess={handleDialogSuccess}
