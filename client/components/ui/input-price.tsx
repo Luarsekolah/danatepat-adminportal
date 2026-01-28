@@ -17,7 +17,8 @@ const InputPrice = React.forwardRef<HTMLInputElement, InputPriceProps>(
     {
       value = "",
       onChange,
-      prefix = "Rp",
+      // 'Pr' stands for 'PRATALA' as the token name
+      prefix = "Pr",
       placeholder = "0",
       className,
       disabled = false,
