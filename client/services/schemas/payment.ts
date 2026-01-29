@@ -75,7 +75,8 @@ export interface PaymentMerchant {
  */
 export interface PaymentProgram {
   programId: number;
-  kategori: string;
+  categoryId: number;
+  categoryName: string;
 }
 
 /**

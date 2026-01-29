@@ -65,7 +65,7 @@ export function DistributionTransactionsTable({
                     Hash Transaksi
                   </th>
                   <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Program
+                    Kategori Program
                   </th>
                   <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Tanggal
@@ -108,14 +108,9 @@ export function DistributionTransactionsTable({
                     </td>
                     <td className="px-6 py-5">
                       <p
-                        className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block ${getCategoryColor(
-                          item.program.kategori,
-                        )}`}
+                        className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block"
                       >
-                        {CATEGORY_ICONS[
-                          item.program.kategori?.toUpperCase() || "default"
-                        ] || CATEGORY_ICONS.default}{" "}
-                        {item.program.kategori}
+                        {item.program?.categoryName || "-"}
                       </p>
                     </td>
                     <td className="px-6 py-5 text-sm text-slate-600">
