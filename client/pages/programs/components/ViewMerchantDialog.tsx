@@ -1,4 +1,4 @@
-import * as React from "react";
+import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
 import { Loader2 } from "lucide-react";
 import {
   Dialog,
@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useGetMerchantProfile } from "@/services/queries/merchant";
 import type { MerchantItem } from "../merchant";
 import QRCode from "react-qr-code";
+import env from "@/env";
+import { stringToLatLng } from "@/lib/utils";
 
 interface ViewMerchantDialogProps {
   open: boolean;
@@ -127,12 +129,29 @@ export function ViewMerchantDialog({
 
                 {profile.latlon && (
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      Koordinat
+                    <p className="mb-1 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      Peta Lokasi
                     </p>
-                    <p className="text-sm font-medium text-slate-900 mt-1 break-all">
-                      {profile.latlon}
-                    </p>
+                    <APIProvider
+                      apiKey={env.VITE_GOOGLE_MAPS_API_KEY}
+                      onError={(error) => {
+                        console.error("Google Maps API error:", error);
+                      }}
+                    >
+                      <div className="h-64 w-full rounded-lg overflow-hidden border border-slate-200">
+                        <Map
+                          defaultCenter={stringToLatLng(profile.latlon)}
+                          defaultZoom={15}
+                          style={{ width: "100%", height: "100%" }}
+                          disableDefaultUI={true}
+                        >
+                          <AdvancedMarker
+                            position={stringToLatLng(profile.latlon)}
+                            title={profile.businessName}
+                          />
+                        </Map>
+                      </div>
+                    </APIProvider>
                   </div>
                 )}
               </div>
