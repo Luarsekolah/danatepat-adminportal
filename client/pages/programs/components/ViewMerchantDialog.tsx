@@ -144,6 +144,7 @@ export function ViewMerchantDialog({
                           defaultZoom={15}
                           style={{ width: "100%", height: "100%" }}
                           disableDefaultUI={true}
+                          mapId="merchant-map"
                         >
                           <AdvancedMarker
                             position={stringToLatLng(profile.latlon)}
