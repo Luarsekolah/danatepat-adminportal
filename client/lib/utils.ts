@@ -113,3 +113,19 @@ export function formatDateToString(date: Date | undefined): string | undefined {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+/**
+ * Converts a comma-separated string of coordinates into a latitude/longitude object.
+ * @param str - A comma-separated string in the format "lat,lng"
+ * @returns An object containing the parsed latitude and longitude as numbers
+ * @example
+ * const coords = stringToLatLng("40.7128,-74.0060");
+ * // Returns: { lat: 40.7128, lng: -74.0060 }
+ */
+export function stringToLatLng(str: string): {
+  lat: number;
+  lng: number;
+} {
+  const [lat, lng] = str.trim().split(",");
+  return { lat: parseFloat(lat), lng: parseFloat(lng) };
+}
