@@ -129,3 +129,22 @@ export function stringToLatLng(str: string): {
   const [lat, lng] = str.trim().split(",");
   return { lat: parseFloat(lat), lng: parseFloat(lng) };
 }
+
+/**
+ * Converts a comma-separated latitude-longitude string into a tuple of numbers.
+ * 
+ * @param str - A string containing latitude and longitude separated by a comma (e.g., "40.7128,-74.0060")
+ * @returns A tuple containing the latitude and longitude as numbers [latitude, longitude]
+ * 
+ * @example
+ * ```typescript
+ * const coordinates = stringToLatLngTuple("40.7128,-74.0060");
+ * // Returns: [40.7128, -74.0060]
+ * ```
+ */
+export function stringToLatLngTuple(str: string): 
+  [number, number]
+{
+  const [lat, lng] = str.trim().split(",");
+  return [parseFloat(lat), parseFloat(lng)];
+}
