@@ -1,4 +1,3 @@
-import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
 import { Loader2 } from "lucide-react";
 import {
   Dialog,
@@ -11,13 +10,52 @@ import { Button } from "@/components/ui/button";
 import { useGetMerchantProfile } from "@/services/queries/merchant";
 import type { MerchantItem } from "../merchant";
 import QRCode from "react-qr-code";
-import env from "@/env";
-import { stringToLatLng } from "@/lib/utils";
+import { stringToLatLngTuple } from "@/lib/utils";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 interface ViewMerchantDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   merchant: MerchantItem | null;
+}
+
+function MerchantMap({ profile }: { profile: any }) {
+  const position: [number, number] = stringToLatLngTuple(profile.latlon);
+
+  return (
+    <MapContainer
+      center={position}
+      zoom={16}
+      scrollWheelZoom={false}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <Marker position={position}>
+        <Popup>
+          <div className="space-y-1 min-w-max">
+            <p className="text-sm font-semibold text-slate-900 mt-0.5">
+              {profile.businessName}
+            </p>
+            <p className="text-xs text-slate-700 mt-0.5 max-w-xs leading-snug">
+              {profile.alamat}
+            </p>
+
+            {profile.kategori && (
+              <div>
+                <p className="text-xs font-bold text-slate-600 uppercase">
+                  Kategori
+                </p>
+                <p className="text-xs text-slate-700 mt-0.5">
+                  {profile.kategori}
+                </p>
+              </div>
+            )}
+          </div>
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
 }
 
 export function ViewMerchantDialog({
@@ -129,30 +167,15 @@ export function ViewMerchantDialog({
 
                 {profile.latlon && (
                   <div>
-                    <p className="mb-1 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <p className="mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
                       Peta Lokasi
                     </p>
-                    <APIProvider
-                      apiKey={env.VITE_GOOGLE_MAPS_API_KEY}
-                      onError={(error) => {
-                        console.error("Google Maps API error:", error);
-                      }}
-                    >
-                      <div className="h-64 w-full rounded-lg overflow-hidden border border-slate-200">
-                        <Map
-                          defaultCenter={stringToLatLng(profile.latlon)}
-                          defaultZoom={15}
-                          style={{ width: "100%", height: "100%" }}
-                          disableDefaultUI={true}
-                          mapId="merchant-map"
-                        >
-                          <AdvancedMarker
-                            position={stringToLatLng(profile.latlon)}
-                            title={profile.businessName}
-                          />
-                        </Map>
-                      </div>
-                    </APIProvider>
+                    <p className="text-xs text-slate-600 mb-2">
+                      Klik penanda untuk melihat detail lokasi
+                    </p>
+                    <div className="h-64 w-full rounded-lg overflow-hidden border border-slate-200 shadow-sm">
+                      <MerchantMap profile={profile} />
+                    </div>
                   </div>
                 )}
               </div>
