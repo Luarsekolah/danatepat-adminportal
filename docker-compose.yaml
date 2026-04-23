@@ -1,5 +1,6 @@
 services:
   presidana-admin:
+    restart: unless-stopped
     build:
       context: .
       args:
