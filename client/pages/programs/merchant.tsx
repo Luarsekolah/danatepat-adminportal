@@ -7,6 +7,7 @@ import {
   Upload,
   Loader2,
   Eye,
+  Map,
 } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { UploadMerchantCSVDialog } from "./components/UploadMerchantCSVDialog";
@@ -18,6 +19,7 @@ import {
   useListProgramUsers,
 } from "@/services/queries/program";
 import { ProgramData } from "@/types/base";
+import { ViewMapsDialog } from "./components/ViewMapsDialog";
 
 export interface MerchantItem {
   id: number;
@@ -34,6 +36,7 @@ export interface MerchantItem {
 export default function ProgramMerchant() {
   const { programId } = useParams<{ programId: string }>();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [mapsDialogOpen, setMapsDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [selectedMerchant, setSelectedMerchant] = useState<MerchantItem | null>(
@@ -148,12 +151,19 @@ export default function ProgramMerchant() {
                     setSelectedMerchant(merchant);
                     setViewDialogOpen(true);
                   }}
+                  onMapsClick={() => setMapsDialogOpen(true)}
                 />
               </TabsContent>
             ))}
           </Tabs>
         )}
       </div>
+
+      {/* View Maps Dialog */}
+      <ViewMapsDialog
+        open={mapsDialogOpen}
+        onOpenChange={setMapsDialogOpen}
+      />
 
       {/* Upload CSV Dialog */}
       <UploadMerchantCSVDialog
@@ -192,6 +202,7 @@ function MerchantTable({
   isLoading,
   onUploadClick,
   onDetailClick,
+  onMapsClick,
 }: {
   parentProgramName: string;
   subProgram: ProgramData;
@@ -199,6 +210,7 @@ function MerchantTable({
   isLoading: boolean;
   onUploadClick: () => void;
   onDetailClick: (merchant: MerchantItem) => void;
+  onMapsClick: () => void;
 }) {
   return (
     <div className="space-y-6">
@@ -213,13 +225,21 @@ function MerchantTable({
             <span className="font-semibold"> {parentProgramName} </span>
           </p>
         </div>
+        <div className="flex items-center gap-2">
         <Button
-          className="gap-2 bg-[#1E6CF6] hover:bg-blue-700"
+          onClick={onMapsClick}
+        >
+          <Map className="h-4 w-4" />
+          Lihat Peta
+        </Button>
+        <Button
           onClick={onUploadClick}
         >
           <Upload className="h-4 w-4" />
           Unggah CSV
         </Button>
+        </div>
+
       </div>
 
       {/* Loading State */}
